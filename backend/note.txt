@@ -49,3 +49,49 @@ added 12 packages, and audited 83 packages in 11s
   run `npm fund` for details
 
 found 0 vulnerabilities
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i cors helmet hpp cookie-session compression express-async-errors http-status-codes
+
+added 15 packages, and audited 100 packages in 55s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i --save-dev @types/cors
+
+added 1 package, and audited 101 packages in 2s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i --save-dev @types/hpp
+
+added 1 package, and audited 102 packages in 3s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i --save-dev @types/cookie-session
+
+added 2 packages, and audited 104 packages in 2s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i --save-dev @types/compression
+
+added 1 package, and audited 105 packages in 2s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
