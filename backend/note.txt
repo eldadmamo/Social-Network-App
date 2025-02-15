@@ -1,0 +1,31 @@
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm init -y
+Wrote to C:\Users\eldad\PhpstormProjects\SocialNetwork\backend\package.json:
+
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>tsc --init
+
+Created a new tsconfig.json with:
+                                                                                TS
+  target: es2016
+  module: commonjs
+  strict: true
+  esModuleInterop: true
+  skipLibCheck: true
+  forceConsistentCasingInFileNames: true
+
+
+You can learn more at https://aka.ms/tsconfig
