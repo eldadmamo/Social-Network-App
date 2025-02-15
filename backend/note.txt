@@ -95,3 +95,34 @@ added 1 package, and audited 105 packages in 2s
   run `npm fund` for details
 
 found 0 vulnerabilities
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i -g nodemon
+
+changed 29 packages in 1s
+
+4 packages are looking for funding
+  run `npm fund` for details
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i ts-node -D
+
+changed 18 packages, and audited 151 packages in 5s
+
+18 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm install --save-dev tsconfig-paths
+
+added 4 packages, and audited 155 packages in 2s
+
+19 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+when you run it, use npx nodemon src/app.ts
