@@ -29,3 +29,23 @@ Created a new tsconfig.json with:
 
 
 You can learn more at https://aka.ms/tsconfig
+
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i express
+
+added 69 packages, and audited 71 packages in 13s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i --save-dev @types/express
+
+added 12 packages, and audited 83 packages in 11s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
