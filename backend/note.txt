@@ -126,3 +126,21 @@ found 0 vulnerabilities
 
 
 when you run it, use npx nodemon src/app.ts
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i mongoose
+
+added 20 packages, and audited 175 packages in 13s
+
+20 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i dotenv
+
+added 1 package, and audited 176 packages in 2s
+
+21 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities

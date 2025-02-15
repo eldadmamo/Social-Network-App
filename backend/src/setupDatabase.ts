@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
-
+import { config } from './config';
 export default () => {
     const connect = () => {
-        mongoose.connect('mongodb://127.0.0.1:27017/socialapp')
+        mongoose.connect(`${config.DATABASE_URL}`)
                .then(() => {
                 console.log("Successfully connected to database")
                })
@@ -12,7 +12,6 @@ export default () => {
                });
     }
     connect();
-
 
     mongoose.connection.on('disconnected', connect);
 
