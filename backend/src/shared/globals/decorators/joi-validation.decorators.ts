@@ -20,7 +20,3 @@ export function joiValidation(schema: ObjectSchema): IJoiDecotator {
   }
 }
 
-function signup(req,res,next) {
-
-}
-
