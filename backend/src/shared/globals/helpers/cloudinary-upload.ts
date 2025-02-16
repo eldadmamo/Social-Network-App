@@ -8,7 +8,7 @@ export async function uploads(
   invalidate?: boolean
 ): Promise<UploadApiErrorResponse| UploadApiResponse | undefined>
 {
-  return new Promise((resolve,req)=> {
+  return new Promise((resolve,request)=> {
     cloudinary.v2.uploader.upload(
       file,
       {
