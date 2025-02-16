@@ -168,3 +168,52 @@ To address all issues, run:
   npm audit fix
 
 Run `npm audit` for details.
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm i -D eslint eslint-config-prettier prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
+added 114 packages, and audited 336 packages in 26s
+
+53 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (3 low, 3 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm init @eslint/config@latest
+
+> backend@1.0.0 npx
+> create-config
+
+@eslint/create-config: v1.4.0
+
+√ How would you like to use ESLint? · problems
+√ What type of modules does your project use? · commonjs
+√ Which framework does your project use? · none
+√ Does your project use TypeScript? · typescript
+√ Where does your code run? · node
+The config that you've selected requires the following dependencies:
+
+eslint, globals, @eslint/js, typescript-eslint
+√ Would you like to install them now? · No / Yes
+√ Which package manager do you want to use? · npm
+☕️Installing...
+npm warn idealTree Removing dependencies.eslint in favor of devDependencies.eslint
+
+added 33 packages, removed 11 packages, changed 8 packages, and audited 606 packages in 1m
+
+91 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (3 low, 3 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+Successfully created C:\Users\eldad\PhpstormProjects\SocialNetwork\backend\eslint.config.js file.

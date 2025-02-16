@@ -1,20 +1,20 @@
-import express, {Express} from 'express'
-import { ChattyServer } from './setupServer'
-import databaseConnection from './setupDatabase'
+import express, { Express } from 'express';
+import { ChattyServer } from './setupServer';
+import databaseConnection from './setupDatabase';
 import { config } from './config';
 
 class Application {
-    public initialze(): void {
-        this.loadConfig()
-        databaseConnection();
-        const app: Express = express();
-        const server: ChattyServer = new ChattyServer(app);
-        server.start();
-    }
+  public initialze(): void {
+    this.loadConfig();
+    databaseConnection();
+    const app: Express = express();
+    const server: ChattyServer = new ChattyServer(app);
+    server.start();
+  }
 
-    private loadConfig(): void {
-        config.validateConfig()
-    }
+  private loadConfig(): void {
+    config.validateConfig();
+  }
 }
 
 const application: Application = new Application();
