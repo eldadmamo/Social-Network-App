@@ -217,3 +217,15 @@ To address all issues, run:
 
 Run `npm audit` for details.
 Successfully created C:\Users\eldad\PhpstormProjects\SocialNetwork\backend\eslint.config.js file.
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork>git checkout develop
+Switched to a new branch 'develop'
+branch 'develop' set up to track 'origin/develop'.
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork>git staus
+git: 'staus' is not a git command. See 'git --help'.
+
+The most similar command is
+        status
+
