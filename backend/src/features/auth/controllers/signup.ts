@@ -13,6 +13,7 @@ import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { UserCache } from "@root/shared/services/redis/user.cache";
 import { omit } from "lodash";
 import { authQueue } from "@root/shared/services/queues/auth.queue";
+import { userQueue } from "@root/shared/services/queues/user.queue";
 
 
 const userCache: UserCache = new UserCache();
@@ -50,6 +51,7 @@ export class SignUp {
     // Add
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
     authQueue.addAuthUserJob('addAuthUserDB',{value: userDataForCache})
+    userQueue.addUserJob('addUserToDB',{value: userDataForCache})
 
     res.status(HTTP_STATUS.CREATED).json({message: 'User created Successfully', authData})
 

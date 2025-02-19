@@ -33,7 +33,7 @@ export abstract class BaseQueue {
 
     this.log = config.createLogger(`${queueName}Queue`);
 
-    this.queue.on('conpleted', (job: Job) => {
+    this.queue.on('completed', (job: Job) => {
       job.remove();
     })
 
