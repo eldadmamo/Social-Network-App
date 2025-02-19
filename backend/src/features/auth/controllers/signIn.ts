@@ -9,6 +9,7 @@ import { loginSchema } from '../schemes/signin';
 import { IAuthDocument } from '../interfaces/auth.interface';
 import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { userService } from '@root/shared/services/db/user.service';
+import { mailTransport } from '@root/shared/services/emails/main.transport';
 
 export class SignIn {
   @joiValidation(loginSchema)
@@ -38,19 +39,10 @@ export class SignIn {
         config.JWT_TOKEN!
       );
 
-      const userDocument: IUserDocument = {
-        ...user,
-        authId: existingUser!._id,
-        username: existingUser!.username,
-        email: existingUser!.email,
-        avatarColor: existingUser!.avatarColor,
-        uId: existingUser!.uId,
-        createdAt: existingUser!.createdAt
-      } as IUserDocument;
-
       req.session = { jwt: userJwt };
 
-      res.status(HTTP_STATUS.OK).json({ message: 'User logged in Successfully', user: userDocument, token: userJwt });
+
+      res.status(HTTP_STATUS.OK).json({ message: 'User logged in Successfully', user: existingUser, token: userJwt });
     } catch (error) {
       throw new BadRequestError('User not found');
     }

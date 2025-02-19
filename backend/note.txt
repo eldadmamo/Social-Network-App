@@ -276,3 +276,10 @@ npm install bull
 npm install -D @types/bull
 
 
+
+in signIn to check it works
+
+  await mailTransport.sendEmail('gilbert71@ethereal.email','Testing development email', 'This is a test email to show that development email sender works.');
+
+
+
