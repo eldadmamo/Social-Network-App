@@ -12,9 +12,8 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import 'express-async-errors';
 import Logger from 'bunyan';
 import { config } from './config';
-import applicationRoutes  from '@root/routes';
+import applicationRoutes from '@root/routes';
 import { CustomError, IErrorResponse } from './shared/globals/helpers/error.handler';
-
 
 const SERVER_PORT = 5000;
 const log: Logger = config.createLogger('server');
@@ -39,7 +38,7 @@ export class ChattyServer {
       cookieSession({
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
-        maxAge: 24 * 7 * 3600000,
+        maxAge: 5000,
         secure: config.NODE_ENV !== 'development'
       })
     );
@@ -112,6 +111,6 @@ export class ChattyServer {
   }
 
   private socketIOConnection(io: Server): void {
-    log.info('socketIOConnection')
+    log.info('socketIOConnection');
   }
 }

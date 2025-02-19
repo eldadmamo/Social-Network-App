@@ -1,36 +1,36 @@
-import { ObjectId } from "mongodb";
-import { Request, Response } from "express";
-import { joiValidation } from "@root/shared/globals/decorators/joi-validation.decorators";
-import { signupSchema } from "../schemes/signup";
-import { IAuthDocument, ISignUpData } from "../interfaces/auth.interface";
-import { authService } from "@root/shared/services/db/auth.service";
-import { BadRequestError } from "@root/shared/globals/helpers/error.handler";
-import { Helpers } from "@root/shared/globals/helpers/helpers";
-import { UploadApiOptions } from "cloudinary";
-import { uploads } from "@root/shared/globals/helpers/cloudinary-upload";
-import HTTP_STATUS  from 'http-status-codes';
-import { IUserDocument } from "@root/features/user/interfaces/user.interface";
-import { UserCache } from "@root/shared/services/redis/user.cache";
-import { omit } from "lodash";
-import { authQueue } from "@root/shared/services/queues/auth.queue";
-import { userQueue } from "@root/shared/services/queues/user.queue";
-import JWT from "jsonwebtoken";
-import { config } from "@root/config";
+import { ObjectId } from 'mongodb';
+import { Request, Response } from 'express';
+import { joiValidation } from '@root/shared/globals/decorators/joi-validation.decorators';
+import { signupSchema } from '../schemes/signup';
+import { IAuthDocument, ISignUpData } from '../interfaces/auth.interface';
+import { authService } from '@root/shared/services/db/auth.service';
+import { BadRequestError } from '@root/shared/globals/helpers/error.handler';
+import { Helpers } from '@root/shared/globals/helpers/helpers';
+import { UploadApiOptions } from 'cloudinary';
+import { uploads } from '@root/shared/globals/helpers/cloudinary-upload';
+import HTTP_STATUS from 'http-status-codes';
+import { IUserDocument } from '@root/features/user/interfaces/user.interface';
+import { UserCache } from '@root/shared/services/redis/user.cache';
+import { omit } from 'lodash';
+import { authQueue } from '@root/shared/services/queues/auth.queue';
+import { userQueue } from '@root/shared/services/queues/user.queue';
+import JWT from 'jsonwebtoken';
+import { config } from '@root/config';
 
 const userCache: UserCache = new UserCache();
 
 export class SignUp {
   @joiValidation(signupSchema)
-  public async create(req: Request, res:Response): Promise<void> {
-    const {username, email, password, avatarColor, avatarImage} = req.body;
-    const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameOrEmail(username,email);
-    if(checkIfUserExist){
+  public async create(req: Request, res: Response): Promise<void> {
+    const { username, email, password, avatarColor, avatarImage } = req.body;
+    const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameOrEmail(username, email);
+    if (checkIfUserExist) {
       throw new BadRequestError('Invalid Credentials');
     }
 
     const authObjectId: ObjectId = new ObjectId();
     const userObjectId: ObjectId = new ObjectId();
-    const uId = `${Helpers.generateRandomIntegers(12)}`
+    const uId = `${Helpers.generateRandomIntegers(12)}`;
     const authData: IAuthDocument = SignUp.prototype.signUpData({
       _id: authObjectId,
       uId,
@@ -39,9 +39,9 @@ export class SignUp {
       password,
       avatarColor
     });
-    const result: UploadApiOptions = await uploads(avatarImage, `${userObjectId}`, true, true) as UploadApiOptions;
-    if(!result?.public_id){
-      throw new BadRequestError('File upload: Error Occured. Try Again.')
+    const result: UploadApiOptions = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiOptions;
+    if (!result?.public_id) {
+      throw new BadRequestError('File upload: Error Occured. Try Again.');
     }
 
     // Add to redis Cache
@@ -51,14 +51,13 @@ export class SignUp {
 
     // Add to database
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-    authQueue.addAuthUserJob('addAuthUserDB',{value: userDataForCache})
-    userQueue.addUserJob('addUserToDB',{value: userDataForCache})
+    authQueue.addAuthUserJob('addAuthUserDB', { value: userDataForCache });
+    userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
-    req.session = {jwt: userJwt}
+    req.session = { jwt: userJwt };
 
-    res.status(HTTP_STATUS.CREATED).json({message: 'User created Successfully', users: userDataForCache, token: userJwt})
-
+    res.status(HTTP_STATUS.CREATED).json({ message: 'User created Successfully', users: userDataForCache, token: userJwt });
   }
 
   private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
@@ -71,11 +70,11 @@ export class SignUp {
         avatarColor: data.avatarColor
       },
       config.JWT_TOKEN!
-    )
+    );
   }
 
-  private signUpData(data: ISignUpData): IAuthDocument{
-    const {_id, username, email, uId, password,avatarColor} = data;
+  private signUpData(data: ISignUpData): IAuthDocument {
+    const { _id, username, email, uId, password, avatarColor } = data;
     return {
       _id,
       uId,
@@ -88,7 +87,7 @@ export class SignUp {
   }
 
   private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
-    const {_id, username, email,uId, password, avatarColor} = data;
+    const { _id, username, email, uId, password, avatarColor } = data;
     return {
       _id: userObjectId,
       authId: _id,
@@ -98,18 +97,18 @@ export class SignUp {
       password,
       avatarColor,
       profilePicture: '',
-      blocked:[],
+      blocked: [],
       blockedBy: [],
       work: '',
       location: '',
       school: '',
       quote: '',
-      bgImageVersion:'',
+      bgImageVersion: '',
       bgImageId: '',
       followersCount: 0,
       followingCount: 0,
       postsCount: 0,
-      notifications:{
+      notifications: {
         messages: true,
         reactions: true,
         comments: true,
@@ -119,7 +118,7 @@ export class SignUp {
         facebook: '',
         instagram: '',
         twitter: '',
-        youtube:''
+        youtube: ''
       }
     } as unknown as IUserDocument;
   }

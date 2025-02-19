@@ -1,22 +1,21 @@
 import { createClient } from 'redis';
 import Logger from 'bunyan';
-import {config} from  '@root/config'
+import { config } from '@root/config';
 import { BaseCache } from './base.cache';
-
 
 const log: Logger = config.createLogger('redisConnection');
 
-class RedisConnection extends BaseCache{
-  constructor(){
+class RedisConnection extends BaseCache {
+  constructor() {
     super('redisConnection');
   }
 
   async connect(): Promise<void> {
-    try{
+    try {
       await this.client.connect();
-      const res = await this.client.ping()
-      log.info(res, 'JSON')
-    } catch(error){
+      const res = await this.client.ping();
+      log.info(res, 'JSON');
+    } catch (error) {
       log.error(error);
     }
   }

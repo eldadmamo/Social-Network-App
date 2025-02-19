@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import bunyan from 'bunyan';
-import cloudinary from 'cloudinary'
+import cloudinary from 'cloudinary';
 
 dotenv.config({});
 
@@ -44,12 +44,12 @@ class Config {
     }
   }
 
-  public cloudinaryConfig(): void{
+  public cloudinaryConfig(): void {
     cloudinary.v2.config({
       cloud_name: this.CLOUD_NAME,
       api_key: this.CLOUD_API_KEY,
       api_secret: this.CLOUR_API_SECRET
-    })
+    });
   }
 }
 

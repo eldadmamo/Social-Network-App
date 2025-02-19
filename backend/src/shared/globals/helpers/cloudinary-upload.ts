@@ -1,14 +1,12 @@
-import cloudinary, {UploadApiResponse, UploadApiErrorResponse} from 'cloudinary'
-
+import cloudinary, { UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
 
 export async function uploads(
   file: string,
   public_id?: string,
   overwrite?: boolean,
   invalidate?: boolean
-): Promise<UploadApiErrorResponse| UploadApiResponse | undefined>
-{
-  return new Promise((resolve,request)=> {
+): Promise<UploadApiErrorResponse | UploadApiResponse | undefined> {
+  return new Promise((resolve, request) => {
     cloudinary.v2.uploader.upload(
       file,
       {
@@ -16,10 +14,10 @@ export async function uploads(
         overwrite,
         invalidate
       },
-      (error:UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
-        if(error) resolve(error);
-      resolve(result)
+      (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
+        if (error) resolve(error);
+        resolve(result);
       }
-    )
-  })
+    );
+  });
 }

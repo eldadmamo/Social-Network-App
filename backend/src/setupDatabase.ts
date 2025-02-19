@@ -11,7 +11,7 @@ export default () => {
       .connect(`${config.DATABASE_URL}`)
       .then(() => {
         log.info('Successfully connected to database');
-        redisConnection.connect()
+        redisConnection.connect();
       })
       .catch((error) => {
         log.error('Error connecting to database', error);

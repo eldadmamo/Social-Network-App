@@ -1,14 +1,14 @@
-import { IAuthJob } from "@root/features/auth/interfaces/auth.interface";
-import { BaseQueue } from "./base.queue";
-import { userWorker } from "@root/shared/workers/user.worker";
+import { IAuthJob } from '@root/features/auth/interfaces/auth.interface';
+import { BaseQueue } from './base.queue';
+import { userWorker } from '@root/shared/workers/user.worker';
 
 class UserQueue extends BaseQueue {
-  constructor(){
+  constructor() {
     super('user');
     this.processJob('addUserToDB', 5, userWorker.addUserToDB);
   }
 
-  public addUserJob(name:string, data: any): void{
+  public addUserJob(name: string, data: any): void {
     this.addJob(name, data);
   }
 }
