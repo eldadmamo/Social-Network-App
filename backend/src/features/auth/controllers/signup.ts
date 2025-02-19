@@ -14,7 +14,8 @@ import { UserCache } from "@root/shared/services/redis/user.cache";
 import { omit } from "lodash";
 import { authQueue } from "@root/shared/services/queues/auth.queue";
 import { userQueue } from "@root/shared/services/queues/user.queue";
-
+import JWT from "jsonwebtoken";
+import { config } from "@root/config";
 
 const userCache: UserCache = new UserCache();
 
@@ -48,13 +49,29 @@ export class SignUp {
     userDataForCache.profilePicture = `https://res.cloudinary.com/dggixttgq/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
-    // Add
+    // Add to database
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
     authQueue.addAuthUserJob('addAuthUserDB',{value: userDataForCache})
     userQueue.addUserJob('addUserToDB',{value: userDataForCache})
 
-    res.status(HTTP_STATUS.CREATED).json({message: 'User created Successfully', authData})
+    const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
+    req.session = {jwt: userJwt}
 
+    res.status(HTTP_STATUS.CREATED).json({message: 'User created Successfully', users: userDataForCache, token: userJwt})
+
+  }
+
+  private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    return JWT.sign(
+      {
+        userId: userObjectId,
+        uId: data.uId,
+        email: data.email,
+        username: data.username,
+        avatarColor: data.avatarColor
+      },
+      config.JWT_TOKEN!
+    )
   }
 
   private signUpData(data: ISignUpData): IAuthDocument{
