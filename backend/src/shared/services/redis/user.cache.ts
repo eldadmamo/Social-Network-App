@@ -1,12 +1,17 @@
 import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { BaseCache } from "./base.cache";
+import Logger from "bunyan";
+import { config } from "@root/config";
+import { ServerError } from "@root/shared/globals/helpers/error.handler";
 
-export class userCache extends BaseCache{
+const log: Logger = config.createLogger('userCache')
+
+export class UserCache extends BaseCache{
   constructor(){
     super('userCache');
   }
 
-  public async saveUserToCache(key: string, userId: string, createdUser: IUserDocument): Promise<void> {
+  public async saveUserToCache(key: string, userUId: string, createdUser: IUserDocument): Promise<void> {
     const createdAt = new Date();
     const {
       _id,
@@ -73,6 +78,19 @@ export class userCache extends BaseCache{
       ];
 
       const dataToSave: string[] = [...firstList,...secondList,...thirdList];
+
+
+      try{
+        'users:1'
+        if(!this.client.isOpen){
+          await this.client.connect();
+        }
+        await this.client.ZADD('user', {score: parseInt(userUId, 10), value: `${key}`});
+        await this.client.HSET(`users: ${key}`, dataToSave);
+      } catch(error){
+        log.error(error);
+        throw new ServerError('Server error. Try Again.');
+      }
   }
 
 

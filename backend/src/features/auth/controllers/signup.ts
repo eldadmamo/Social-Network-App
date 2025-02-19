@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 import { Request, Response } from "express";
 import { joiValidation } from "@root/shared/globals/decorators/joi-validation.decorators";
 import { signupSchema } from "../schemes/signup";
@@ -9,7 +9,10 @@ import { Helpers } from "@root/shared/globals/helpers/helpers";
 import { UploadApiOptions } from "cloudinary";
 import { uploads } from "@root/shared/globals/helpers/cloudinary-upload";
 import HTTP_STATUS  from 'http-status-codes';
+import { IUserDocument } from "@root/features/user/interfaces/user.interface";
+import { UserCache } from "@root/shared/services/redis/user.cache";
 
+const userCache: UserCache = new UserCache();
 
 export class SignUp {
   @joiValidation(signupSchema)
@@ -20,8 +23,8 @@ export class SignUp {
       throw new BadRequestError('Invalid Credentials');
     }
 
-    const authObjectId = new mongoose.Types.ObjectId();
-    const userObjectId = new mongoose.Types.ObjectId();
+    const authObjectId: ObjectId = new ObjectId();
+    const userObjectId: ObjectId = new ObjectId();
     const uId = `${Helpers.generateRandomIntegers(12)}`
     const authData: IAuthDocument = SignUp.prototype.signUpData({
       _id: authObjectId,
@@ -35,6 +38,11 @@ export class SignUp {
     if(!result?.public_id){
       throw new BadRequestError('File upload: Error Occured. Try Again.')
     }
+
+    // Add to redis Cache
+    const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
+    userDataForCache.profilePicture = `https://res.cloudinary.com/dggixttgq/image/upload/v${result.version}/${userObjectId}`;
+    await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
     res.status(HTTP_STATUS.CREATED).json({message: 'User created Successfully', authData})
 
@@ -51,5 +59,42 @@ export class SignUp {
       avatarColor,
       createdAt: new Date()
     } as unknown as IAuthDocument;
+  }
+
+  private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
+    const {_id, username, email,uId, password, avatarColor} = data;
+    return {
+      _id: userObjectId,
+      authId: _id,
+      uId,
+      username: Helpers.firstLetterUppercase(username),
+      email,
+      password,
+      avatarColor,
+      profilePicture: '',
+      blocked:[],
+      blockedBy: [],
+      work: '',
+      location: '',
+      school: '',
+      quote: '',
+      bgImageVersion:'',
+      bgImageId: '',
+      followersCount: 0,
+      followingCount: 0,
+      postsCount: 0,
+      notifications:{
+        messages: true,
+        reactions: true,
+        comments: true,
+        follows: true
+      },
+      social: {
+        facebook: '',
+        instagram: '',
+        twitter: '',
+        youtube:''
+      }
+    } as unknown as IUserDocument;
   }
 }
