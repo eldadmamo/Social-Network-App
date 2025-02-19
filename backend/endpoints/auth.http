@@ -1,0 +1,46 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/signup
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "username": "Abenezer",
+  "password": "123456",
+  "email": "abenezer@gmail.com",
+  "avatarColor": "red",
+  "avatarImage": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
+}
+
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/signin
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "username": "Abenezer",
+  "password": "123456"
+}
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/currentuser
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/signout
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+

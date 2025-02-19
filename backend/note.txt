@@ -229,3 +229,50 @@ git: 'staus' is not a git command. See 'git --help'.
 The most similar command is
         status
 
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork>git checkout -b feature/auth-feature
+Switched to a new branch 'feature/auth-feature'
+
+
+
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/signup
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "username": "eldad",
+  "password": "123456",
+  "email": "eldadfikre456@gmail.com",
+  "avatarColor": "red",
+  "avatarImage": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
+}
+
+
+
+C:\Users\eldad\PhpstormProjects\SocialNetwork\backend>npm install -g redis-commander
+npm WARN deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm WARN deprecated npmlog@5.0.1: This package is no longer supported.
+npm WARN deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+npm WARN deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm WARN deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm WARN deprecated are-we-there-yet@2.0.0: This package is no longer supported.
+npm WARN deprecated gauge@3.0.2: This package is no longer supported.
+
+added 197 packages in 13s
+
+19 packages are looking for funding
+  run `npm fund` for details
+
+
+npm install bull
+
+
+npm install -D @types/bull
+
+
