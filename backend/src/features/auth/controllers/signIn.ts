@@ -7,8 +7,12 @@ import { authService } from '@root/shared/services/db/auth.service';
 import { BadRequestError } from '@root/shared/globals/helpers/error.handler';
 import { loginSchema } from '../schemes/signin';
 import { IAuthDocument } from '../interfaces/auth.interface';
-import { IUserDocument } from '@root/features/user/interfaces/user.interface';
+import { IResetPasswordParams, IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { userService } from '@root/shared/services/db/user.service';
+import { emailQueue } from '@root/shared/services/queues/email.queue';
+import moment from 'moment';
+import publicIP from 'ip';
+import { resetPasswordTemplate } from '@root/shared/services/emails/templates/reset-password/reset-password-template';
 
 export class SignIn {
   @joiValidation(loginSchema)
@@ -38,19 +42,20 @@ export class SignIn {
         config.JWT_TOKEN!
       );
 
-      const userDocument: IUserDocument = {
-        ...user,
-        authId: existingUser!._id,
-        username: existingUser!.username,
-        email: existingUser!.email,
-        avatarColor: existingUser!.avatarColor,
-        uId: existingUser!.uId,
-        createdAt: existingUser!.createdAt
-      } as IUserDocument;
 
+
+      const templateParams: IResetPasswordParams = {
+        username: existingUser.username!,
+        email: existingUser.email!,
+        ipaddress: publicIP.address(),
+        date: moment().format('DD/MM/YYYY HH:mm')
+      }
+
+
+      const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
+      emailQueue.addEmailJob('forgotPasswordEmail', {template, receiverEmail: 'gilbert71@ethereal.email', subject: 'Password reset confirmation. your Password'});
       req.session = { jwt: userJwt };
-
-      res.status(HTTP_STATUS.OK).json({ message: 'User logged in Successfully', user: userDocument, token: userJwt });
+      res.status(HTTP_STATUS.OK).json({ message: 'User logged in Successfully', user: existingUser, token: userJwt });
     } catch (error) {
       throw new BadRequestError('User not found');
     }
