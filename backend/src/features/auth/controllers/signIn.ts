@@ -7,6 +7,8 @@ import { authService } from "@root/shared/services/db/auth.service";
 import { BadRequestError } from "@root/shared/globals/helpers/error.handler";
 import { loginSchema } from "../schemes/signin";
 import { IAuthDocument } from "../interfaces/auth.interface";
+import { IUserDocument } from "@root/features/user/interfaces/user.interface";
+import { userService } from "@root/shared/services/db/user.service";
 
 
 
@@ -24,9 +26,11 @@ export class SignIn {
       throw new BadRequestError('Invalid credentials')
     }
 
+    const user: IUserDocument = await userService.getUserByAuthId(`${existingUser._id}`);
+
     const userJwt: string = JWT.sign(
       {
-        userId: existingUser._id,
+        userId: user._id,
         uId: existingUser.uId,
         email: existingUser.email,
         username: existingUser.username,
@@ -35,7 +39,16 @@ export class SignIn {
       config.JWT_TOKEN!
     );
     req.session = {Jwt: userJwt}
+    const userDocument: IUserDocument = {
+      ...user,
+      authId: existingUser!._id,
+      username: existingUser!.username,
+      email: existingUser!.email,
+      avatarColor: existingUser!.avatarColor,
+      uId: existingUser!.uId,
+      createdAt: existingUser!.createdAt,
+    } as IUserDocument;
 
-    res.status(HTTP_STATUS.OK).json({message: 'User logged in Successfully', users: existingUser, token: userJwt})
+    res.status(HTTP_STATUS.OK).json({message: 'User logged in Successfully', users: userDocument, token: userJwt})
   }
 }
