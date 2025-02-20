@@ -70,7 +70,7 @@ export class FileTooLargeError extends CustomError {
   statusCode = HTTP_STATUS.REQUEST_TOO_LONG;
   status = 'error';
 
-  constructor(message: string) {
+  constructor(message: string)  {
     super(message);
   }
 }

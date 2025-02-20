@@ -33,7 +33,7 @@ export class SignIn {
 
       const userJwt: string = JWT.sign(
         {
-          userId: existingUser._id,
+          userId: user._id,
           uId: existingUser.uId,
           email: existingUser.email,
           username: existingUser.username,
@@ -42,18 +42,20 @@ export class SignIn {
         config.JWT_TOKEN!
       );
 
+      // const templateParams: IResetPasswordParams = {
+      //   username: existingUser.username!,
+      //   email: existingUser.email!,
+      //   ipaddress: publicIP.address(),
+      //   date: moment().format('DD/MM/YYYY HH:mm')
+      // }
 
+      // const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
+      // emailQueue.addEmailJob('forgotPasswordEmail', {template, receiverEmail: 'tracey.ebert35@ethereal.email', subject: 'Password reset confirmation. your Password'});
 
-      const templateParams: IResetPasswordParams = {
-        username: existingUser.username!,
-        email: existingUser.email!,
-        ipaddress: publicIP.address(),
-        date: moment().format('DD/MM/YYYY HH:mm')
-      }
+      // const resetLink = `${config.CLIENT_URL}/reset-password?token=873456789876856787`;
+      // const template: string = forgotPasswordTemplate.passwordResetTemplate(existingUser.username!, resetLink);
+      // emailQueue.addEmailJob('forgotPasswordEmail', {template, receiverEmail: 'tracey.ebert35@ethereal.email', subject: 'Reset your password'})
 
-
-      const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
-      emailQueue.addEmailJob('forgotPasswordEmail', {template, receiverEmail: 'gilbert71@ethereal.email', subject: 'Password reset confirmation. your Password'});
       req.session = { jwt: userJwt };
       res.status(HTTP_STATUS.OK).json({ message: 'User logged in Successfully', user: existingUser, token: userJwt });
     } catch (error) {

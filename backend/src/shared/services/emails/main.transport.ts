@@ -14,7 +14,6 @@ interface IMailOptions {
 }
 
 const log: Logger = config.createLogger('mailOptions');
-
 sendGridMail.setApiKey(config.SENDGRID_API_KEY!);
 
 class MailTransport {
@@ -28,13 +27,13 @@ class MailTransport {
   }
 
   private async developmentEmailSender(receverEmail: string, subject: string, body: string) : Promise<void> {
-    const transporter = nodemailer.createTransport({
+    const transporter: Mail = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
       secure: false,
       auth: {
-        user: config.SENDER_EMAIL,
-        pass: config.SENDER_EMAIL_PASSWORD
+        user: config.SENDER_EMAIL!,
+        pass: config.SENDER_EMAIL_PASSWORD!
       }
     });
 

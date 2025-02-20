@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { UserCache } from '@root/shared/services/redis/user.cache';
 import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { userService } from '@root/shared/services/db/user.service';
-import { Jwt } from 'jsonwebtoken';
 import HTTP_STATUS from 'http-status-codes';
 
 const userCache: UserCache = new UserCache();
