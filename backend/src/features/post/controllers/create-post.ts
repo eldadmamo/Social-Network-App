@@ -4,15 +4,18 @@ import HTTP_STATUS from 'http-status-codes';
 import { postSchema } from "../schemes/post.schemes";
 import { ObjectId } from 'mongodb';
 import { IPostDocument } from "../interfaces/post.interface";
+import { PostCache } from './../../../shared/services/redis/post.cache';
 
+const postCache: PostCache = new PostCache();
 
 export class Create {
  @joiValidation(postSchema)
  public async post(req:Request, res: Response): Promise<void> {
-  const {post, bgColor, privacy,gifUrl, profilePicture, feelings} = req.body;
+  const {post, bgColor, privacy, gifUrl, profilePicture, feelings} = req.body;
 
   const postObjectId: ObjectId = new ObjectId();
-  const createPost: IPostDocument = {
+
+  const createdPost: IPostDocument = {
     _id: postObjectId,
     userId: req.currentUser!.userId,
     username: req.currentUser!.username,
@@ -37,6 +40,13 @@ export class Create {
       angry:0
     }
   } as IPostDocument;
+
+  await postCache.savePostToCache({
+    key: postObjectId,
+    currentUserId: `${req.currentUser!.userId}`,
+    uId: `${req.currentUser!.uId}`,
+    createdPost
+  });
 
   res.status(HTTP_STATUS.CREATED).json({message: 'Post created successfully'})
  }
