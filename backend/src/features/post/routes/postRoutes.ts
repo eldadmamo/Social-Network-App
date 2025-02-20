@@ -11,6 +11,7 @@ class PostRoutes {
 
   public routes(): Router {
     this.router.post('/post', authMiddleware.checkAuthentication, Create.prototype.post);
+    this.router.post('/post/image/post', authMiddleware.checkAuthentication, Create.prototype.postWithimage);
 
     return this.router;
   }
