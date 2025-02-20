@@ -9,23 +9,22 @@ Accept: application/json
 withCredentials: true
 
 {
-  "username": "Abenezer",
+  "username": "eldad",
   "password": "123456",
-  "email": "abenezer@gmail.com",
+  "email": "eldad@gmail.com",
   "avatarColor": "red",
   "avatarImage": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
 }
 
-
-
 ###
+
 POST {{baseUrl}}/{{urlPath}}/signin
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "username": "Abigia",
+  "username": "eldad",
   "password": "123456"
 }
 
@@ -42,4 +41,26 @@ GET {{baseUrl}}/{{urlPath}}/signout
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
+
+###
+POST {{baseUrl}}/{{urlPath}}/forgot-password
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "email": "eldad@gmail.com"
+}
+
+###
+POST {{baseUrl}}/{{urlPath}}/reset-password/
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "password": "1234567",
+  "confirmPassword": "1234567"
+}
+
 

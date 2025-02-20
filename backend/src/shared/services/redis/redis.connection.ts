@@ -1,4 +1,3 @@
-import { createClient } from 'redis';
 import Logger from 'bunyan';
 import { config } from '@root/config';
 import { BaseCache } from './base.cache';
@@ -22,3 +21,5 @@ class RedisConnection extends BaseCache {
 }
 
 export const redisConnection: RedisConnection = new RedisConnection();
+
+
