@@ -42,15 +42,15 @@ export class SignIn {
         config.JWT_TOKEN!
       );
 
-      const templateParams: IResetPasswordParams = {
-        username: existingUser.username!,
-        email: existingUser.email!,
-        ipaddress: publicIP.address(),
-        date: moment().format('DD/MM/YYYY HH:mm')
-      }
+      // const templateParams: IResetPasswordParams = {
+      //   username: existingUser.username!,
+      //   email: existingUser.email!,
+      //   ipaddress: publicIP.address(),
+      //   date: moment().format('DD/MM/YYYY HH:mm')
+      // }
 
-      const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
-      emailQueue.addEmailJob('forgotPasswordEmail', {template, receiverEmail: 'tracey.ebert35@ethereal.email', subject: 'Password reset confirmation. your Password'});
+      // const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
+      // emailQueue.addEmailJob('forgotPasswordEmail', {template, receiverEmail: 'tracey.ebert35@ethereal.email', subject: 'Password reset confirmation. your Password'});
 
       // const resetLink = `${config.CLIENT_URL}/reset-password?token=873456789876856787`;
       // const template: string = forgotPasswordTemplate.passwordResetTemplate(existingUser.username!, resetLink);
