@@ -10,7 +10,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "post": "This is my third post",
+  "post": "This is my Third post",
   "bgColor": "#41aa1f3",
   "privacy": "Public",
   "gifUrl": "",
@@ -38,6 +38,21 @@ withCredentials: true
 ###
 
 GET {{baseUrl}}/{{urlPath}}/post/all/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/post/images/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+DELETE {{baseUrl}}/{{urlPath}}/post/67b846be9405a10c607c1f84
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

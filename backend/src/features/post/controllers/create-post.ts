@@ -4,8 +4,8 @@ import HTTP_STATUS from 'http-status-codes';
 import { postSchema, postWithImageSchema } from "../schemes/post.schemes";
 import { ObjectId } from 'mongodb';
 import { IPostDocument } from "../interfaces/post.interface";
-import { PostCache } from './../../../shared/services/redis/post.cache';
-import { SocketIOPostHandler, SocketIOPostObject } from "@root/shared/sockets/post";
+import { PostCache } from "@root/shared/services/redis/post.cache";
+import {  SocketIOPostObject } from "@root/shared/sockets/post";
 import { postQueue } from "@root/shared/services/queues/post.queue";
 import { UploadApiOptions } from "cloudinary";
 import { uploads } from "@root/shared/globals/helpers/cloudinary-upload";
@@ -16,7 +16,7 @@ const postCache: PostCache = new PostCache();
 export class Create {
  @joiValidation(postSchema)
  public async post(req:Request, res: Response): Promise<void> {
-  const {post, bgColor, privacy, gifUrl, profilePicture, feelings, image} = req.body;
+  const {post, bgColor, privacy, gifUrl, profilePicture, feelings} = req.body;
 
   const postObjectId: ObjectId = new ObjectId();
 
