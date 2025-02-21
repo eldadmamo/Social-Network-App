@@ -56,3 +56,22 @@ DELETE {{baseUrl}}/{{urlPath}}/post/67b846be9405a10c607c1f84
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
+
+###
+
+PUT {{baseUrl}}/{{urlPath}}/post/67b846c59405a10c607c1f88
+Content-Type: application/json
+Accept: application/json
+withCredentials: true,
+
+{
+  "post": "This is my Final Post",
+  "bgColor": "#ffffff",
+  "privacy": "Public",
+  "gifUrl": "",
+  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1739971415/67b5db56239edd72a49f8bd8",
+  "feelings": "happy",
+  "imgId": "",
+  "imgVersion": ""
+}
+
