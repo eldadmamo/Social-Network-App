@@ -1,0 +1,78 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/post
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "post": "This is my Third post",
+  "bgColor": "#41aa1f3",
+  "privacy": "Public",
+  "gifUrl": "",
+  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1739971415/67b5db56239edd72a49f8bd8",
+  "feelings": "happy"
+}
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/post/image/post
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "post": "Post with image created",
+  "bgColor": "#41aa1f3",
+  "privacy": "Public",
+  "gifUrl": "",
+  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1739971415/67b5db56239edd72a49f8bd8",
+  "feelings": "happy",
+  "image": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
+}
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/post/all/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/post/images/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+DELETE {{baseUrl}}/{{urlPath}}/post/67b846be9405a10c607c1f84
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+PUT {{baseUrl}}/{{urlPath}}/post/image/67b846c59405a10c607c1f88
+Content-Type: application/json
+Accept: application/json
+withCredentials: true,
+
+{
+  "post": "This is my Final Post",
+  "bgColor": "#000000",
+  "privacy": "Public",
+  "gifUrl": "",
+  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1739971415/67b5db56239edd72a49f8bd8",
+  "feelings": "happy",
+  "imgId": "",
+  "imgVersion": "",
+  "image": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
+}
+

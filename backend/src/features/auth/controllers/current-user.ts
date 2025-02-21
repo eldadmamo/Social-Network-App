@@ -22,4 +22,6 @@ export class CurrentUser {
     }
     res.status(HTTP_STATUS.OK).json({ token, isUser, user });
   }
+
+
 }
