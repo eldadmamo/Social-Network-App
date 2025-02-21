@@ -7,7 +7,7 @@ import { IPostDocument } from "../interfaces/post.interface";
 import { PostCache } from "@root/shared/services/redis/post.cache";
 import {  SocketIOPostObject } from "@root/shared/sockets/post";
 import { postQueue } from "@root/shared/services/queues/post.queue";
-import { UploadApiOptions } from "cloudinary";
+import { UploadApiOptions, UploadApiResponse } from "cloudinary";
 import { uploads } from "@root/shared/globals/helpers/cloudinary-upload";
 import { BadRequestError } from "@root/shared/globals/helpers/error.handler";
 
@@ -63,7 +63,7 @@ export class Create {
  public async postWithimage(req:Request, res: Response): Promise<void> {
   const {post, bgColor, privacy, gifUrl, profilePicture, feelings, image} = req.body;
 
-  const result: UploadApiOptions = (await uploads(image)) as UploadApiOptions;
+  const result: UploadApiResponse = (await uploads(image)) as UploadApiResponse;
    if (!result?.public_id) {
     throw new BadRequestError(result.message);
   }
