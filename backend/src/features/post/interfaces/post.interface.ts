@@ -3,8 +3,6 @@ import { ObjectId } from 'mongodb';
 import mongoose, { Document } from 'mongoose';
 
 
-
-
 export interface IPostDocument extends Document {
   _id?: string | mongoose.Types.ObjectId;
   userId: string;
@@ -56,3 +54,6 @@ export interface IQueryComplete {
 export interface IQueryDeleted {
   deletedCount?: number;
 }
+
+
+export { IReactions };
