@@ -21,7 +21,7 @@ class ReactionWorker {
   async removeRectionDataFromDB(job: Job, done: DoneCallback): Promise<void> {
     try {
       const { data } = job;
-      await reactionSerivice.addReactionDataToDB(data);
+      await reactionSerivice.removeReactionDataFromDB(data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
