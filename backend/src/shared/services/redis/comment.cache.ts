@@ -6,6 +6,7 @@ import { config } from '@root/config';
 import { ServerError } from '@root/shared/globals/helpers/error.handler';
 import { Helpers } from '@root/shared/globals/helpers/helpers';
 import { IReactionDocument, IReactions } from '@root/features/reactions/interfaces/reaction.interface';
+import { ICommentDocument } from '@root/features/comment/interfaces/comment.interface';
 
 const log:Logger = config.createLogger('commentsCache')
 
@@ -23,12 +24,29 @@ export class CommentCache extends BaseCache {
       await this.client.LPUSH(`comments:${postId}`, value);
       const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCache');
       let count: number = Helpers.parseJson(commentsCount[0]) as number;
-
+      count+=1;
+      await this.client.HSET(`posts:${postId}`,'commentsCount', `${count}`)
     }catch(error){
       log.error(error);
       throw new ServerError('Server error. Try again')
     }
   }
 
+  public async getCommentFromCache(postId: string): Promise<ICommentDocument[]> {
+    try{
+      if(!this.client.isOpen){
+        await this.client.connect();
+      }
+      const reply: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
+      const list: ICommentDocument[] = [];
+      for(const item of reply){
+        list.push(Helpers.parseJson(item));
+      }
+      return list;
+    }catch(error){
+      log.error(error);
+      throw new ServerError('Server error. Try again')
+    }
+  }
 
 }
