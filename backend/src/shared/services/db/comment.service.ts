@@ -22,7 +22,6 @@ class CommentService {
     const user: Promise<IUserDocument> = userCache.getUserFromCache(userTo) as Promise<IUserDocument>;
     const response: [ICommentDocument, IPostDocument, IUserDocument] = await Promise.all([comments, post, user]);
 
-
   }
 
   public async getPostComments(query: IQueryComment, sort: Record<string, 1| -1>): Promise<ICommentDocument[]>{
