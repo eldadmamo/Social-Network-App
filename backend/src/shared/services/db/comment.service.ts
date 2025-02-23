@@ -1,4 +1,4 @@
-import { ICommentDocument, ICommentJob, IQueryComment } from "@root/features/comment/interfaces/comment.interface";
+import { ICommentDocument, ICommentJob, ICommentNameList, IQueryComment } from "@root/features/comment/interfaces/comment.interface";
 import { CommentsModel } from "@root/features/comment/models/comment.schema";
 import { IPostDocument } from "@root/features/post/interfaces/post.interface";
 import { PostModel } from "@root/features/post/models/post.schema";
@@ -31,6 +31,16 @@ class CommentService {
       {$sort: sort}
     ])
     return comments;
+  }
+
+  public async getPostCommentNames(query: IQueryComment, sort: Record<string, 1 | -1>): Promise<ICommentNameList[]>{
+    const commentsNamesList: ICommentNameList[] = await CommentsModel.aggregate([
+      {$match: query},
+      {$sort: sort},
+      {$group: {_id: null, names: {$addToSet: '$username'}, count: {$sum: 1} }},
+      {$project: {_id:0}}
+    ])
+    return commentsNamesList;
   }
 
 }
