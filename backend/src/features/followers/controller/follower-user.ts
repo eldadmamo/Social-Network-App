@@ -7,6 +7,7 @@ import { UserCache } from '@root/shared/services/redis/user.cache';
 import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { IFollowerData } from '../interfaces/follower.interface';
 import { socketIOFollowerObject } from '@root/shared/sockets/follower';
+import { followerQueue } from '@root/shared/services/queues/follower.queue';
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
@@ -23,7 +24,7 @@ export class Add {
     const cachedFollowee: Promise<IUserDocument> = userCache.getUserFromCache(`${req.currentUser!.userId}`) as Promise<IUserDocument>;
     const response: [IUserDocument, IUserDocument] = await Promise.all([cachedFollower, cachedFollowee]);
 
-    // const followerObjectId: ObjectId = new ObjectId();
+    const followerObjectId: ObjectId = new ObjectId();
     const addFolloweeData: IFollowerData = Add.prototype.userData(response[0]);
     if (socketIOFollowerObject) {
       socketIOFollowerObject.emit('add follower', addFolloweeData);
@@ -35,6 +36,12 @@ export class Add {
     const addFolloweeToCache: Promise<void> = followerCache.saveFollowerToCache(`followers:${followerId}`, `${req.currentUser!.userId}`);
     await Promise.all([addFollowerToCache, addFolloweeToCache]);
 
+    followerQueue.addFollowerJob('addFollowerToDB',{
+      keyOne: `${req.currentUser!.userId}`,
+      keyTwo: `${req.currentUser!.username}`,
+      username: req.currentUser!.username,
+      followerDocumentId: followerObjectId
+    })
 
     res.status(HTTP_STATUS.OK).json({ message: 'Following user now' });
   }

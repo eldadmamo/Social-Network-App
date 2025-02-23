@@ -11,7 +11,7 @@ import { uploads } from '@root/shared/globals/helpers/cloudinary-upload';
 import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { UserCache } from '@root/shared/services/redis/user.cache';
-import { omit } from 'lodash';
+// import { omit } from 'lodash';
 import { authQueue } from '@root/shared/services/queues/auth.queue';
 import { userQueue } from '@root/shared/services/queues/user.queue';
 import JWT from 'jsonwebtoken';
@@ -50,7 +50,7 @@ export class SignUp {
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
     // Add to database
-    omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
+    // omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
     authQueue.addAuthUserJob('addAuthUserDB', { value: authData });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
