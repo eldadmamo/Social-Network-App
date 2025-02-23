@@ -113,6 +113,9 @@ export class ChattyServer {
 
   private socketIOConnections(io: Server): void {
     const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
+    const followerSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
+
     postSocketHandler.listen()
+    followerSocketHandler.listen()
   }
 }
