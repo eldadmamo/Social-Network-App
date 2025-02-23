@@ -27,6 +27,7 @@ export class Helpers {
     } catch (error) {
       return prop;
     }
+    return JSON.parse(prop);
   }
 
   static isDataURL(value: string): boolean {
