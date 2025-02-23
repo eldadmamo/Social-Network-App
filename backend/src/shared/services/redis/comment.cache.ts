@@ -5,7 +5,6 @@ import { find } from 'lodash';
 import { config } from '@root/config';
 import { ServerError } from '@root/shared/globals/helpers/error.handler';
 import { Helpers } from '@root/shared/globals/helpers/helpers';
-import { IReactionDocument, IReactions } from '@root/features/reactions/interfaces/reaction.interface';
 import { ICommentDocument, ICommentNameList } from '@root/features/comment/interfaces/comment.interface';
 
 const log:Logger = config.createLogger('commentsCache')
