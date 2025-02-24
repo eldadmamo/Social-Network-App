@@ -7,6 +7,12 @@ import { IPostDocument } from "@root/features/post/interfaces/post.interface";
 import { omit } from "lodash";
 import mongoose from "mongoose";
 import { Helpers } from "@root/shared/globals/helpers/helpers";
+import { INotificationDocument, INotificationTemplate } from "@root/features/notifications/interfaces/notification.interface";
+import { NotificationModel } from "@root/features/notifications/models/notification.schema";
+import { BulkWriteResult } from "mongodb";
+import { socketIONotificationObject } from "@root/shared/sockets/notification";
+import { notificationTemplate } from "../emails/notifications/notification-template";
+import { emailQueue } from "../queues/email.queue";
 
 const userCache: UserCache = new UserCache();
 
@@ -32,6 +38,37 @@ class ReactionSerivce {
         { new: true }
       )
     ])) as unknown as [IUserDocument, IReactionDocument, IPostDocument];
+
+
+    if(updatedReaction[0]?.notifications.reactions && userTo !== userFrom) {
+      const notificationModel: INotificationDocument = new NotificationModel();
+      const notifications = await notificationModel.insertNotification({
+        userFrom: userFrom as string,
+        userTo: userTo as string,
+        message: `${username} reacted to your post`,
+        notificationType: 'reactions',
+        entityId: new mongoose.Types.ObjectId(postId),
+        createdItemId: new mongoose.Types.ObjectId(updatedReaction[1]._id!),
+        createdAt: new Date(),
+        comment: '',
+        post: updatedReaction[2].post,
+        imgId: updatedReaction[2].imgId!,
+        imgVersion: updatedReaction[2].imgVersion!,
+        gifUrl: updatedReaction[2].gifUrl!,
+        reaction: type!
+      });
+      // send to client
+      socketIONotificationObject.emit('insert notification', notifications, {userTo});
+      const templateParams: INotificationTemplate = {
+        username: updatedReaction[0].username!,
+        message: `${username} reacted to your post`,
+        header: 'Post Reaction Notification'
+      }
+      const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+      emailQueue.addEmailJob('reactionsEmail', {receiverEmail: updatedReaction[0].email!, template, subject: 'Post Reaction Notification'})
+
+      // send to email
+    }
 
   }
 
