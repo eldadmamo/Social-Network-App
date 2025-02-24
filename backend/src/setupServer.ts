@@ -15,6 +15,7 @@ import { config } from './config';
 import applicationRoutes from '@root/routes';
 import { CustomError, IErrorResponse } from './shared/globals/helpers/error.handler';
 import { SocketIOPostHandler } from './shared/sockets/post';
+import { SocketIOUserHandler } from './shared/sockets/user';
 
 const SERVER_PORT = 5000;
 const log: Logger = config.createLogger('server');
@@ -113,6 +114,12 @@ export class ChattyServer {
 
   private socketIOConnections(io: Server): void {
     const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
+    const followerSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
+    const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
+
+
     postSocketHandler.listen()
+    followerSocketHandler.listen()
+    userSocketHandler.listen()
   }
 }
