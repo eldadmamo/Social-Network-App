@@ -38,7 +38,7 @@ export class Add {
 
     followerQueue.addFollowerJob('addFollowerToDB',{
       keyOne: `${req.currentUser!.userId}`,
-      keyTwo: `${req.currentUser!.username}`,
+      keyTwo: `${followerId}`,
       username: req.currentUser!.username,
       followerDocumentId: followerObjectId
     })

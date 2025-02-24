@@ -7,7 +7,7 @@ import { IFollowerData, IFollowerDocument } from "@root/features/followers/inter
 
 
 class FollowerService {
-  public async addFollowerToDB(userId: string, followeeId: string, username: string, followerDocumentId: Object): Promise<void> {
+  public async addFollowerToDB(userId: string, followeeId: string, username: string, followerDocumentId: ObjectId): Promise<void> {
     const followeeObjectId: ObjectId = new mongoose.Types.ObjectId(followeeId);
     const followerObjectId: ObjectId = new mongoose.Types.ObjectId(userId);
 

@@ -1,5 +1,5 @@
-import { IFollowerDocument } from '../interfaces/follower.interface';
 import mongoose, { model, Model, Schema } from 'mongoose';
+import { IFollowerDocument } from '@root/features/followers/interfaces/follower.interface';
 
 const followerSchema: Schema = new Schema({
   followerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
