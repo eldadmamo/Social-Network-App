@@ -7,6 +7,7 @@ import { UserCache } from "../redis/user.cache";
 import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { NotificationModel } from '@root/features/notifications/models/notification.schema';
 import { INotificationDocument } from "@root/features/notifications/interfaces/notification.interface";
+import { socketIONotificationObject } from "@root/shared/sockets/notification";
 
 
 const userCache: UserCache = new UserCache();
@@ -42,7 +43,7 @@ class CommentService {
         reaction: ''
       });
       // send to client
-
+      socketIONotificationObject.emit('insert notification', notifications, {userTo});
 
       // send to email
     }
