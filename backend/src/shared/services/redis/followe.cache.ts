@@ -1,12 +1,13 @@
 import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { BaseCache } from './base.cache';
 import Logger from 'bunyan';
-import { find } from 'lodash';
+import { remove } from 'lodash';
 import { config } from '@root/config';
 import { ServerError } from '@root/shared/globals/helpers/error.handler';
 import { IFollowerData } from '@root/features/followers/interfaces/follower.interface';
 import { UserCache } from './user.cache';
 import mongoose from 'mongoose';
+import { Helpers } from '@root/shared/globals/helpers/helpers';
 
 const log: Logger = config.createLogger('followersCache');
 const userCache: UserCache = new UserCache();
@@ -77,6 +78,33 @@ export class FollowerCache extends BaseCache {
         list.push(data);
        }
        return list;
+     } catch(error){
+       log.error(error);
+       throw new ServerError('Server Error. Try again Please')
+     }
+   }
+
+   public async updateBlockedUserPropInCache(key: string, prop: string, value:string, type: 'block' | 'unblock'): Promise<void>  {
+    try{
+     if(!this.client.isOpen){
+           await this.client.connect();
+       }
+
+
+       const response: string = await this.client.HGET(`users:${key}`, prop) as string;
+       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+
+       let blocked: string[] = Helpers.parseJson(response) as string[];
+
+       if(type === 'block'){
+        blocked = [...blocked, value];
+       } else {
+        remove(blocked, (id: string) => id === value);
+        blocked = [...blocked];
+       }
+
+       multi.HSET(`users:${key}`, `${prop}`, JSON.stringify(blocked))
+       await multi.exec();
      } catch(error){
        log.error(error);
        throw new ServerError('Server Error. Try again Please')
