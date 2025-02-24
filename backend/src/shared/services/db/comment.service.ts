@@ -2,9 +2,11 @@ import { ICommentDocument, ICommentJob, ICommentNameList, IQueryComment } from "
 import { CommentsModel } from "@root/features/comment/models/comment.schema";
 import { IPostDocument } from "@root/features/post/interfaces/post.interface";
 import { PostModel } from "@root/features/post/models/post.schema";
-import { Query } from "mongoose";
+import mongoose,{ mongo, Query } from "mongoose";
 import { UserCache } from "../redis/user.cache";
 import { IUserDocument } from "@root/features/user/interfaces/user.interface";
+import { NotificationModel } from '@root/features/notifications/models/notification.schema';
+import { INotificationDocument } from "@root/features/notifications/interfaces/notification.interface";
 
 
 const userCache: UserCache = new UserCache();
@@ -22,6 +24,28 @@ class CommentService {
     const user: Promise<IUserDocument> = userCache.getUserFromCache(userTo) as Promise<IUserDocument>;
     const response: [ICommentDocument, IPostDocument, IUserDocument] = await Promise.all([comments, post, user]);
 
+    if(response[2].notifications.comments && userFrom !== userTo) {
+      const notificationModel: INotificationDocument = new NotificationModel();
+      const notifications = await notificationModel.insertNotification({
+        userFrom,
+        userTo,
+        message: `${username} commented  on your post.`,
+        notificationType: 'comment',
+        entityId: new mongoose.Types.ObjectId(postId),
+        createdItemId: new mongoose.Types.ObjectId(response[0]._id),
+        createdAt: new Date(),
+        comment: comment.comment,
+        post: response[1].post,
+        imgId: response[1].imgId!,
+        imgVersion: response[1].imgVersion!,
+        gifUrl: response[1].gifUrl!,
+        reaction: ''
+      });
+      // send to client
+
+
+      // send to email
+    }
   }
 
   public async getPostComments(query: IQueryComment, sort: Record<string, 1| -1>): Promise<ICommentDocument[]>{
