@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import { authMiddleware } from '@root/shared/globals/helpers/auth-middleware';
 import { Add } from '@chat/controllers/add-chat-message';
 import { Get } from '@chat/controllers/get-chat-messages';
+import { Delete } from '@chat/controllers/delete-chat-message';
 
 
 class ChatRoutes {
@@ -18,7 +19,7 @@ class ChatRoutes {
     this.router.post('/chat/message/add-chat-users', authMiddleware.checkAuthentication, Add.prototype.addChatUsers);
     this.router.post('/chat/message/remove-chat-users', authMiddleware.checkAuthentication, Add.prototype.removeChatUsers);
 
-    this.router.delete('/chat/message/mark-as-deleted/:messageId/:senderId/:receiverId/:type', authMiddleware.checkAuthentication, Add.prototype.removeChatUsers);
+    this.router.delete('/chat/message/mark-as-deleted/:messageId/:senderId/:receiverId/:type', authMiddleware.checkAuthentication, Delete.prototype.markMessageAsDeleted);
     return this.router;
   }
 }
