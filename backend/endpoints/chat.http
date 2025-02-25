@@ -55,8 +55,12 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
-{
-  "userOne": "67bc589111945b4bf432d7a8",
-  "userTwo": "67bcf46edb4660813c7a2461"
-}
 
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/chat/message/user/
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
