@@ -15,8 +15,10 @@ import { CurrentUser } from './../../auth/controllers/current-user';
 import { INotificationTemplate } from "@root/features/notifications/interfaces/notification.interface";
 import { notificationTemplate } from "@service/emails/templates/notifications/notification-template";
 import { emailQueue } from "@service/queues/email.queue";
+import { MessageCache } from './../../../shared/services/redis/message.cache';
 
 const userCache: UserCache = new UserCache();
+const messageCache :MessageCache = new MessageCache();
 
 export class Add {
   @joiValidation(addChatSchema)
@@ -56,9 +58,11 @@ export class Add {
       receiverUsername,
       senderUsername: `${req.currentUser!.username}`,
       senderId: `${req.currentUser!.userId}`,
-      senderAvatarColor: `${sender.profilePicture}`,
+      senderAvatarColor: `${req.currentUser!.avatarColor}`,
+      senderProfilePicture: `${sender.profilePicture}`,
       body,
       isRead,
+      gifUrl,
       selectedImage: fileUrl,
       reaction:[],
       createdAt: new Date(),
@@ -76,6 +80,10 @@ export class Add {
         messageData
       })
     }
+
+    await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
+    await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
+
     res.status(HTTP_STATUS.OK).json({message: 'Message added', conversationId:conversationObjectId})
   }
 
