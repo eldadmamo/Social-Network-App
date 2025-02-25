@@ -9,6 +9,8 @@ import { loginSchema } from '../schemes/signin';
 import { IAuthDocument } from '../interfaces/auth.interface';
 import { IResetPasswordParams, IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { userService } from '@root/shared/services/db/user.service';
+import { forgotPasswordTemplate } from '@root/shared/services/emails/templates/forgot-password/forgot-password-template';
+import { emailQueue } from '@root/shared/services/queues/email.queue';
 
 
 export class SignIn {
@@ -45,6 +47,7 @@ export class SignIn {
       uId: existingUser!.uId,
       createdAt: existingUser!.createdAt
     } as IUserDocument;
+
     res.status(HTTP_STATUS.OK).json({ message: 'User login successfully', user: userDocument, token: userJwt });
   }
 }

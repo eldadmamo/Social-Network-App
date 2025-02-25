@@ -8,8 +8,11 @@ import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { INotificationDocument, INotificationTemplate } from './../../../features/notifications/interfaces/notification.interface';
 import { NotificationModel } from "@root/features/notifications/models/notification.schema";
 import { socketIONotificationObject } from "@root/shared/sockets/notification";
-import { notificationTemplate } from "../emails/notifications/notification-template";
+import { notificationTemplate } from "../emails/templates/notifications/notification-template";
 import { emailQueue } from "../queues/email.queue";
+import { UserCache } from "../redis/user.cache";
+
+const userCache: UserCache = new UserCache();
 
 class FollowerService {
   public async addFollowerToDB(userId: string, followeeId: string, username: string, followerDocumentId: ObjectId): Promise<void> {
@@ -35,7 +38,7 @@ class FollowerService {
         }
       }
     ]);
-    const response: [BulkWriteResult, IUserDocument | null] = await Promise.all([users, UserModel.findOne({_id: followeeId})])
+    const response: [BulkWriteResult, IUserDocument | null] = await Promise.all([users, userCache.getUserFromCache(followeeId)])
 
     if(response[1]?.notifications.follows && userId !== followeeId) {
       const notificationModel: INotificationDocument = new NotificationModel();
@@ -62,6 +65,7 @@ class FollowerService {
         header: 'Follower Notification'
       }
       const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+      console.log(response[1])
       emailQueue.addEmailJob('followersEmail', {receiverEmail: response[1].email!, template, subject: 'Post Notificaion'})
 
       // send to email

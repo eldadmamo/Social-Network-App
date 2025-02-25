@@ -9,9 +9,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "username": "abenezer",
+  "username": "fikre",
   "password": "123456",
-  "email": "abenezer@gmail.com",
+  "email": "fikre@gmail.com",
   "avatarColor": "red",
   "avatarImage": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
 }

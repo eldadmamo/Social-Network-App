@@ -18,7 +18,7 @@ export class Add {
     const commentData: ICommentDocument = {
       _id: commentObjectId,
       postId,
-      username: `${req.currentUser?. username}`,
+      username: `${req.currentUser?.username}`,
       avatarColor: `${req.currentUser?.avatarColor}`,
       profilePicture,
       comment,
@@ -35,6 +35,6 @@ export class Add {
     }
     commentQueue.addCommentJob('addCommentToDB', databaseCommentData)
 
-    res.status(HTTP_STATUS.OK).json({message: 'Commnet created successfully'})
+    res.status(HTTP_STATUS.OK).json({message: 'Comment created successfully'})
   }
 }
