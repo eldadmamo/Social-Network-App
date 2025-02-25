@@ -24,19 +24,19 @@
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ],
     "paths": {
-      "@auth/*": ["src/Features/auth/*"],
-      "@user/*": ["src/Features/user/*"],
-      "@post/*": ["src/Features/post/*"],
-      "@reaction/*": ["src/Features/reactions/*"],
-      "@comment/*": ["src/Features/comments/*"],
-      "@follower/*": ["src/Features/followers/*"],
-      "@notification/*": ["src/Features/notification/*"],
-      "@image/*": ["src/Features/images/*"],
-      "@chat/*": ["src/Features/chat/*"],
-      "@global/*": ["src/Shared/globals/*"],
-      "@service/*": ["src/Shared/services/*"],
-      "@socket/*": ["src/Shared/sockets/*"],
-      "@worker/*": ["src/Shared/workers/*"],
+      "@auth/*": ["src/features/auth/*"],
+      "@user/*": ["src/features/user/*"],
+      "@post/*": ["src/features/post/*"],
+      "@reaction/*": ["src/features/reactions/*"],
+      "@comment/*": ["src/features/comments/*"],
+      "@follower/*": ["src/features/followers/*"],
+      "@notification/*": ["src/features/notification/*"],
+      "@image/*": ["src/features/images/*"],
+      "@chat/*": ["src/features/chat/*"],
+      "@global/*": ["src/shared/globals/*"],
+      "@service/*": ["src/shared/services/*"],
+      "@socket/*": ["src/shared/sockets/*"],
+      "@worker/*": ["src/shared/workers/*"],
       "@root/*": ["src/*"]
     }
   }
