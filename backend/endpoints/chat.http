@@ -15,7 +15,7 @@ withCredentials: true
   "receiverUsername": "Fikre",
   "receiverAvatarColor": "red",
   "receiverProfilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1740436592/67bcf46edb4660813c7a2461",
-  "body": "Hello how are you Fikre",
+  "body": "Are you Ok?",
   "gifUrl": "",
   "isRead": false,
   "selectedImage": ""
