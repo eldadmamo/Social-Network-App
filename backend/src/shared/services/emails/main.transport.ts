@@ -26,7 +26,7 @@ class MailTransport {
     }
   }
 
-  private async developmentEmailSender(receverEmail: string, subject: string, body: string) : Promise<void> {
+  private async developmentEmailSender(receiverEmail: string, subject: string, body: string) : Promise<void> {
     const transporter: Mail = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
@@ -39,7 +39,7 @@ class MailTransport {
 
     const mailOptions: IMailOptions = {
       from: `Social Media App <${config.SENDER_EMAIL}>`,
-      to: receverEmail,
+      to: receiverEmail,
       subject,
       html: body
     }
@@ -53,11 +53,11 @@ class MailTransport {
   }
 
 
-  private async productionEmailSender(receverEmail: string, subject: string, body: string) : Promise<void> {
+  private async productionEmailSender(receiverEmail: string, subject: string, body: string) : Promise<void> {
 
     const mailOptions: IMailOptions = {
       from: `Social Media App <${config.SENDER_EMAIL}>`,
-      to: receverEmail,
+      to: receiverEmail,
       subject,
       html: body
     }

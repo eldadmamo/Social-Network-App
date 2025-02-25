@@ -11,7 +11,7 @@ import { INotificationDocument, INotificationTemplate } from "@root/features/not
 import { NotificationModel } from "@root/features/notifications/models/notification.schema";
 import { BulkWriteResult } from "mongodb";
 import { socketIONotificationObject } from "@root/shared/sockets/notification";
-import { notificationTemplate } from "../emails/notifications/notification-template";
+import { notificationTemplate } from "../emails/templates/notifications/notification-template";
 import { emailQueue } from "../queues/email.queue";
 
 const userCache: UserCache = new UserCache();
