@@ -9,10 +9,12 @@ import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { socketIOImageObject } from "@root/shared/sockets/image";
 import { imageQueue } from "@root/shared/services/queues/image.queue";
 import HTTP_STATUS  from 'http-status-codes';
+import { IBgUploadResponse } from "../interfaces/image.interface";
+import { Helpers } from "@root/shared/globals/helpers/helpers";
 
 const userCache: UserCache = new UserCache();
 
-export class Add {
+export class AddImage {
   @joiValidation(addImageSchema)
   public async profileImage(req: Request, res: Response): Promise<void> {
     const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;
@@ -34,5 +36,57 @@ export class Add {
       imgVersion: result.version.toString()
     });
     res.status(HTTP_STATUS.OK).json({message: "image added Successfully"})
+  }
+
+
+  @joiValidation(addImageSchema)
+  public async backgroundImage(req: Request, res: Response): Promise<void> {
+    const {version, publicId}: IBgUploadResponse = await AddImage.prototype.backgroundUpload(req.body.image);
+
+    const bgImageId: Promise<IUserDocument>  = userCache.updateSingleUserItemInCache(
+      `${req.currentUser!.userId}`,
+      'bgImageId',
+      publicId
+    ) as Promise<IUserDocument>;
+    const bgImageVersion: Promise<IUserDocument>  = userCache.updateSingleUserItemInCache(
+      `${req.currentUser!.userId}`,
+      'bgImageVersion',
+      version
+    ) as Promise<IUserDocument>;
+    const response: [IUserDocument, IUserDocument] = (await Promise.all([bgImageId, bgImageVersion])) as [IUserDocument, IUserDocument];
+
+    socketIOImageObject.emit('update user', {
+      bgImageId: publicId,
+      bgImageVersion: version,
+      userId: response[0]
+    });
+    imageQueue.addImageJob('updateBGImageInDB', {
+      key: `${req.currentUser!.userId}`,
+      imgId: publicId,
+      imgVersion: version.toString()
+    });
+    res.status(HTTP_STATUS.OK).json({message: "image added Successfully"})
+  }
+
+
+  private async backgroundUpload(image: string): Promise<IBgUploadResponse> {
+    const isDataURL = Helpers.isDataURL(image);
+    let version =  '';
+    let publicId =  '';
+    if(isDataURL){
+      const result: UploadApiResponse = (await uploads(image)) as UploadApiResponse;
+      if(!result.public_id){
+        throw new BadRequestError(result.message);
+      } else {
+        version = result.version.toString();
+        publicId = result.public_id;
+      }
+    } else {
+      const value = image.split('/');
+      version = value[value.length -2];
+      publicId = value[value.length -1];
+    }
+
+    return {version: version.replace(/v/g, ''), publicId};
   }
 }

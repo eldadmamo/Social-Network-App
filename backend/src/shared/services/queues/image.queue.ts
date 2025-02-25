@@ -1,5 +1,4 @@
 import { BaseQueue } from "./base.queue";
-import { emailWorker } from "@root/shared/workers/email.worker";
 import { IFileImageJobData } from "@root/features/images/interfaces/image.interface";
 import { imageWorker } from "@root/shared/workers/image.worker";
 
