@@ -11,8 +11,8 @@ withCredentials: true
 
 {
   "conversationId": "",
-  "receiverId": "67bcf46edb4660813c7a2461",
-  "receiverUsername": "Fikre",
+  "receiverId": "67be1c6aca10b4f2838ef1fc",
+  "receiverUsername": "Abigia",
   "receiverAvatarColor": "red",
   "receiverProfilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1740436592/67bcf46edb4660813c7a2461",
   "body": "Are you Ok?",
@@ -20,3 +20,43 @@ withCredentials: true
   "isRead": false,
   "selectedImage": ""
 }
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/chat/message/add-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "67bc589111945b4bf432d7a8",
+  "userTwo": "67bcf46edb4660813c7a2461"
+}
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/chat/message/remove-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "67bc589111945b4bf432d7a8",
+  "userTwo": "67bcf46edb4660813c7a2461"
+}
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/chat/message/conversation-list
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "67bc589111945b4bf432d7a8",
+  "userTwo": "67bcf46edb4660813c7a2461"
+}
+

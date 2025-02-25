@@ -16,6 +16,7 @@ import { INotificationTemplate } from "@root/features/notifications/interfaces/n
 import { notificationTemplate } from "@service/emails/templates/notifications/notification-template";
 import { emailQueue } from "@service/queues/email.queue";
 import { MessageCache } from './../../../shared/services/redis/message.cache';
+import { chatQueue } from "@service/queues/chat.queue";
 
 const userCache: UserCache = new UserCache();
 const messageCache :MessageCache = new MessageCache();
@@ -84,8 +85,21 @@ export class Add {
     await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
     await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
     await messageCache.addChatMessageToCache(`${conversationObjectId}`, messageData);
+    chatQueue.addChatJob('addChatMessageToDB', messageData);
 
     res.status(HTTP_STATUS.OK).json({message: 'Message added', conversationId:conversationObjectId})
+  }
+
+  public async addChatUsers(req: Request, res: Response): Promise<void> {
+    const chatUsers = await messageCache.addChatUsersToCache(req.body);
+    socketIOChatObject.emit('add chat users', chatUsers);
+    res.status(HTTP_STATUS.OK).json({message: 'Message added'})
+  }
+
+  public async removeChatUsers(req: Request, res: Response): Promise<void> {
+    const chatUsers = await messageCache.removeChatUsersToCache(req.body);
+    socketIOChatObject.emit('add chat users', chatUsers);
+    res.status(HTTP_STATUS.OK).json({message: 'Users removed'})
   }
 
   private emitSocketIOEvent(data: IMessageData): void {
