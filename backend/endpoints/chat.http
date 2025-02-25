@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/chat/message
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "conversationId": "",
+  "receiverId": "67bcf46edb4660813c7a2461",
+  "receiverUsername": "Fikre",
+  "receiverAvatarColor": "red",
+  "receiverProfilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1740436592/67bcf46edb4660813c7a2461",
+  "body": "Hello how are you Fikre",
+  "gifUrl": "",
+  "isRead": false,
+  "selectedImage": ""
+}
