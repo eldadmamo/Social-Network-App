@@ -1,0 +1,38 @@
+import { joiValidation } from "@root/shared/globals/decorators/joi-validation.decorators";
+import { UserCache } from "@root/shared/services/redis/user.cache";
+import { Request,Response } from "express";
+import { addImageSchema } from "../schemes/images";
+import { UploadApiResponse } from "cloudinary";
+import { uploads } from "@root/shared/globals/helpers/cloudinary-upload";
+import { BadRequestError } from "@root/shared/globals/helpers/error.handler";
+import { IUserDocument } from "@root/features/user/interfaces/user.interface";
+import { socketIOImageObject } from "@root/shared/sockets/image";
+import { imageQueue } from "@root/shared/services/queues/image.queue";
+import HTTP_STATUS  from 'http-status-codes';
+
+const userCache: UserCache = new UserCache();
+
+export class Add {
+  @joiValidation(addImageSchema)
+  public async profileImage(req: Request, res: Response): Promise<void> {
+    const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;
+    if(!result?.public_id){
+      throw new BadRequestError('File upload: Error occured. Try again')
+    }
+
+    const url = `https://res.cloudinary.com/dggixttgq/image/upload/v${result.version}/${result.public_id}`;
+    const cachedUser: IUserDocument = await userCache.updateSingleUserItemInCache(
+      `${req.currentUser!.userId}`,
+      'profilePicture',
+      url
+    ) as IUserDocument;
+    socketIOImageObject.emit('update user', cachedUser);
+    imageQueue.addImageJob('addUserProfileImageDB', {
+      key: `${req.currentUser!.userId}`,
+      value: url,
+      imgId: result.public_id,
+      imgVersion: result.version.toString()
+    });
+    res.status(HTTP_STATUS.OK).json({message: "image added Successfully"})
+  }
+}
