@@ -1,0 +1,104 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/chat/message
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "conversationId": "",
+  "receiverId": "67be1c6aca10b4f2838ef1fc",
+  "receiverUsername": "Abigia",
+  "receiverAvatarColor": "red",
+  "receiverProfilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1740436592/67bcf46edb4660813c7a2461",
+  "body": "Are you Ok?",
+  "gifUrl": "",
+  "isRead": false,
+  "selectedImage": ""
+}
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/chat/message/add-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "67bc589111945b4bf432d7a8",
+  "userTwo": "67bcf46edb4660813c7a2461"
+}
+
+
+###
+
+POST {{baseUrl}}/{{urlPath}}/chat/message/remove-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "67bc589111945b4bf432d7a8",
+  "userTwo": "67bcf46edb4660813c7a2461"
+}
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/chat/message/conversation-list
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/chat/message/user/
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+
+
+###
+
+DELETE {{baseUrl}}/{{urlPath}}/chat/message/mark-as-deleted/67be1cd5ca10b4f2838ef203/67be1c53ca10b4f2838ef1f5/67be1c6aca10b4f2838ef1fc/deleteForEveryone
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+
+PUT {{baseUrl}}/{{urlPath}}/chat/message/mark-as-read
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "senderId": "67be1c53ca10b4f2838ef1f5",
+  "receiverId": "67be1c6aca10b4f2838ef1fc"
+}
+
+
+###
+
+PUT {{baseUrl}}/{{urlPath}}/chat/message/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "conversationId": "67be1cd5ca10b4f2838ef204",
+  "messageId": "67be1cd5ca10b4f2838ef203",
+  "reaction": "happy",
+  "type": "add"
+}
