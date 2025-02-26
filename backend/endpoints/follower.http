@@ -3,7 +3,7 @@
 
 ###
 
-PUT {{baseUrl}}/{{urlPath}}/user/follow/67bc588611945b4bf432d7a1
+PUT {{baseUrl}}/{{urlPath}}/user/follow/67be1c6aca10b4f2838ef1fc
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

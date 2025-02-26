@@ -19,7 +19,7 @@ export class SocketIOPostHandler {
         this.io.emit('update like', reaction);
       });
 
-      socket.on('reaction', (data: ICommentDocument) => {
+      socket.on('comment', (data: ICommentDocument) => {
         this.io.emit('update comment', data);
       });
     })

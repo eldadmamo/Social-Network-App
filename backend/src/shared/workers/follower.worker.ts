@@ -21,7 +21,7 @@ import { followerService } from '@root/shared/services/db/follower.service';
    async removeFollowerFromDB(job: Job, done: DoneCallback): Promise<void> {
     try {
       const { keyOne, keyTwo } = job.data;
-      await followerService.removeFollowerToDB(keyOne, keyTwo);
+      await followerService.removeFollowerFromDB(keyOne, keyTwo);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

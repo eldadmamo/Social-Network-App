@@ -9,7 +9,7 @@ import { commentQueue } from "@root/shared/services/queues/comment.queue";
 
 const commentCache: CommentCache = new CommentCache();
 
-export class Add {
+export class AddComment {
   @joiValidation(addCommentSchema)
   public async comment(req: Request, res: Response): Promise<void> {
     const {userTo, postId, profilePicture, comment} = req.body;

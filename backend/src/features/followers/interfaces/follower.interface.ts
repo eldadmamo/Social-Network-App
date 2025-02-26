@@ -9,14 +9,14 @@ export interface IFollowers {
 export interface IFollowerDocument extends Document {
   _id: mongoose.Types.ObjectId | string;
   followerId: mongoose.Types.ObjectId;
-  followeeId: mongoose.Types.ObjectId;
+  followedUserId: mongoose.Types.ObjectId;
   createdAt?: Date;
 }
 
 export interface IFollower {
   _id: mongoose.Types.ObjectId | string;
   followeeId?: IFollowerData;
-  followerId?: IFollowerData;
+  followedUserId?: IFollowerData;
   createdAt?: Date;
 }
 

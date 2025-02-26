@@ -1,6 +1,6 @@
 import HTTP_STATUS from 'http-status-codes';
 import { Request,Response } from 'express';
-import { IPostDocument } from '../interfaces/post.interface';
+import { IPostDocument } from '@post/interfaces/post.interface';
 import { PostCache } from '@root/shared/services/redis/post.cache';
 import { postService } from '@root/shared/services/db/post.service';
 
