@@ -16,14 +16,14 @@ const userCache: UserCache = new UserCache();
 
 export class AddImage {
   @joiValidation(addImageSchema)
-  public async profileImage(req: Request, res: Response): Promise<void> {
+  public async  profileImage(req: Request, res: Response): Promise<void> {
     const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;
     if(!result?.public_id){
       throw new BadRequestError('File upload: Error occured. Try again')
     }
 
     const url = `https://res.cloudinary.com/dggixttgq/image/upload/v${result.version}/${result.public_id}`;
-    const cachedUser: IUserDocument = await userCache.updateSingleUserItemInCache(
+    const cachedUser: IUserDocument | null = await userCache.updateSingleUserItemInCache(
       `${req.currentUser!.userId}`,
       'profilePicture',
       url

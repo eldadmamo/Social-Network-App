@@ -11,10 +11,10 @@ withCredentials: true
 
 {
   "conversationId": "",
-  "receiverId": "67be1c6aca10b4f2838ef1fc",
-  "receiverUsername": "Abigia",
+  "receiverId": "67bf7aaeff66c9c1032632e4",
+  "receiverUsername": "Fikre",
   "receiverAvatarColor": "red",
-  "receiverProfilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1740436592/67bcf46edb4660813c7a2461",
+  "receiverProfilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1740602031/67bf7aaeff66c9c1032632e4",
   "body": "Are you Ok?",
   "gifUrl": "",
   "isRead": false,

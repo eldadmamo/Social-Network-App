@@ -4,8 +4,8 @@ import { IChatJobData, IMessageData } from '@chat/interfaces/chat.interface';
 
 class ChatQueue extends BaseQueue {
   constructor() {
-    super('chats');
-    this.processJob('addChatUserToDB', 5, chatWorker.addChatMessageToDB);
+    super('chat');
+    this.processJob('addChatMessageToDB', 5, chatWorker.addChatMessageToDB);
     this.processJob('markMessageAsDeletedinDB', 5, chatWorker.markMessageAsDeleted);
     this.processJob('markMessagesAsReadInDB', 5, chatWorker.markMessagesAsReadInDB);
     this.processJob('updateMessageReaction', 5, chatWorker.updateMessageReaction);
