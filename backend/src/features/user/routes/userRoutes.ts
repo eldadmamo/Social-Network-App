@@ -12,7 +12,8 @@ class UserRoutes {
 
     public routes(): Router {
         this.router.get('/user/all/:page', authMiddleware.checkAuthentication, GetUser.prototype.all);
-
+        this.router.get('/user/profile', authMiddleware.checkAuthentication, GetUser.prototype.profile);
+        this.router.get('/user/profile/:userId', authMiddleware.checkAuthentication, GetUser.prototype.profileByUserId);
 
         return this.router;
     }

@@ -38,6 +38,21 @@ export class GetUser {
     res.status(HTTP_STATUS.OK).json({message: 'Get Users', users: allUsers.users, totalUsers: allUsers.totalUsers, followers})
   }
 
+  public async profile(req: Request, res: Response): Promise<void> {
+    const cachedUser: IUserDocument = await userCache.getUserFromCache(`${req.currentUser?.userId}`) as IUserDocument;
+    const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(`${req.currentUser?.userId}`)
+
+    res.status(HTTP_STATUS.OK).json({message: 'Get user profile', user: existingUser})
+  }
+
+  public async profileByUserId(req: Request, res: Response): Promise<void> {
+    const {userId} = req.params;
+    const cachedUser: IUserDocument = await userCache.getUserFromCache(userId) as IUserDocument;
+    const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(`${req.currentUser?.userId}`)
+
+    res.status(HTTP_STATUS.OK).json({message: 'Get user profile by id', user: existingUser})
+  }
+
   private async allUsers({newSkip, limit, skip, userId}: IUserAll): Promise<IAllUsers> {
     let users;
     let type = '';
@@ -61,7 +76,7 @@ export class GetUser {
 
   private async followers(userId: string): Promise<IFollowerData[]> {
     const cachedFollowers: IFollowerData[] = await followerCache.getFollowersFromCache(`followers:${userId}`);
-    const result = cachedFollowers.length ? cachedFollowers : await followerService.getFollowedUser(new mongoose.Types.ObjectId(userId))
+    const result = cachedFollowers.length ? cachedFollowers : await followerService.getFollowerUser(new mongoose.Types.ObjectId(userId))
     return result;
   }
 }
