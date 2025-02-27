@@ -15,12 +15,15 @@ export class Update {
   public async message(req: Request, res: Response): Promise<void> {
     const { senderId, receiverId } = req.body;
     const updatedMessage: IMessageData = await messageCache.updateChatMessages(`${senderId}`, `${receiverId}`);
+
     socketIOChatObject.emit('message read', updatedMessage);
     socketIOChatObject.emit('chat list', updatedMessage);
+
     chatQueue.addChatJob('markMessagesAsReadInDB', {
       senderId: new mongoose.Types.ObjectId(senderId),
       receiverId: new mongoose.Types.ObjectId(receiverId)
     });
+
     res.status(HTTP_STATUS.OK).json({ message: 'Message marked as read' });
   }
 }

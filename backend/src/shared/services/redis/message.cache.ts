@@ -53,12 +53,12 @@ public async addChatUsersToCache(value:IChatUsers): Promise<IChatUsers[]> {
         await this.client.connect();
       }
 
-      const users: IChatUsers[] = await this.getChatUsersList();
+      const users: IChatUsers[] = await this.getChatUserList();
       const usersIndex = findIndex(users, (listItem: IChatUsers) => JSON.stringify(listItem) === JSON.stringify(value))
       let chatUsers: IChatUsers[] = [];
       if(usersIndex === -1){
         await this.client.RPUSH('chatUsers', JSON.stringify(value))
-        chatUsers = await this.getChatUsersList();
+        chatUsers = await this.getChatUserList();
       } else {
         chatUsers = users;
       }
@@ -76,12 +76,12 @@ public async removeChatUsersToCache(value:IChatUsers): Promise<IChatUsers[]> {
         await this.client.connect();
       }
 
-      const users: IChatUsers[] = await this.getChatUsersList();
+      const users: IChatUsers[] = await this.getChatUserList();
       const usersIndex = findIndex(users, (listItem: IChatUsers) => JSON.stringify(listItem) === JSON.stringify(value))
       let chatUsers: IChatUsers[] = [];
       if(usersIndex > -1){
         await this.client.LREM('chatUsers', usersIndex, JSON.stringify(value))
-        chatUsers = await this.getChatUsersList();
+        chatUsers = await this.getChatUserList();
       } else {
         chatUsers = users;
       }
@@ -219,14 +219,25 @@ public async updateMessageReaction(
 }
 
 
-private async getChatUsersList(): Promise<IChatUsers[]> {
-const chatUsersList: IChatUsers[] = []
-const chatUsers = await this.client.LRANGE('chatUsers', 0, -1);
-for(const item of chatUsers){
-  const chatUser: IChatUsers = Helpers.parseJson(item) as IChatUsers;
-  chatUsersList.push(chatUser);
-}
-return chatUsersList;
+private async getChatUserList(): Promise<IChatUsers[]> {
+  try {
+      if (!this.client.isOpen) {
+          await this.client.connect();
+      }
+      const chatUsersList: IChatUsers[] = [];
+      const chatUsers = await this.client.LRANGE('chatUsers', 0, -1);
+
+      for (const item of chatUsers) {
+          const chatUser: IChatUsers = Helpers.parseJson(item) as IChatUsers;
+          chatUsersList.push(chatUser);
+      }
+
+      return chatUsersList;
+
+  } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+  }
 }
 
 private async getMessage(senderId: string, receiverId: string, messageId: string): Promise<IGetMessageFromCache> {
@@ -237,7 +248,8 @@ private async getMessage(senderId: string, receiverId: string, messageId: string
   const message: string = find(messages, (listItem: string) => listItem.includes(messageId)) as string;
   const index: number = findIndex(messages, (listItem: string) => listItem.includes(messageId));
 
-  return { index, message, receiver: parsedReceiver };
+  return {index, message, receiver: parsedReceiver};
+
 }
 
 }

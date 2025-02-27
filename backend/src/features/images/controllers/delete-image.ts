@@ -6,24 +6,23 @@ import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { socketIOImageObject } from "@root/shared/sockets/image";
 import { imageQueue } from "@root/shared/services/queues/image.queue";
 import HTTP_STATUS  from 'http-status-codes';
-import { IBgUploadResponse, IFileImageDocument } from "../interfaces/image.interface";
+import {  IFileImageDocument } from "../interfaces/image.interface";
 import { imageService } from "@root/shared/services/db/image.service";
 
 const userCache: UserCache = new UserCache();
 
 export class DeleteImage {
-  @joiValidation(addImageSchema)
   public async image(req: Request, res: Response): Promise<void> {
     const {imageId} = req.params;
     socketIOImageObject.emit('delete image', imageId);
     imageQueue.addImageJob('removeImageFromDB', {
       imageId
     });
-    res.status(HTTP_STATUS.OK).json({message: "image added Successfully"})
+    res.status(HTTP_STATUS.OK).json({message: "image deleted Successfully"})
   }
 
   public async backgroundImage(req: Request, res: Response): Promise<void> {
-    const image: IFileImageDocument = await imageService.getImageByBackground(req.params.bgImageId)
+    const image: IFileImageDocument = await imageService.getImageByBackgroundId(req.params.bgImageId)
 
     socketIOImageObject.emit('delete image', image?._id);
 

@@ -2,7 +2,6 @@ import { IFileImageDocument } from "@root/features/images/interfaces/image.inter
 import { ImageModel } from "@root/features/images/models/image.schema";
 import { UserModel } from "@root/features/user/models/user.schema"
 import mongoose, { mongo } from "mongoose"
-import { userInfo } from "os";
 
 class ImageService {
   public async addUserProfileImageToDB(userId: string, url: string, imgId: string, imgVersion: string): Promise<void> {
@@ -29,7 +28,7 @@ class ImageService {
     await ImageModel.deleteOne({_id: imageId}).exec();
   }
 
-  public async getImageByBackground(bgImageId: string): Promise<IFileImageDocument> {
+  public async getImageByBackgroundId(bgImageId: string): Promise<IFileImageDocument> {
     const image: IFileImageDocument | null = (await ImageModel.findOne({bgImageId}).exec()) as IFileImageDocument;
     return image;
   }

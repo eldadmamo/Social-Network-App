@@ -9,7 +9,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "image": "https://assets.vogue.com/photos/5876fe0a8a28e998768824d3/4:3/w_795,h_597,c_limit/david-gandy.jpg"
+  "image": "https://media.licdn.com/dms/image/v2/D4E03AQFSJHY0JzUCug/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1730833758630?e=1746057600&v=beta&t=bOSwlFNSkdFkSmUHfzLFaALvpuB9aQQdpQ02S0jvzHY"
 }
 
 
@@ -21,7 +21,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "image": "https://res.cloudinary.com/dggixttgq/image/upload/v1740396690/67bc589111945b4bf432d7a8"
+  "image": "https://res.cloudinary.com/dggixttgq/image/upload/v1740590137/67be1c53ca10b4f2838ef1f5"
 }
 
 
@@ -34,7 +34,7 @@ withCredentials: true
 
 ###
 
-DELETE {{baseUrl}}/{{urlPath}}/images/background/
+DELETE {{baseUrl}}/{{urlPath}}/images/67bf4f7af81bd408c39a9a03
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
