@@ -27,6 +27,19 @@ class UserService {
     return users[0];
   }
 
+  public async getAllUsers(userId: string, skip: number, limit: number): Promise<IUserDocument[]> {
+    const users: IUserDocument[] = await UserModel.aggregate([
+      { $match: { _id: {$ne: new mongoose.Types.ObjectId(userId)} } },
+      { $skip: skip},
+      { $limit: limit},
+      { $sort: {createdAt: -1}},
+      { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
+      { $unwind: '$authId' },
+      { $project: this.aggregateProject() }
+    ]);
+    return users;
+  }
+
   private aggregateProject() {
     return {
       _id: 1,
