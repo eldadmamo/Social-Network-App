@@ -10,4 +10,11 @@ Accept: application/json
 withCredentials: true
 
 
+
 ###
+
+
+GET {{baseUrl}}/{{urlPath}}/user/profile/posts/eldad/67be1c53ca10b4f2838ef1f5/974143628422
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
