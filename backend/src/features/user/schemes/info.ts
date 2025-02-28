@@ -15,7 +15,7 @@ const socialLinksSchema: ObjectSchema = Joi.object({
 });
 
 const changePasswordSchema: ObjectSchema = Joi.object({
-    currentPassword: Joi.string().required().min(8).max(20).messages({
+    currentPassword: Joi.string().required().min(6).max(20).messages({
         'string.base': 'Password should be a type of string',
         'string.min': 'Password must have a minimum length of 8 characters',
         'string.max': 'Password should have a maximum length of 20 characters',

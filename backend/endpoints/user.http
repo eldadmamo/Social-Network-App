@@ -37,3 +37,67 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/basic-info
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "quote":"One of the best moment is my life is when i know God at grade 7",
+  "work": "Software Enginnering",
+  "school": "ALX Africa",
+  "location": "Ethiopia, Addis Ababa"
+}
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/social-links
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "instagram": "",
+  "twitter": "",
+  "facebook": "https://www.facebook.com/gitlab",
+  "youtube": "https://youtu.be/WX91BFW9z28"
+}
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/settings
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "messages": false,
+  "reactions": false,
+  "comments": false,
+  "follows": false
+}
+
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/change-password
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "currentPassword": "123456",
+  "newPassword": "12345678",
+  "confirmPassword": "12345678"
+}
+
