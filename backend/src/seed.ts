@@ -7,7 +7,6 @@ import { createCanvas } from 'canvas';
 dotenv.config({});
 
 
-
 function avatarColor(): string {
   const colors: string[] = [
     '#5FB08E', '#CF9DED', '#C346D3', '#056ECA', '#9A0BCF',
