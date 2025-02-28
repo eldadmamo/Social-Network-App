@@ -1,0 +1,103 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+
+GET {{baseUrl}}/{{urlPath}}/user/all/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+
+###
+
+
+GET {{baseUrl}}/{{urlPath}}/user/profile/posts/eldad/67be1c53ca10b4f2838ef1f5/974143628422
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+
+
+GET {{baseUrl}}/{{urlPath}}/user/profile/users/suggestions
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+
+
+GET {{baseUrl}}/{{urlPath}}/user/profile/search/z
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/basic-info
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "quote":"One of the best moment is my life is when i know God at grade 7",
+  "work": "Software Enginnering",
+  "school": "ALX Africa",
+  "location": "Ethiopia, Addis Ababa"
+}
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/social-links
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "instagram": "",
+  "twitter": "",
+  "facebook": "https://www.facebook.com/gitlab",
+  "youtube": "https://youtu.be/WX91BFW9z28"
+}
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/settings
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "messages": false,
+  "reactions": false,
+  "comments": false,
+  "follows": false
+}
+
+
+
+###
+
+
+PUT {{baseUrl}}/{{urlPath}}/user/profile/change-password
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "currentPassword": "123456",
+  "newPassword": "12345678",
+  "confirmPassword": "12345678"
+}
+

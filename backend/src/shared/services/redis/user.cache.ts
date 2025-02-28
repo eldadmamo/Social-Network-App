@@ -4,9 +4,13 @@ import Logger from 'bunyan';
 import { config } from '@root/config';
 import { ServerError } from '@root/shared/globals/helpers/error.handler';
 import { Helpers } from '@root/shared/globals/helpers/helpers';
+import { RedisCommandRawReply } from '@redis/client/dist/lib/commands';
+import { findIndex, indexOf } from 'lodash';
 
 const log: Logger = config.createLogger('userCache');
 type UserItem = string | ISocialLinks | INotificationSettings;
+type UserCacheMultiType = string | number | Buffer | RedisCommandRawReply[] | IUserDocument | IUserDocument[];
+
 
 export class UserCache extends BaseCache {
   constructor() {
@@ -37,56 +41,36 @@ export class UserCache extends BaseCache {
       social
     } = createdUser;
 
-    const firstList: string[] = [
-      '_id',
-      `${_id}`,
-      'uid',
-      `${uId}`,
-      'username',
-      `${username}`,
-      'email',
-      `${email}`,
-      'avatarColor',
-      `${avatarColor}`,
-      'createdAt',
-      `${createdAt}`,
-      'postsCount',
-      `${postsCount}`
-    ];
+    const firstList =  {
+      '_id': `${_id}`,
+      'uid': `${uId}`,
+      'username': `${username}`,
+      'email': `${email}`,
+      'avatarColor':`${avatarColor}`,
+      'createdAt':`${createdAt}`,
+      'postsCount':`${postsCount}`
+    }
 
-    const secondList: string[] = [
-      'blocked',
-      JSON.stringify(blocked),
-      'blockedBy',
-      JSON.stringify(blockedBy),
-      'profilePicture',
-      `${profilePicture}`,
-      'followersCount',
-      `${followersCount}`,
-      'followingCount',
-      `${followingCount}`,
-      'notifications',
-      JSON.stringify(notifications),
-      'social',
-      JSON.stringify(social)
-    ];
+    const secondList = {
+      'blocked': JSON.stringify(blocked),
+      'blockedBy': JSON.stringify(blockedBy),
+      'profilePicture': `${profilePicture}`,
+      'followersCount':`${followersCount}`,
+      'followingCount': `${followingCount}`,
+      'notifications': JSON.stringify(notifications),
+      'social': JSON.stringify(social)
+    };
 
-    const thirdList: string[] = [
-      'work',
-      `${work}`,
-      'location',
-      `${location}`,
-      'school',
-      `${school}`,
-      'quote',
-      `${quote}`,
-      'bgImageVersion',
-      `${bgImageVersion}`,
-      'bgImageId',
-      `${bgImageId}`
-    ];
+    const thirdList = {
+      'work': `${work}`,
+      'location': `${location}`,
+      'school': `${school}`,
+      'quote':`${quote}`,
+      'bgImageVersion':`${bgImageVersion}`,
+      'bgImageId':`${bgImageId}`
+    }
 
-    const dataToSave: string[] = [...firstList, ...secondList, ...thirdList];
+    const dataToSave = {...firstList, ...secondList, ...thirdList};
 
     try {
       ('users:1');
@@ -94,7 +78,10 @@ export class UserCache extends BaseCache {
         await this.client.connect();
       }
       await this.client.ZADD('user', { score: parseInt(userUId, 10), value: `${key}` });
-      await this.client.HSET(`users:${key}`, dataToSave);
+      for(const [itemKey,itemValue] of Object.entries(dataToSave)) {
+        await this.client.HSET(`users:${key}`, `${itemKey}`, `${itemValue}`);
+      }
+
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try Again.');
@@ -127,6 +114,104 @@ export class UserCache extends BaseCache {
     }
   }
 
+  public async getUsersFromCache(start: number, end: number, excludedUserKey: string): Promise<IUserDocument[]> {
+    try {
+        if (!this.client.isOpen) {
+            await this.client.connect();
+        }
+        const response: string[] = await this.client.ZRANGE('user', start, end);
+        response.reverse();
+
+        const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+
+        for (const key of response) {
+            if (key != excludedUserKey) {
+                multi.HGETALL(`users:${key}`);
+            }
+        }
+        const replies: UserCacheMultiType = await multi.exec() as UserCacheMultiType;
+        const userReplies: IUserDocument[] = [];
+
+        for (const reply of replies as IUserDocument[]) {
+            reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
+            reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
+            reply.blocked = Helpers.parseJson(`${reply.blocked}`);
+            reply.blockedBy = Helpers.parseJson(`${reply.blockedBy}`);
+            reply.notifications = Helpers.parseJson(`${reply.notifications}`);
+            reply.social = Helpers.parseJson(`${reply.social}`);
+            reply.followersCount = Helpers.parseJson(`${reply.followersCount}`);
+            reply.followingCount = Helpers.parseJson(`${reply.followingCount}`);
+            reply.bgImageId = Helpers.parseJson(`${reply.bgImageId}`);
+            reply.bgImageVersion = Helpers.parseJson(`${reply.bgImageVersion}`);
+            reply.profilePicture = Helpers.parseJson(`${reply.profilePicture}`);
+            reply.work = Helpers.parseJson(`${reply.work}`);
+            reply.school = Helpers.parseJson(`${reply.school}`);
+            reply.location = Helpers.parseJson(`${reply.location}`);
+            reply.quote = Helpers.parseJson(`${reply.quote}`);
+
+            userReplies.push(reply);
+        }
+
+        return userReplies;
+
+    } catch (error) {
+        log.error(error);
+        throw new ServerError('Server error. Try again.');
+    }
+
+}
+
+public async getRandomUsersFromCache(userId: string, excludedUsername: string): Promise<IUserDocument[]> {
+  try {
+      if (!this.client.isOpen) {
+          await this.client.connect();
+      }
+
+      const replies: IUserDocument[] = [];
+      const followers: string[] = await this.client.LRANGE(`followers:${userId}`, 0, -1);
+      const users: string[] = await this.client.ZRANGE('user', 0, -1);
+      const randomUsers: string[] = Helpers.shuffle(users).slice(0, 10);
+
+      for (const key of randomUsers) {
+          const followerIndex = indexOf(followers, key);
+
+          if (followerIndex < 0) {
+              const userHash: IUserDocument = await this.client.HGETALL(`users:${key}`) as unknown as IUserDocument;
+              replies.push(userHash);
+          }
+      }
+
+      const excludedUsernameIndex: number = findIndex(replies, ['username', excludedUsername]);
+
+      if (excludedUsernameIndex >= 0) {
+          replies.splice(excludedUsernameIndex, 1);
+      }
+
+      for (const reply of replies) {
+          reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
+          reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
+          reply.blocked = Helpers.parseJson(`${reply.blocked}`);
+          reply.blockedBy = Helpers.parseJson(`${reply.blockedBy}`);
+          reply.notifications = Helpers.parseJson(`${reply.notifications}`);
+          reply.social = Helpers.parseJson(`${reply.social}`);
+          reply.followersCount = Helpers.parseJson(`${reply.followersCount}`);
+          reply.followingCount = Helpers.parseJson(`${reply.followingCount}`);
+          reply.bgImageId = Helpers.parseJson(`${reply.bgImageId}`);
+          reply.bgImageVersion = Helpers.parseJson(`${reply.bgImageVersion}`);
+          reply.profilePicture = Helpers.parseJson(`${reply.profilePicture}`);
+          reply.work = Helpers.parseJson(`${reply.work}`);
+          reply.school = Helpers.parseJson(`${reply.school}`);
+          reply.location = Helpers.parseJson(`${reply.location}`);
+          reply.quote = Helpers.parseJson(`${reply.quote}`);
+      }
+
+      return replies;
+  } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+  }
+}
+
 
   public async updateSingleUserItemInCache(userId: string, prop: string, value: UserItem): Promise<IUserDocument | null> {
     try{
@@ -140,6 +225,19 @@ export class UserCache extends BaseCache {
     } catch(error){
       log.error(error);
       throw new ServerError('Server Error. Try Again')
+    }
+  }
+
+  public async getTotalUsersInCache(): Promise<number> {
+    try{
+      if(!this.client.isOpen){
+        this.client.connect();
+      }
+      const count: number = await this.client.ZCARD('user')
+      return count;
+    } catch(error){
+      log.error(error)
+      throw new ServerError('Server error. Try again')
     }
   }
 }
