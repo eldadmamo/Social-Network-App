@@ -10,9 +10,9 @@ class UserService {
     await UserModel.create(data);
   }
 
-  public async updatePassword(userId: string, hashedPassword: string): Promise<void> {
+  public async updatePassword(username: string, hashedPassword: string): Promise<void> {
     await AuthModel.updateOne(
-      {_id: userId},
+      {username},
       {$set: {password: hashedPassword}}
   ).exec();
   }
