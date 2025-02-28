@@ -6,6 +6,8 @@ import { createCanvas } from 'canvas';
 
 dotenv.config({});
 
+
+
 function avatarColor(): string {
   const colors: string[] = [
     '#5FB08E', '#CF9DED', '#C346D3', '#056ECA', '#9A0BCF',
@@ -47,6 +49,7 @@ async function seedUserData(count:number): Promise<void> {
         avatarColor: color,
         avatarImage: avatar
       };
+
       console.log(`***ADDING USER TO DATABASE*** - ${i+1} of ${count} - ${username}`);
       await axios.post(`${process.env.API_KEY}/signup`, body);
     }
@@ -56,7 +59,7 @@ async function seedUserData(count:number): Promise<void> {
 }
 
 
-seedUserData(10)
+seedUserData(10);
 
 
 
