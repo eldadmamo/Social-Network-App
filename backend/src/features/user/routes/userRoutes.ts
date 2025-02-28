@@ -17,6 +17,8 @@ class UserRoutes {
 
         this.router.get('/user/profile/posts/:username/:userId/:uId', authMiddleware.checkAuthentication, GetUser.prototype.profileAndPosts);
 
+        this.router.get('/user/profile/users/suggestions', authMiddleware.checkAuthentication, GetUser.prototype.randomUserSuggestion);
+
         return this.router;
     }
 }

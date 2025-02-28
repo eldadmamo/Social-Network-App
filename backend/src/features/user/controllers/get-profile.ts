@@ -70,6 +70,18 @@ export class GetUser {
     res.status(HTTP_STATUS.OK).json({message: 'Get user profile and post', user: existingUser, posts: userPosts})
   }
 
+  public  async randomUserSuggestion(req: Request, res: Response): Promise<void> {
+    let randomUsers: IUserDocument[] =[];
+    const cachedUsers: IUserDocument[]= await userCache.getRandomUsersFromCache(`${req.currentUser!.userId}`, req.currentUser!.username);
+    if(cachedUsers.length){
+      randomUsers = [...cachedUsers];
+    } else {
+      const users: IUserDocument[] = await userService.getRandomUsers(req.currentUser!.userId);
+      randomUsers = [...users];
+    }
+    res.status(HTTP_STATUS.OK).json({message:" User suggesstion", users: randomUsers})
+  }
+
   private async allUsers({newSkip, limit, skip, userId}: IUserAll): Promise<IAllUsers> {
     let users;
     let type = '';
