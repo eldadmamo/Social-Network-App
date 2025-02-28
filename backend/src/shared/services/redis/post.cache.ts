@@ -33,6 +33,8 @@ export class PostCache extends BaseCache {
       commentsCount,
       imgVersion,
       imgId,
+      videoId,
+      videoVersion,
       reactions,
       createdAt
     } = createdPost;
@@ -54,7 +56,9 @@ export class PostCache extends BaseCache {
       'reactions': JSON.stringify(reactions),
       'imgVersion': `${imgVersion}`,
       'imgId': `${imgId}`,
-      'createdAt': `${createdAt}`
+      'createdAt': `${createdAt}`,
+      'videoId': `${videoId}`,
+      'videoVersion': `${videoVersion}`
     };
 
     try {
