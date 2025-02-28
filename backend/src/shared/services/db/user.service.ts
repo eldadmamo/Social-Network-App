@@ -1,4 +1,4 @@
-import { ISearchUser, IUserDocument } from '@root/features/user/interfaces/user.interface';
+import { IBasicInfo, ISearchUser, ISocialLinks, IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { UserModel } from '@root/features/user/models/user.schema';
 import mongoose from 'mongoose';
 import { followerService } from './follower.service';
@@ -14,6 +14,26 @@ class UserService {
     await UserModel.updateOne(
       {_id: userId},
       {$set: {password: hashedPassword}}
+  ).exec();
+  }
+
+  public async updateuserInfo(userId: string, info: IBasicInfo): Promise<void> {
+    await UserModel.updateOne(
+      {_id: userId},
+      {$set: {
+        work: info['work'],
+        school: info['school'],
+        quote: info['quote'],
+        location: info['location']
+      }}
+  ).exec();
+  }
+
+  public async updateSocialLinks(userId: string, links: ISocialLinks): Promise<void> {
+    await UserModel.updateOne(
+      {_id: userId},
+      {$set: {social: links}
+    }
   ).exec();
   }
 
