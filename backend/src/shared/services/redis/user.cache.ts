@@ -41,56 +41,36 @@ export class UserCache extends BaseCache {
       social
     } = createdUser;
 
-    const firstList: string[] = [
-      '_id',
-      `${_id}`,
-      'uid',
-      `${uId}`,
-      'username',
-      `${username}`,
-      'email',
-      `${email}`,
-      'avatarColor',
-      `${avatarColor}`,
-      'createdAt',
-      `${createdAt}`,
-      'postsCount',
-      `${postsCount}`
-    ];
+    const firstList =  {
+      '_id': `${_id}`,
+      'uid': `${uId}`,
+      'username': `${username}`,
+      'email': `${email}`,
+      'avatarColor':`${avatarColor}`,
+      'createdAt':`${createdAt}`,
+      'postsCount':`${postsCount}`
+    }
 
-    const secondList: string[] = [
-      'blocked',
-      JSON.stringify(blocked),
-      'blockedBy',
-      JSON.stringify(blockedBy),
-      'profilePicture',
-      `${profilePicture}`,
-      'followersCount',
-      `${followersCount}`,
-      'followingCount',
-      `${followingCount}`,
-      'notifications',
-      JSON.stringify(notifications),
-      'social',
-      JSON.stringify(social)
-    ];
+    const secondList = {
+      'blocked': JSON.stringify(blocked),
+      'blockedBy': JSON.stringify(blockedBy),
+      'profilePicture': `${profilePicture}`,
+      'followersCount':`${followersCount}`,
+      'followingCount': `${followingCount}`,
+      'notifications': JSON.stringify(notifications),
+      'social': JSON.stringify(social)
+    };
 
-    const thirdList: string[] = [
-      'work',
-      `${work}`,
-      'location',
-      `${location}`,
-      'school',
-      `${school}`,
-      'quote',
-      `${quote}`,
-      'bgImageVersion',
-      `${bgImageVersion}`,
-      'bgImageId',
-      `${bgImageId}`
-    ];
+    const thirdList = {
+      'work': `${work}`,
+      'location': `${location}`,
+      'school': `${school}`,
+      'quote':`${quote}`,
+      'bgImageVersion':`${bgImageVersion}`,
+      'bgImageId':`${bgImageId}`
+    }
 
-    const dataToSave: string[] = [...firstList, ...secondList, ...thirdList];
+    const dataToSave = {...firstList, ...secondList, ...thirdList};
 
     try {
       ('users:1');
@@ -98,7 +78,10 @@ export class UserCache extends BaseCache {
         await this.client.connect();
       }
       await this.client.ZADD('user', { score: parseInt(userUId, 10), value: `${key}` });
-      await this.client.HSET(`users:${key}`, dataToSave);
+      for(const [itemKey,itemValue] of Object.entries(dataToSave)) {
+        await this.client.HSET(`users:${key}`, `${itemKey}`, `${itemValue}`);
+      }
+
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try Again.');
