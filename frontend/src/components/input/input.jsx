@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import '../input/input.scss'
 
 const Input = ({id, name, type, value, className, labelText, placeholder, handleChange}) => {
   return (
@@ -32,7 +33,7 @@ Input.propTypes = {
     value: PropTypes.any,
     className: PropTypes.string,
     placeholder: PropTypes.string,
-    handleChange: PropTypes.string
+    handleChange: PropTypes.func
 }
 
 export default Input
