@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { AuthTabs } from "./pages";
+import { AuthTabs, ResetPassword } from "./pages";
 import {useRoutes} from 'react-router-dom'
 import ForgotPassword from "./pages/auth/forgot-password/ForgotPassword";
 
@@ -13,6 +13,10 @@ export const AppRouter = () => {
         {
             path: '/forgot-password',
             element: <ForgotPassword/>,  
+        },
+        {
+            path: '/reset-password',
+            element: <ResetPassword/>,  
         }
     ]);
 
