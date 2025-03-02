@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const input = ({name, type, value, className, labelText, placeholder, handleChange}) => {
+const Input = ({id, name, type, value, className, labelText, placeholder, handleChange}) => {
   return (
     <>
       <div className='form-row'>
@@ -10,6 +10,7 @@ const input = ({name, type, value, className, labelText, placeholder, handleChan
         )}
 
         <input 
+          id={id}
           name={name}
           type={type}
           value={value}
@@ -23,14 +24,15 @@ const input = ({name, type, value, className, labelText, placeholder, handleChan
   )
 }
 
-input.propTypes = {
+Input.propTypes = {
     name: PropTypes.string.isRequired,
     labelText: PropTypes.string,
     type: PropTypes.string,
-    value: PropTypes.string,
+    id: PropTypes.string,
+    value: PropTypes.any,
     className: PropTypes.string,
     placeholder: PropTypes.string,
     handleChange: PropTypes.string
 }
 
-export default input
+export default Input

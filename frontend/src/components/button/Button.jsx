@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react'
 
 
@@ -16,7 +17,8 @@ Button.propTypes = {
     label: PropTypes.any.isRequired,
     className: PropTypes.string,
     handleClick: PropTypes.func,
-    disabled: PropTypes.bool 
-}
+    disabled: PropTypes.bool
+};
+
 
 export default Button;
