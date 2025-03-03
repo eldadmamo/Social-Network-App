@@ -1,6 +1,4 @@
 import axios from "../../axios";
-import { Password } from './../../../../../backend/src/features/auth/controllers/password';
-
 
 class AuthService {
     async signUp(body){

@@ -1,9 +1,9 @@
 import React from 'react'
 import './Login.scss'
 import { FaArrowRight } from 'react-icons/fa'
-import Input from '../../../components/input/input.jsX'
 import Button from '../../../components/button/Button'
 import { Link } from 'react-router-dom'
+import Input from '../../../components/input/input.jsX'
 
 const Login = () => {
   return (
@@ -20,7 +20,7 @@ const Login = () => {
                   value="my value"
                   labelText="Username"
                   placeholder="Enter Username"
-                  handleClick={()=> {}}
+                  handleChange={()=> {}}
                 />
                 <Input
                   id="password"
@@ -29,7 +29,7 @@ const Login = () => {
                   value="my password"
                   labelText="Password"
                   placeholder="Enter Password"
-                  handleClick={()=> {}}
+                  handleChange={()=> {}}
                 />
                 <label className="checkmark-container" htmlFor="checkbox">
                     <Input

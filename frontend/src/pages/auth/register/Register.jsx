@@ -1,54 +1,105 @@
 import React from 'react'
 import './Register.scss'
 import { FaArrowRight } from 'react-icons/fa'
-import Input from '../../../components/input/input.jsX'
 import Button from '../../../components/button/Button'
+import { useState } from 'react'
+import { Utils } from '../../../services/utils/utils.service.jsx'
+import { authService } from '../../../services/api/auth/auth.service.js'
+import { Link } from 'react-router-dom'
+import Input from '../../../components/input/input.jsX'
 
 const Register = () => {
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading , setLoading] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [alertType, setAlertType] = useState('')
+  const [hasError, setHasError] = useState(false) 
+
+  const registerUser = async (e) => {
+    e.preventDefault(); // Move this to the top
+    setLoading(true);
+    try {
+      const avatarColor = Utils.avatarColor();
+      const avatarImage = '';
+      
+      const result = await authService.signUp({
+        username,
+        email,
+        password,
+        avatarColor,
+        avatarImage
+      });
+  
+      console.log("Registration success:", result);
+  
+      setAlertType('alert-success');
+      setHasError(false);
+    } catch (error) {
+      console.error("Registration error:", error);
+      setHasError(true);
+      setAlertType('alert-error');
+      setErrorMessage(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false); // Ensure loading state resets
+    }
+  };
+  
+
   return (
     <div className='auth-inner'>
-        <div className='alerts alert-error' role='alert'>
-            Error Message
-        </div>
-        <form className='auth-form'>
+        
+            {hasError && errorMessage && (
+            <div className={`alerts ${alertType} `} role='alert'>
+              {errorMessage}
+              </div>
+            )}
+       
+        <form className='auth-form' onSubmit={registerUser}>
             <div className='form-input-container'>
                 <Input
                   id="username"
                   name="username"
                   type="text"
-                  value="my value"
+                  value={username}
                   labelText="Username"
                   placeholder="Enter Username"
-                  handleClick={()=> {}}
+                  style={{border: `${hasError ? '1px solid #fa9b8a': ''}`}}
+                  handleChange={(event)=> setUsername(event.target.value)}
                 />
                 <Input
                   id="email"
                   name="email"
                   type="text"
-                  value="eldadf456@gmail.com"
+                  value={email}
                   labelText="Email"
                   placeholder="Enter Email"
-                  handleClick={()=> {}}
+                  style={{border: `${hasError ? '1px solid #fa9b8a': ''}`}}
+                  handleChange={(event)=> setEmail(event.target.value)}
                 />
                 <Input
                   id="password"
                   name="password"
                   type="password"
-                  value="my password"
+                  value={password}
                   labelText="Password"
                   placeholder="Enter Password"
-                  handleClick={()=> {}}
+                  style={{border: `${hasError ? '1px solid #fa9b8a': ''}`}}
+                  handleChange={(event)=> setPassword(event.target.value)}
                 />
             </div>
             <Button
-            label={'SIGNUP'}
+            label={`${loading ? 'SIGNUP IN PROGRESS...': 'SIGNUP'}`}
             className="auth-button button"
-            disabled={true}
+            disabled={!username || !email || !password}
             />
+            <Link to="/forgot-password">
             <span className='forgot-password'>
                     Forgot Password?
                     <FaArrowRight className='arrow-right'/>
             </span>
+            </Link>
         </form>
     </div>
   )

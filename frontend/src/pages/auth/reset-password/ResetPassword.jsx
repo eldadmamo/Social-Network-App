@@ -2,8 +2,8 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import backgroundImage from '../../../assets/images/background.jpg';
 import './ResetPassword.scss'
-import Input from '../../../components/input/input.jsX';
 import Button from '../../../components/button/Button';
+import Input from '../../../components/input/input.jsX';
 
 
 const ResetPassword = () => {
