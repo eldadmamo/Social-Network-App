@@ -13,7 +13,7 @@ class AuthService {
         const response = await axios.post('/forgot-password', {email});
         return response
     }
-    async resetPassword(token){
+    async resetPassword(token,body){
         const response = await axios.post(`/reset-password/${token}`, body);
         return response
     }
