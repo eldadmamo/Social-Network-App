@@ -2,7 +2,7 @@ import React from 'react'
 import './Login.scss'
 import { FaArrowRight } from 'react-icons/fa'
 import Button from '../../../components/button/Button'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
 import { Utils } from '../../../services/utils/utils.service.jsx'
 import { authService } from '../../../services/api/auth/auth.service.js'
 import Input from '../../../components/input/input.jsX'
@@ -18,6 +18,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [alertType, setAlertType] = useState('');
   const [user, setUser] = useState();
+  const navigate = useNavigate();
 
   const loginUser = async (event) =>{
     event.preventDefault();
@@ -43,10 +44,9 @@ const Login = () => {
   useEffect(()=> {
       if(loading && !user) return;
       if(user) {
-        console.log('navigate to streams page  login page')
-        setLoading(false);
+        navigate('/app/social/streams');
       }
-    },[loading, user]);
+    },[loading, user, navigate]);
 
   return (
     <div className='auth-inner'>
