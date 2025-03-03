@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Register.scss'
 import { FaArrowRight } from 'react-icons/fa'
 import Button from '../../../components/button/Button'
@@ -15,14 +15,15 @@ const Register = () => {
   const [loading , setLoading] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [alertType, setAlertType] = useState('')
-  const [hasError, setHasError] = useState(false) 
+  const [hasError, setHasError] = useState(false) ;
+  const [user, setUser] = useState();
 
   const registerUser = async (e) => {
     e.preventDefault(); // Move this to the top
     setLoading(true);
     try {
       const avatarColor = Utils.avatarColor();
-      const avatarImage = '';
+      const avatarImage = Utils.generateAvatar(username.charAt(0).toUpperCase(), avatarColor);
       
       const result = await authService.signUp({
         username,
@@ -34,6 +35,7 @@ const Register = () => {
   
       console.log("Registration success:", result);
   
+      setUser(result.data.user);
       setAlertType('alert-success');
       setHasError(false);
     } catch (error) {
@@ -45,6 +47,14 @@ const Register = () => {
       setLoading(false); // Ensure loading state resets
     }
   };
+
+  useEffect(()=> {
+    if(loading && !user) return;
+    if(user) {
+      console.log('navigate to streams page')
+      setLoading(false);
+    }
+  },[loading, user]);
   
 
   return (
