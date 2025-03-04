@@ -1,0 +1,44 @@
+.streams {
+  margin-top: 30px;
+  max-width: 1152px;
+  margin: auto;
+  height: 100vh;
+
+  &-content {
+    display: grid;
+    grid-template-areas: "spacer post suggestions";
+    grid-template-columns: 1fr 800px 300px;
+    column-gap: 20px;
+    margin-top: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .streams-spacer {
+    grid-area: spacer;
+  }
+
+  .streams-post {
+    grid-area: post;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+    scroll-behavior: smooth;
+    background-color: var(--white-1);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .streams-suggestions {
+    grid-area: suggestions;
+    background-color: var(--white-1);
+    max-height: 500px;
+    border-radius: 16px;
+    padding: 10px;
+  }
+
+  .bottom-line {
+    margin-bottom: 50px;
+    height: 50px;
+  }
+}
