@@ -19,4 +19,4 @@ const useLocalStorage = (key, type) => {
     }
 }
 
-export default useLocalStorage;
+export default useLocalStorage; 
