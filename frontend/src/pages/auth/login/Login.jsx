@@ -7,6 +7,7 @@ import { Utils } from '../../../services/utils/utils.service.jsx'
 import { authService } from '../../../services/api/auth/auth.service.js'
 import Input from '../../../components/input/input.jsX'
 import { useState, useEffect } from 'react'
+import useLocalStorage from '../../../hooks/useLocalStorage.js'
 
 
 const Login = () => {
@@ -19,6 +20,8 @@ const Login = () => {
   const [alertType, setAlertType] = useState('');
   const [user, setUser] = useState();
   const navigate = useNavigate();
+  const [setStoredUsername] = useLocalStorage('username','set');
+  const [setLoggedIn] = useLocalStorage('keepLoggedIn','set');
 
   const loginUser = async (event) =>{
     event.preventDefault();
@@ -29,8 +32,9 @@ const Login = () => {
         username,
         password 
       })
-      setKeepLoggedIn(keepLoggedIn);
       setUser(result.data.user);
+      setLoggedIn(keepLoggedIn)
+      setStoredUsername(username);
       setHasError(false)
       setAlertType('alert-success')
     }catch(error){
