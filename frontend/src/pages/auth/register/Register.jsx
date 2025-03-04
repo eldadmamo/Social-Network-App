@@ -45,7 +45,7 @@ const Register = () => {
       setAlertType('alert-error');
       setErrorMessage(error?.response?.data?.message || "Something went wrong");
     } finally {
-      setLoading(false); // Ensure loading state resets
+      setLoading(false); 
     }
   };
 
