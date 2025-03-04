@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRef } from 'react'
 import './Streams.scss'
+import Suggesstions from '../../../components/suggesstions/Suggesstions';
 
 const Streams = () => {
   const bodyRef = useRef(null);
@@ -14,7 +15,7 @@ const Streams = () => {
           <div ref={bottomLineRef} style={{ marginBottom: '50px', height: '50px' }}></div>
         </div>
         <div className="streams-suggestions">
-          <div>Suggession</div>
+          <Suggesstions/>
         </div>
       </div>
     </div>
