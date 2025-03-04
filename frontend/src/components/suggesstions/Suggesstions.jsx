@@ -1,11 +1,19 @@
 import React from 'react'
 import Button from '../button/Button'
 import Avatar from '../avatar/Avatar'
-
 import './Suggesstions.scss'
-
+import { useEffect , useState} from 'react'
+import { useSelector } from 'react-redux'
 
 const Suggesstions = () => {
+  const {suggestions} = useSelector(state => state)
+  const [users, setUsers] = useState([]);
+
+  useEffect(()=> {
+    setUsers(suggestions?.users)
+  },[suggestions, users])
+
+
   return (
     <div className="suggestions-list-container" data-testid="suggestions-container">
       <div className="suggestions-header">
@@ -14,7 +22,7 @@ const Suggesstions = () => {
       <hr />
       <div className="suggestions-container">
         <div className="suggestions">
-          {[1,2,3,4]?.map((user) => (
+          {users?.map((user) => (
             <div data-testid="suggestions-item" className="suggestions-item" key={user?._id}>
               <Avatar
                 name={user?.username}
@@ -34,6 +42,9 @@ const Suggesstions = () => {
             </div>
           ))}
         </div>
+        {users.length > 8 && (
+          <div className='view-more'>View More</div>
+        )}
       </div>
     </div>
   )

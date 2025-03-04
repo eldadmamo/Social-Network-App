@@ -4,6 +4,7 @@ import './Streams.scss'
 import Suggesstions from '../../../components/suggesstions/Suggesstions';
 import { useDispatch } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
+import useEffectOnce from '../../../hooks/useEffectOnce';
 
 const Streams = () => {
   const bodyRef = useRef(null);
@@ -12,7 +13,7 @@ const Streams = () => {
 
   useEffect(()=> {
     dispatch(getUserSuggestions())
-  },[dispatch])
+  })
 
   return (
     <div className="streams" data-testid="streams">
