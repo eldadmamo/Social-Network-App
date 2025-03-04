@@ -1,10 +1,19 @@
 import logo from '../../assets/images/logo.svg';
 import { FaCaretDown, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
-
+import { useState, useEffect } from 'react';
 import './Header.scss';
 import Avatar from '../avatar/Avatar';
+import { Utils } from '../../services/utils/utils.service';
 
 const Header = () => {
+    const [enviroment, setEnviroment] = useState('');
+
+    const backgroundColor = `${enviroment === 'DEV' ? '#50b5ff': enviroment === 'STG' ? '#e9710f': ''}`
+
+    useEffect(()=> {
+        const env = Utils.appEnviroment();
+        setEnviroment(env);
+    },[])
   return (
     <>
       <div className="header-nav-wrapper" data-testid="header-wrapper">
@@ -13,6 +22,11 @@ const Header = () => {
               <img src={logo} className="img-fluid" alt="" />
               <div className="app-name">
                 Social Network
+                {enviroment && (
+                    <span className="environment" style={{backgroundColor: `${backgroundColor}`}}>
+                        {enviroment}
+                    </span>
+                )}
                 <span className="environment">DEV</span>
               </div>
             </div>
@@ -42,7 +56,7 @@ const Header = () => {
               <li className="header-nav-item">
                 <span className="header-list-name profile-image">
                     <Avatar 
-                    name="eldad"
+                    name="eldads"
                     bgColor="red"
                     textColor="#ffffff" 
                     size={40}

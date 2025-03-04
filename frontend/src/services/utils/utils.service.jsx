@@ -40,4 +40,13 @@ export class Utils {
         deleteSessionPagePayload();
         setLoggedIn(false);
     }
+
+     static appEnviroment() {
+        const env = import.meta.env.VITE_REACT_APP_ENVIROMENT;
+        if(env === 'development'){
+            return 'DEV'
+        } else if (env === 'staging'){
+            return 'STG'
+        }
+     }
 }
