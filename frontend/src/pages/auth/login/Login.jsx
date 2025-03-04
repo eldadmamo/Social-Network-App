@@ -8,7 +8,8 @@ import { authService } from '../../../services/api/auth/auth.service.js'
 import Input from '../../../components/input/input.jsX'
 import { useState, useEffect } from 'react'
 import useLocalStorage from '../../../hooks/useLocalStorage.js'
-
+import useSessionStorage from './../../../hooks/useSessionStorage';
+import { useDispatch } from 'react-redux'
 
 const Login = () => {
   const [username, setUsername] = useState('')
@@ -22,6 +23,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [setStoredUsername] = useLocalStorage('username','set');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn','set');
+  const [pageReload] = useSessionStorage('pageReload','set');
+  const dispatch = useDispatch();
 
   const loginUser = async (event) =>{
     event.preventDefault();
@@ -32,11 +35,11 @@ const Login = () => {
         username,
         password 
       })
-      setUser(result.data.user);
       setLoggedIn(keepLoggedIn)
       setStoredUsername(username);
       setHasError(false)
       setAlertType('alert-success')
+      Utils.dispatchUser(result, pageReload, dispatch, setUser)
     }catch(error){
       setLoading(false);
       setHasError(true);

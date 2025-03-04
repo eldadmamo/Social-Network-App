@@ -8,6 +8,7 @@ import { authService } from '../../../services/api/auth/auth.service.js'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../../components/input/input.jsX'
 import useLocalStorage from '../../../hooks/useLocalStorage.js'
+import { useDispatch } from 'react-redux'
 
 const Register = () => {
   const [username, setUsername] = useState('')
@@ -21,6 +22,7 @@ const Register = () => {
   const [setStoredUsername] = useLocalStorage('username','set');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn','set');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const registerUser = async (e) => {
     e.preventDefault(); // Move this to the top
@@ -37,12 +39,10 @@ const Register = () => {
         avatarImage
       });
   
-      console.log("Registration success:", result);
       setLoggedIn(true)
       setStoredUsername(username);
-      setUser(result.data.user);
       setAlertType('alert-success');
-      setHasError(false);
+      Utils.dispatchUser(result, pageReload, dispatch, setUser)
     } catch (error) {
       console.error("Registration error:", error);
       setHasError(true);
