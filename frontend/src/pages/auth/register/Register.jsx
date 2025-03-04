@@ -7,6 +7,7 @@ import { Utils } from '../../../services/utils/utils.service.jsx'
 import { authService } from '../../../services/api/auth/auth.service.js'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../../components/input/input.jsX'
+import useLocalStorage from '../../../hooks/useLocalStorage.js'
 
 const Register = () => {
   const [username, setUsername] = useState('')
@@ -17,6 +18,8 @@ const Register = () => {
   const [alertType, setAlertType] = useState('')
   const [hasError, setHasError] = useState(false) ;
   const [user, setUser] = useState();
+  const [setStoredUsername] = useLocalStorage('username','set');
+  const [setLoggedIn] = useLocalStorage('keepLoggedIn','set');
   const navigate = useNavigate();
 
   const registerUser = async (e) => {
@@ -35,7 +38,8 @@ const Register = () => {
       });
   
       console.log("Registration success:", result);
-  
+      setLoggedIn(true)
+      setStoredUsername(username);
       setUser(result.data.user);
       setAlertType('alert-success');
       setHasError(false);
