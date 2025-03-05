@@ -2,11 +2,7 @@ import { lazy, Suspense } from "react";
 import { AuthTabs, ResetPassword } from "./pages/auth/index";
 import {useRoutes} from 'react-router-dom'
 import ForgotPassword from "./pages/auth/forgot-password/ForgotPassword";
-import Streams from './pages/social/streams/Streams';
-import Photo from "./pages/social/photos/photo";
-
 import Videos from "./pages/social/videos/video";
-import Profiles from "./pages/social/profile/profile";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Error from "./pages/error/Error";
 import StreamsSkeleton from "./pages/social/streams/StreamsSkeleton";
