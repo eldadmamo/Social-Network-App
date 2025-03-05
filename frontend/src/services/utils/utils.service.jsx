@@ -49,4 +49,15 @@ export class Utils {
             return 'STG'
         }
      }
+
+     static mapSettingsDropdownItems(setSettings){
+        const items = []
+        const item = {
+            topText: 'My Profle',
+            subText: 'View personal Profile'
+        };
+        items.push(item)
+        setSettings(items);
+        return items;
+     }
 }
