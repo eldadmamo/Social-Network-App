@@ -4,8 +4,11 @@ import { AppRouter } from './routes'
 import { useEffect } from 'react'
 import '../src/App.scss'
 import { socketService } from './services/socket/socket.service'
+import Toast from './components/toast/Toast'
+import { useSelector } from 'react-redux'
 
 const App = () => {
+  const {notifications} = useSelector((state) => state.notifications);
 
   useEffect(()=> {
     socketService.setupSocketConnection();
@@ -13,6 +16,9 @@ const App = () => {
 
   return (
     <>
+     {notifications && notifications.length > 0 && (
+      <Toast position="top-right" toastList={notifications} autoDelete={false} />
+     )}
      <BrowserRouter>
        <AppRouter/>
      </BrowserRouter>

@@ -37,14 +37,15 @@ const Header = () => {
     const openChatPage = () => {}
     const onMarkAsRead = () => {}
     const onDeleteNotification = () => {}
+
     const onLogout = async () => {
       try{
         setLoggedIn(false);
-        Utils.clearStore({dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn});
         await userService.logoutUser();
+        Utils.clearStore({dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn});
         navigate('/')
       }catch(error){
-        console.log(error);
+        Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
       }
     } 
 
