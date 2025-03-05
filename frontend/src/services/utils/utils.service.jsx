@@ -33,11 +33,11 @@ export class Utils {
         setUser(result.data.user);
     }
 
-    static clearStore({dispatch, deleteStorageUsername, deleteSessionPagePayload, setLoggedIn}){
+    static clearStore({dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn}){
         dispatch(clearUser());
         // dispatch clear notification action
         deleteStorageUsername();
-        deleteSessionPagePayload();
+        deleteSessionPageReload();
         setLoggedIn(false);
     }
 

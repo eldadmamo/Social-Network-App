@@ -29,7 +29,7 @@ const Header = () => {
     const [isSettingsActive, setIsSettingsActive] = useDetectOutsideClick(settingsRef, false);
     const [deleteStorageUsername] = useLocalStorage('username', 'delete')
     const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set')
-    const [deleteSessionPagePayload] = useSessionStorage('pageReload', 'delete')
+    const [deleteSessionPageReload] = useSessionStorage('pageReload', 'delete')
 
     const backgroundColor = `${enviroment === 'DEV' ? '#50b5ff': enviroment === 'STG' ? '#e9710f': ''}`
 
@@ -39,7 +39,7 @@ const Header = () => {
     const onLogout = async () => {
       try{
         setLoggedIn(false);
-        Utils.clearStore({dispatch, deleteStorageUsername, deleteSessionPagePayload, setLoggedIn});
+        Utils.clearStore({dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn});
         await userService.logoutUser();
         navigate('/')
       }catch(error){

@@ -2,7 +2,7 @@ import './AuthTabs.scss'
 import React from 'react'
 import { useState } from 'react'
 import backgroundImage from '../../../assets/images/background.jpg'
-import {Login, Register} from '../../index'
+import {Login, Register} from '../index'
 
 
 const AuthTabs = () => {

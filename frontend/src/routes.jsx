@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { AuthTabs, ResetPassword } from "./pages";
+import { AuthTabs, ResetPassword } from "./pages/auth/index";
 import {useRoutes} from 'react-router-dom'
 import ForgotPassword from "./pages/auth/forgot-password/ForgotPassword";
 import Streams from './pages/social/streams/Streams';
@@ -12,6 +12,7 @@ import Photo from "./pages/social/photos/photo";
 import Notifications from "./pages/social/notifications/notifications";
 import Videos from "./pages/social/videos/video";
 import Profiles from "./pages/social/profile/profile";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 
 export const AppRouter = () => {
@@ -30,7 +31,11 @@ export const AppRouter = () => {
         },
         {
             path: '/app/social',
-            element: <Social/>,
+            element: (
+                <ProtectedRoute>
+                   <Social/>
+                </ProtectedRoute>
+                ),
             children: [
                 {
                     path: 'streams',

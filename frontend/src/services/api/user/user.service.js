@@ -12,7 +12,7 @@ class UserService {
     }
 
     async checkCurrentUser(){
-        const response = await axios.get('/signout');
+        const response = await axios.get('/currentuser');
         return response;
     }
 }
