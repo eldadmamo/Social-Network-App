@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import useLocalStorage from './../../hooks/useLocalStorage';
 import useSessionStorage from './../../hooks/useSessionStorage';
 import { userService } from '../../services/api/user/user.service';
+import HeaderSkeleton from './HeaderSkeleton';
 
 const Header = () => {
     const {profile} = useSelector(state => state.user);
@@ -56,7 +57,10 @@ const Header = () => {
   },[])
   return (
     <>
-      <div className="header-nav-wrapper" data-testid="header-wrapper">
+    {!profile ? (
+      <HeaderSkeleton/>
+    ): (
+<div className="header-nav-wrapper" data-testid="header-wrapper">
         {isMessageActive && (
             <div ref={messageRef}>
                 <MessageSidebar
@@ -172,7 +176,10 @@ const Header = () => {
               </li>
             </ul>
           </div>
-        </div>
+        </div> 
+    )
+    }
+      
     </>
   );
 };
