@@ -1,17 +1,18 @@
 import React from 'react'
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import './Streams.scss'
 import Suggesstions from '../../../components/suggesstions/Suggesstions';
 import { useDispatch } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
 import useEffectOnce from '../../../hooks/useEffectOnce';
 
+
 const Streams = () => {
   const bodyRef = useRef(null);
   const bottomLineRef = useRef();
   const dispatch = useDispatch();
 
-  useEffect(()=> {
+  useEffectOnce(()=> {
     dispatch(getUserSuggestions())
   })
 

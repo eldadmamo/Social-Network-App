@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../../components/input/input.jsX'
 import useLocalStorage from '../../../hooks/useLocalStorage.js'
 import { useDispatch } from 'react-redux'
+import useSessionStorage from '../../../hooks/useSessionStorage.js'
 
 const Register = () => {
   const [username, setUsername] = useState('')
@@ -21,6 +22,7 @@ const Register = () => {
   const [user, setUser] = useState();
   const [setStoredUsername] = useLocalStorage('username','set');
   const [setLoggedIn] = useLocalStorage('keepLoggedIn','set');
+  const [pageReload] = useSessionStorage('pageReload', 'set');
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
