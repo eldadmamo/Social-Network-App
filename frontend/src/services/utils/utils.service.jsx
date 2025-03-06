@@ -69,4 +69,12 @@ export class Utils {
         setSettings(items);
         return items;
      }
+
+     static appImageUrl(version, id) {
+        if (typeof version === 'string' && typeof id === 'string') {
+          version = version.replace(/['"]+/g, '');
+          id = id.replace(/['"]+/g, '');
+        }
+        return `https://res.cloudinary.com/dggixttgq/image/upload/v${version}/${id}`;
+      }
 }
