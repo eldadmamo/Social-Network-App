@@ -1,6 +1,7 @@
 import { notificationService } from '../api/notifications/notification.service';
 import { socketService } from './../socket/socket.service';
-import { cloneDeep, find, findIndex, remove } from 'lodash';
+import { cloneDeep, find, findIndex, remove , sumBy} from 'lodash';
+import { Utils } from './utils.service';
 
 export class NotificationUtils {
 
@@ -11,6 +12,9 @@ static socketIONotification(profile, notifications, setNotifications, type, setN
                 notifications = [...data];
                 if(type === 'notificationPage'){
                     setNotifications(notifications);
+                } else {
+                    const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(notifications, setNotificationsCount);
+                    setNotifications(mappedNotifications)
                 }
             }
         });
@@ -22,7 +26,10 @@ static socketIONotification(profile, notifications, setNotifications, type, setN
                 notificationData.read = true;
                 notifications.splice(index, 1, notificationData);
                 if(type === 'notificationPage'){
-
+                    setNotifications(notifications)
+                } else {
+                    const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(notifications, setNotificationsCount);
+                    setNotifications(mappedNotifications)
                 }
             }
         });
@@ -31,12 +38,48 @@ static socketIONotification(profile, notifications, setNotifications, type, setN
             remove(notifications, {_id: notificationId});
             if(type === 'notificationPage'){
                 setNotifications(notifications);
+            } else {
+                const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(notifications, setNotificationsCount);
+                setNotifications(mappedNotifications)
             }
         });
     }
 
-    static async markMessageAsRead(messageId){
-        console.log(messageId)
+    static mapNotificationDropdownItems(notificationData, setNotificationsCount) {
+        const items = [];
+        for (const notification of notificationData) {
+          const item = {
+            _id: notification?._id,
+            topText: notification?.topText ? notification?.topText : notification?.message,
+            subText: timeAgo.transform(notification?.createdAt),
+            createdAt: notification?.createdAt,
+            username: notification?.userFrom ? notification?.userFrom.username : notification?.username,
+            avatarColor: notification?.userFrom ? notification?.userFrom.avatarColor : notification?.avatarColor,
+            profilePicture: notification?.userFrom ? notification?.userFrom.profilePicture : notification?.profilePicture,
+            read: notification?.read,
+            post: notification?.post,
+            imgUrl: notification?.imgId
+              ? Utils.appImageUrl(notification?.imgVersion, notification?.imgId)
+              : notification?.gifUrl
+              ? notification?.gifUrl
+              : notification?.imgUrl,
+            comment: notification?.comment,
+            reaction: notification?.reaction,
+            senderName: notification?.userFrom ? notification?.userFrom.username : notification?.username,
+            notificationType: notification?.notificationType
+          };
+          items.push(item);
+        }
+    
+        const count = sumBy(items, (selectedNotification) => {
+          return !selectedNotification.read ? 1 : 0;
+        });
+        setNotificationsCount(count);
+        return items;
+      }
+
+    static async markMessageAsRead(messageId, notification, setNotificationDialogContent){
+       
         await notificationService.markNotificationAsRead(messageId);
     }
 }

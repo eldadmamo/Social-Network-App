@@ -8,11 +8,19 @@ import useEffectOnce from '../../../hooks/useEffectOnce';
 import Avatar from '../../../components/avatar/Avatar';
 import './notification.scss'
 import { NotificationUtils } from '../../../services/utils/notification-utils.service';
+import NotificationPreview from '../../../components/dialog/NotificationPreview';
 
 const Notifications = () => {
   const {profile} = useSelector(state => state.user)
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [notificationDialogContent, setNotificationDialogContent] = useState({
+    post: '',
+    imgUrl: '',
+    comment: '',
+    reaction: '',
+    senderName: ''
+  })
   const dispatch = useDispatch();
 
   const getUserNotifications = async () => {
@@ -53,6 +61,27 @@ const Notifications = () => {
   }, [profile, notifications]);
 
   return (
+      <>
+      {notificationDialogContent?.senderName && (
+        <NotificationPreview
+        title="Your Post"
+        post={notificationDialogContent?.post}
+        imgUrl={notificationDialogContent?.imgUrl}
+        comment={notificationDialogContent?.comment}
+        reaction={notificationDialogContent?.reaction}
+        senderName={notificationDialogContent?.senderName}
+        secondButtonText="Close"
+        secondBtnHandler={()=> {
+          setNotificationDialogContent({
+            post: '',
+            imgUrl:'',
+            comment: '',
+            reaction: '',
+            senderName: ''
+          })
+        }}
+        />
+      )}
       <div className="notifications-container">
     <div className="notifications">Notifications</div>
     {notifications.length > 0 && (
@@ -100,6 +129,7 @@ const Notifications = () => {
     </h3>
     )}
     </div>
+      </>
   
   )
 }
