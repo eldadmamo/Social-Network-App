@@ -1,7 +1,8 @@
+import { notificationService } from '../api/notifications/notification.service';
 import { socketService } from './../socket/socket.service';
 import { cloneDeep, find, findIndex, remove } from 'lodash';
 
-export class NotificaitonUtils {
+export class NotificationUtils {
 
 
 static socketIONotification(profile, notifications, setNotifications, type, setNotificationsCount){
@@ -32,5 +33,10 @@ static socketIONotification(profile, notifications, setNotifications, type, setN
                 setNotifications(notifications);
             }
         });
+    }
+
+    static async markMessageAsRead(messageId){
+        console.log(messageId)
+        await notificationService.markNotificationAsRead(messageId);
     }
 }
