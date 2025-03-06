@@ -9,6 +9,6 @@ export const store = configureStore({
         user: userReducer,
         suggestions: suggestionsReduce,
         notifications: notificationReducer,
-        modal:modalReducer
+        modal: modalReducer
     }
 })
