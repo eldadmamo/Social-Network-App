@@ -4,14 +4,24 @@ import gif from '../../../../assets/images/gif.png'
 import feeling from '../../../../assets/images/feeling.png'
 import Input from '../../../input/input'
 import useDetectOutsideClick from '../../../../hooks/useDetectOutsideClick'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Feelings from '../../../feelings/Feelings'
 
 const ModalBoxSelection = () => {
 	const {feelingIsOpen} = useSelector((state) => state.modal);
+	const {post} = useSelector((state) => state.post);
 	const feelingsRef = useRef(null);
+	const fileInputRef = useRef();
 	const [toggleFeelings,setToggleFeelings] = useDetectOutsideClick(feelingsRef, feelingIsOpen);
+	const dispatch = useDispatch();
 
+	const fileInputClicked = () => {
+		fileInputRef.current.click();
+	}
+
+	const handleFileChange = (event) => {
+		console.log(event.taget.files[0])
+	}
 
   return (
     <>
@@ -22,8 +32,19 @@ const ModalBoxSelection = () => {
 	)}
     <div className="modal-box-selection" data-testid="modal-box-selection">
 	  <ul className="post-form-list" data-testid="list-item">
-		<li className="post-form-list-item image-select">
-			<Input name="image"  type="file" className="file-input" />
+		<li className="post-form-list-item image-select" onClick={fileInputClicked}>
+			<Input 
+			name="image" 
+			ref={fileInputRef} 
+			type="file" 
+			className="file-input" 
+			onClick={()=> {
+				if (fileInputRef.current){
+					fileInputRef.current.value = null;
+				}
+			}}
+			handleChange={handleFileChange}
+			/>
 			<img src={photo} alt="" /> Photo
 		</li>
 		<li className="post-form-list-item">
