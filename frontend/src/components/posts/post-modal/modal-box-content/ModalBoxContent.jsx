@@ -1,9 +1,35 @@
-import React from 'react'
+import React, { useCallback, useRef, useState, useEffect } from 'react'
 import Avatar from '../../../avatar/Avatar'
 import { useSelector } from 'react-redux'
+import SelectDropdown from '../../../select-dropdown/SelectDropdown';
+import { FaGlobe } from 'react-icons/fa';
+import { privacyList } from '../../../../services/utils/static.data';
+import useDetectOutsideClick from './../../../../hooks/useDetectOutsideClick';
+import { find } from 'lodash';
 
 const ModalBoxContent = () => {
     const {profile} = useSelector((state) => state.user);
+    const {privacy} = useSelector((state) => state.post);
+    const {feeling} = useSelector((state) => state.modal);
+    const privacyRef = useRef(null);
+    const [selectedItem , setSelectedItem] = useState({
+        topText: 'Public',
+        subText: 'Any',
+        icon: <FaGlobe className='globe-icon globe'/>
+    });
+
+    const [togglePrivacy, setTogglePrivacy] = useDetectOutsideClick(privacyRef); 
+
+    const displayPostPrivacy = useCallback(()=> {
+    if(privacy){
+        const postPrivacy = find(privacyList, (data) => data.topText === privacy);
+        setSelectedItem(postPrivacy);
+    }    
+    }, [privacy]);
+
+    useEffect(()=> {
+        displayPostPrivacy();   
+    },[displayPostPrivacy])
 
   return (
     <div className="modal-box-content" data-testid="modal-box-content">
@@ -16,17 +42,19 @@ const ModalBoxContent = () => {
     </div>
     <div className="modal-box-info">
         <h5 className="inline-title-display" data-testid="box-username">
-            Danny
+            {profile?.username}
         </h5>
+        {feeling?.name && (
         <p className="inline-display" data-testid="box-feeling">
-            is feeling <img className="feeling-icon" src="" alt="" /> <span>Happy</span>
+            is feeling <img className="feeling-icon" src={`${feeling}`} alt="" /> <span>{feeling?.name}</span>
         </p>
-        <div data-testid="box-text-display" className="time-text-display">
+        )}
+        <div data-testid="box-text-display" className="time-text-display" onClick={()=> setTogglePrivacy(!togglePrivacy)}>
             <div className="selected-item-text" data-testid="box-item-text">
-                Feeling
+                {selectedItem.topText}
             </div>
-            <div>
-
+            <div ref={privacyRef}>
+                <SelectDropdown isActive={togglePrivacy} items={privacyList} setSelectedItem={setSelectedItem} />
             </div>
         </div>
     </div>
