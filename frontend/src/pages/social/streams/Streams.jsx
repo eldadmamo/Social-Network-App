@@ -5,6 +5,7 @@ import Suggesstions from '../../../components/suggesstions/Suggesstions';
 import { useDispatch } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
 import useEffectOnce from '../../../hooks/useEffectOnce';
+import PostForm from '../../../components/posts/post-form/PostForm';
 
 
 const Streams = () => {
@@ -20,7 +21,8 @@ const Streams = () => {
     <div className="streams" data-testid="streams">
       <div className="streams-content">
         <div className="streams-post" ref={bodyRef} style={{backgroundColor: 'white'}}>
-          <div>User Form</div>
+          <PostForm />
+          <div>Post Item</div>
           <div ref={bottomLineRef} style={{ marginBottom: '50px', height: '50px' }}></div>
         </div>
         <div className="streams-suggestions">

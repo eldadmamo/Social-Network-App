@@ -1,6 +1,7 @@
 import React from 'react'
 import './Streams.scss'
 import SuggestionsSkeletons from '../../../components/suggesstions/SuggestionsSkeleton';
+import PostFormSkeleton from '../../../components/posts/post-form/PostFormSkeleton';
 
 const StreamsSkeleton = () => {
   
@@ -9,7 +10,7 @@ const StreamsSkeleton = () => {
     <div className="streams" data-testid="streams">
       <div className="streams-content">
         <div className="streams-post" >
-          <div>Post Form</div>
+          <PostFormSkeleton/>
           {[1,2,3,4,5].map((index) => (
             <div key={index}>
                 Posts Items
