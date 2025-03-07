@@ -17,6 +17,7 @@ const AddPost = () => {
     const [postImage, setPostImage] = useState('');
     const [allowedNumberOfCharacters] = useState('100/100');
     const [textAreaBackground, setTextAreaBackground] = useState('#ffffff');
+    const [selectedPostImage, setSelectedPostImage] = useState();
     const [postData, setPostData] = useState({
         post:'',
         bgColor: textAreaBackground,
@@ -29,6 +30,8 @@ const AddPost = () => {
     const [disable, setDisable] = useState(false);
     const [selectedPostItem, setSelectedPostItem] = useState();
     const counterRef = useRef(null);
+    const inputRef = useRef(null);
+    const imageInputRef = useRef(null);
     const dispatch = useDispatch();
 
     const maxNumberOfCharacters = 100;
@@ -56,13 +59,19 @@ const AddPost = () => {
         }
     }
 
+    const clearImage = () => {
+        PostUtils.clearImage(postData, '',inputRef, dispatch, setSelectedPostImage, setPostImage, setDisable, setPostData );
+    }
+
     useEffect(()=> {
         if(gifUrl){
             setPostImage(gifUrl)
+            PostUtils.postInputData(imageInputRef, postData, '', setPostData);
         } else if(image) {
             setPostImage(image);
+            PostUtils.postInputData(imageInputRef, postData, '', setPostData);
         }
-    },[gifUrl, image])
+    },[gifUrl, image,postData])
 
 
 
@@ -98,6 +107,10 @@ const AddPost = () => {
                             <div 
                             data-testid="editable"
                             name="post"
+                            ref={(el) => {
+                                inputRef.current = el;
+                                inputRef?.current?.focus();
+                            }}
                             className={`editable flex-item ${textAreaBackground !== '#ffffff'? 'textInputColor':''}`}
                             contentEditable={true}
                             onInput={(e)=> postInputEditable(e, e.currentTarget.textContent)}
@@ -118,6 +131,10 @@ const AddPost = () => {
                       <div 
                         data-testid="post-editable"
                         name="post"
+                        ref={(el) => {
+                            imageInputRef.current = el;
+                            imageInputRef?.current?.focus();
+                        }}
                         className='post-input flex-item'
                         contentEditable={true}
                         onInput={(e) => postInputEditable(e, e.currentTarget.textContent)}
@@ -125,7 +142,9 @@ const AddPost = () => {
                         data-placeholder="what's on your mind?..." 
                         ></div>
                         <div className='image-display'>
-                            <div className='image-delete-btn' data-testid="image-delete-btn">
+                            <div className='image-delete-btn' data-testid="image-delete-btn" 
+                            onClick={()=> clearImage()}
+                            >
                                 <FaTimes/>
                             </div>
                             <img data-testid="post-image" className='post-image' src={`${postImage}`} alt=''/>
