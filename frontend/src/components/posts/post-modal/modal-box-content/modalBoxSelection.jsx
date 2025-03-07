@@ -23,8 +23,8 @@ const ModalBoxSelection = ({setSelectedPostImage}) => {
 	}
 
 	const handleFileChange = (event) => {
-		ImageUtils.addFileToRedux(event, post,setSelectedPostImage, dispatch);
-	}
+		ImageUtils.addFileToRedux(event, post, setSelectedPostImage, dispatch, 'image');
+	};
 
   return (
     <>

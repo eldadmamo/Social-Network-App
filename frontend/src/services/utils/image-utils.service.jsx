@@ -27,12 +27,12 @@ export class ImageUtils {
         }
     }
 
-    static addFileToRedux(event, post, setSelectedPostImage, dispatch){
+    static addFileToRedux(event, post, setSelectedImage, dispatch){
         const file = event.target.files[0];
         ImageUtils.checkFile(file);
-        setSelectedPostImage(file);
+        setSelectedImage(file);
         dispatch(updatePostItem({
-            image: URL.createObjectURL(),
+            image: URL.createObjectURL(file),
             gifUrl: '',
             imgId: '',
             imgVersion: '',
