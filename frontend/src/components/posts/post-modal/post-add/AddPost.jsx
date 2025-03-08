@@ -34,7 +34,7 @@ const AddPost = ({selectedImage}) => {
         profilePicture: '',
         image: ''
     });
-    const [disable, setDisable] = useState(false);
+    const [disable, setDisable] = useState(true);
     const [apiResponse, setApiResponse] = useState('');
     const counterRef = useRef(null);
     const inputRef = useRef(null);
@@ -52,7 +52,8 @@ const AddPost = ({selectedImage}) => {
         const currentTextLength = event.target.textContent.length;
         const counter =  maxNumberOfCharacters - currentTextLength;
         counterRef.current.textContent = `${counter}/100`;
-        PostUtils.postInputEditable(textContent, postData, setPostData, setDisable);
+        setDisable(currentTextLength <= 0 && !postImage);
+        PostUtils.postInputEditable(textContent, postData, setPostData);
     }
 
     const closePostModal = () => {
@@ -67,7 +68,7 @@ const AddPost = ({selectedImage}) => {
     }
 
     const clearImage = () => {
-        PostUtils.clearImage(postData, '',inputRef, dispatch, setSelectedPostImage, setPostImage, setDisable, setPostData );
+        PostUtils.clearImage(postData, '',inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData );
     }
 
     const createPost = async () => {
@@ -117,7 +118,8 @@ const AddPost = ({selectedImage}) => {
         if (!loading && apiResponse === 'success'){
             dispatch(closeModal())
         }
-    },[loading, dispatch, apiResponse])
+        setDisable(postData.post.length <= 0 && !postImage);
+    },[loading, dispatch, apiResponse,postData,postImage])
 
     useEffect(()=> {
         if(gifUrl){

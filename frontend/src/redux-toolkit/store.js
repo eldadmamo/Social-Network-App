@@ -11,6 +11,7 @@ export const store = configureStore({
         suggestions: suggestionsReduce,
         notifications: notificationReducer,
         modal: modalReducer,
-        post: postReducer
+        post: postReducer,
+        allPosts: postReducer
     }
 })

@@ -5,11 +5,10 @@ import { Utils } from './utils.service';
 
 
 export class PostUtils {
-    static selectBackground(bgColor, postData, setTextAreaBackground, setPostData, setDisable){
+    static selectBackground(bgColor, postData, setTextAreaBackground, setPostData){
         postData.bgColor = bgColor;
         setTextAreaBackground(bgColor);
         setPostData(postData);
-        setDisable(false);
     }
 
     static postInputEditable(textContent,postData, setPostData){
@@ -29,14 +28,12 @@ export class PostUtils {
         dispatch,
         setSelectedPostImage,
         setPostImage,
-        setDisable,
         setPostData 
     ){
         postData.gifUrl = '';
         postData.image = '';
         setSelectedPostImage(null);
         setPostImage('');
-        setDisable(false);
         setTimeout(()=> {
             if (inputRef?.current){
                 inputRef.current.textContent = !post ? postData?.post : post;
@@ -98,6 +95,13 @@ export class PostUtils {
         }
     }
 
+    static checkPrivacy(post, profile, following) {
+        const isPrivate = post?.privacy === 'Private' && post?.userId === profile?._id;
+        const isPublic = post?.privacy === 'Public';
+        const isFollower =
+          post?.privacy === 'Followers' && Utils.checkIfUserIsFollowed(following, post?.userId, profile?._id);
+        return isPrivate || isPublic || isFollower;
+    }
 
 }
 

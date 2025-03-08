@@ -1,28 +1,49 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRef, useState } from 'react'
 import './Streams.scss'
 import Suggesstions from '../../../components/suggesstions/Suggesstions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
 import useEffectOnce from '../../../hooks/useEffectOnce';
 import PostForm from '../../../components/posts/post-form/PostForm';
 import Posts from '../../../components/posts/Posts';
 import { Utils } from '../../../services/utils/utils.service';
 import { postService } from '../../../services/api/post/post.service';
+import { getPosts } from '../../../redux-toolkit/api/posts';
+import { uniqBy } from 'lodash';
+import useInfiniteScroll from './../../../hooks/useInfiniteScroll';
 
 
 const Streams = () => {
+  const {allPosts} = useSelector((state) => state);
   const [posts, setPosts] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPostsCount, setTotalPostsCount] = useState(0)
   const bodyRef = useRef(null);
   const bottomLineRef = useRef();
+  let appPosts = useRef([]);
   const dispatch = useDispatch();
+  useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData);
+  let PAGE_SIZE = 10;
+
+  function fetchPostData(){
+    let pageNum = currentPage;
+    if(currentPage <= Math.round(totalPostsCount/ PAGE_SIZE)){
+      pageNum += 1;
+      setCurrentPage(pageNum);
+      getAllPosts();
+    }
+  }
 
   const getAllPosts = async () => {
     try{
       const response = await postService.getAllPosts(1);
       if(response.data.posts.length > 0){
-        setPosts(response.data.posts)
+        appPosts = [...posts, ...response.data.posts];
+        const allPosts = uniqBy(appPosts, '_id');
+        setPosts(allPosts);
       }
       setLoading(false);
     } catch(error){
@@ -36,17 +57,25 @@ const Streams = () => {
     getAllPosts()
   })
 
+  useEffect(()=> {
+    dispatch(getPosts());
+  },[dispatch])
+
+  useEffect(()=> {
+    setLoading(allPosts?.isLoading)
+    setPosts(allPosts?.posts)
+    setTotalPostsCount(allPosts?.totalPostsCount)
+  },[allPosts])
+
   return (
     <div className="streams" data-testid="streams">
       <div className="streams-content">
-        <div className="streams-post" ref={bodyRef} style={{backgroundColor: 'white'}}>
+        <div className="streams-post" ref={bodyRef}>
           <PostForm />
-          <Posts allPosts={posts} postsLoading={loading} userFollowing={[]} />
+          <Posts allPosts={posts || []} postsLoading={loading} userFollowing={following} />
           <div ref={bottomLineRef} style={{ marginBottom: '50px', height: '50px' }}></div>
         </div>
-        <div className="streams-suggestions">
-          <Suggesstions/>
-        </div>
+        
       </div>
     </div>
   )
