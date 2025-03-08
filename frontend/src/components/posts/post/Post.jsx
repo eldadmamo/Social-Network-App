@@ -5,6 +5,7 @@ import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa'
 import { timeAgo } from './../../../services/utils/timeago.utils';
 import { find } from 'lodash';
 import { feelingsList, privacyList } from '../../../services/utils/static.data';
+import './Post.scss'
 
 const Post = ({post, showIcons}) => {
     const getFeeling = (name) => {
@@ -37,7 +38,7 @@ const Post = ({post, showIcons}) => {
                         {post?.username}
                         {post?.feelings && (
                             <div className="inline-display" data-testid="inline-display">
-                                is feeling <img className="feeling-icon" src="" alt="" />
+                                is feeling <img className="feeling-icon" src={`${getFeeling(post?.feelings)}`} alt="" />
                                 <div>{post?.feelings}</div>
                             </div>
                         )}
@@ -52,7 +53,8 @@ const Post = ({post, showIcons}) => {
 
                 {post?.createdAt && (
                     <p className="time-text-display" data-testid="time-display">
-                        {timeAgo.transform(post?.createdAt)} &middot; Public
+                        {timeAgo.transform(post?.createdAt)} &middot; 
+                        {getPrivacy(post?.privacy)}
                     </p>
                 )}
             </div>
@@ -100,7 +102,7 @@ const Post = ({post, showIcons}) => {
 
 Post.propTypes = {
     post: PropTypes.object.isRequired,
-
+    showIcons: PropTypes.bool
 }
 
 export default Post
