@@ -12,6 +12,7 @@ export class GiphyUtils {
     }
 
     static async searchGifs(gif, setGifs, setLoading){
+        
         if(gif.length <=1){
             GiphyUtils.getTrendingGifs(setGifs, setLoading);
             return ;
