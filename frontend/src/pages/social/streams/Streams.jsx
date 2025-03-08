@@ -12,6 +12,7 @@ import { postService } from '../../../services/api/post/post.service';
 import { getPosts } from '../../../redux-toolkit/api/posts';
 import { uniqBy } from 'lodash';
 import useInfiniteScroll from './../../../hooks/useInfiniteScroll';
+import { PostUtils } from '../../../services/utils/post-utils.service';
 
 
 const Streams = () => {
@@ -66,6 +67,11 @@ const Streams = () => {
     setPosts(allPosts?.posts)
     setTotalPostsCount(allPosts?.totalPostsCount)
   },[allPosts])
+
+
+  useEffect(()=> {
+    PostUtils.socketIOPost(posts, setPosts);
+  },[posts])
 
   return (
     <div className="streams" data-testid="streams">
