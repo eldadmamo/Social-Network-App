@@ -9,7 +9,7 @@ const PostFormSkeleton = () => {
           <h4 className="post-form-title">
             <Skeleton baseColor="#EFF1F6" width={70} />{' '}
           </h4>
-        </div>
+        </div> 
         <div className="post-form-body">
           <div className="post-form-input-body">
             <Skeleton baseColor="#EFF1F6" circle height="100%" containerClassName="avatar-skeleton" />
