@@ -90,6 +90,7 @@ const Post = ({post, showIcons}) => {
                     </div>
                 )}
                 {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}
+                
             </div>
         </div>
     </div>
