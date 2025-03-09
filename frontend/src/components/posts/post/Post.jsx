@@ -6,6 +6,7 @@ import { timeAgo } from './../../../services/utils/timeago.utils';
 import { find } from 'lodash';
 import { feelingsList, privacyList } from '../../../services/utils/static.data';
 import './Post.scss'
+import PostCommentSection from '../post-comment-section/PostCommentSection.jsx';
 
 const Post = ({post, showIcons}) => {
     const getFeeling = (name) => {
@@ -92,7 +93,7 @@ const Post = ({post, showIcons}) => {
                     </div>
                 )}
                 {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}
-                
+                <PostCommentSection post={post}/>
             </div>
         </div>
     </div>
