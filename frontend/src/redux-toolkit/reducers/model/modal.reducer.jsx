@@ -9,7 +9,7 @@ const initialState = {
     feelingsIsOpen: false,
     openFileDialog: false,
     gifModalIsOpen: false,
-    reactionModelIsOpen: false,
+    reactionsModalIsOpen: false,
     commentsModalIsOpen: false,
     deleteDialogIsOpen: false,
 };

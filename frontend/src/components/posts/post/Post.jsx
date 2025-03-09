@@ -7,8 +7,11 @@ import { find } from 'lodash';
 import { feelingsList, privacyList } from '../../../services/utils/static.data';
 import './Post.scss'
 import PostCommentSection from '../post-comment-section/PostCommentSection.jsx';
+import { useSelector } from 'react-redux';
+import ReactionsModal from '../reactions/reactions-modal/ReactionsModal.jsx';
 
 const Post = ({post, showIcons}) => {
+    const {reactionsModalIsOpen} = useSelector((state) => state.modal);
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name);
         return feeling?.name;
@@ -21,6 +24,8 @@ const Post = ({post, showIcons}) => {
 
   return (
     <>
+    {reactionsModalIsOpen && <ReactionsModal/>}
+
     <div className="post-body" data-testid="post">
     <div className="user-post-data">
         <div className="user-post-data-wrap">
