@@ -126,78 +126,102 @@ const EditPost = () => {
         }
     },[post, postData, getFeeling, postInputData])
   
-    const createPost = async () => {
+    const updatePost = async () => {
       setLoading(!loading);
       setDisable(!disable);
       try {
         if (Object.keys(feeling).length) {
           postData.feelings = feeling?.name;
         }
-        // postData.privacy = privacy || 'Public';
-        // postData.gifUrl = gifUrl;
+        if (postData.gifUrl || (postData.imgId && postData.imgVersion)) {
+            postData.bgColor = '#ffffff'
+        }
+        postData.privacy = post?.privacy || 'Public';
         postData.profilePicture = profile?.profilePicture;
         if (selectedPostImage || selectedVideo ) {
-          let result = '';
-          if (selectedPostImage) {
-            result = await ImageUtils.readAsBase64(selectedPostImage);
-          }
-  
-          if (selectedVideo) {
-            result = await ImageUtils.readAsBase64(selectedVideo);
-          }
-  
-          
-          const type = selectedPostImage || selectedImage ? 'image' : 'video';
-          if (type === 'image') {
-            postData.image = result;
-            postData.video = '';
-          } else {
-            postData.video = result;
-            postData.image = '';
-          }
-          const response = await PostUtils.sendPostWithFileRequest(
-            type,
+          updatePostWithImage();
+        } else {
+            updateUserPost();
+        }
+      } catch (error) {
+        setHasVideo(false);
+        PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, setDisable, dispatch);
+      }
+    };
+
+    const updateUserPost = async () => {
+        const response = await PostUtils.sendUpdatePostRequest(
+            post?._id,
             postData,
-            imageInputRef,
             setApiResponse,
             setLoading,
             setDisable,
             dispatch
-          );
-          if (response && response?.data?.message) {
-            setHasVideo(false);
+        );
+        if(response && response?.data?.message){
             PostUtils.closePostModal(dispatch);
-          }
-        } else {
-          const response = await postService.createPost(postData);
-          if (response) {
-            setApiResponse('success');
-            setLoading(false);
-            setHasVideo(false);
-            PostUtils.closePostModal(dispatch);
-          }
         }
-      } catch (error) {
-        setHasVideo(false);
-        PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
-      }
-    };
+    }
+
+    const updatePostWithImage = async (image) => {
+        const result = await ImageUtils.readAsBase64(image);
+        const response = await PostUtils.sendUpdatePostWithImageRequest(
+            result,
+            post?._id,
+            postData,
+            setApiResponse,
+            setLoading,
+            setDisable,
+            dispatch
+        );
+        if(response && response?.data?.message){
+            PostUtils.closePostModal(dispatch);
+        }
+
+    }
   
     useEffect(() => {
         console.log(post)
       PostUtils.positionCursor('editable');
     }, [post]);
+
+    useEffect(()=> {
+        setTimeout(()=> {
+            if(imageInputRef?.current && imageInputRef?.current.textContent.length){
+                counterRef.current.textContent = `${maxNumberOfCharacters - imageInputRef?.current.textContent.length}/100`;
+            } else if(inputRef?.current && inputRef?.current.textContent.length){
+                counterRef.current.textContent = `${maxNumberOfCharacters - inputRef?.current.textContent.length}/100`;
+            } 
+        })
+    })
   
     useEffect(() => {
       if (!loading && apiResponse === 'success') {
         dispatch(closeModal());
       }
-      setDisable(postData.post.length <= 0 && !postImage);
-    }, [loading, dispatch, apiResponse, postData, postImage]);
+      setDisable(post?.post.length <= 0 && !postImage);
+    }, [loading, dispatch, apiResponse, post, postImage]);
   
     useEffect(() => {
+        if (post?.gifUrl) {
+            postData.image = '';
+            postData.video = '';
+            setSelectedPostImage(null);
+            setSelectedVideo(null);
+            setHasVideo(false);
+            setPostImage(post?.gifUrl);
+            PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+          } else if (post?.image) {
+            setPostImage(post?.image);
+            setHasVideo(false);
+            PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+          } else if (post?.video) {
+            setPostImage(post?.video);
+            setHasVideo(true);
+            PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+          }
       editableFields();  
-    }, [editableFields]);
+    }, [editableFields, post, postData]);
   
     return (
       <>
@@ -208,7 +232,7 @@ const EditPost = () => {
               className="modal-box"
               style={{
                 height:
-                  selectedPostImage || postData?.gifUrl || postData?.image
+                  selectedPostImage || postData?.gifUrl || post?.imgId
                     ? '700px'
                     : 'auto'
               }}
@@ -319,7 +343,7 @@ const EditPost = () => {
               <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} setSelectedVideo={setSelectedVideo} />
   
               <div className="modal-box-button" data-testid="post-button">
-                <Button label="Create Post" className="post-button" disabled={disable} handleClick={createPost} />
+                <Button label="Update" className="post-button" disabled={disable} handleClick={updatePost} />
               </div>
             </div>
           )}

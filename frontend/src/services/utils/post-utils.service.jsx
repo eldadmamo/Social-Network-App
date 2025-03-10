@@ -98,6 +98,68 @@ export class PostUtils {
         }
     }
 
+    static async sendUpdatePostWithImageRequest (fileResult, postId , postData, setApiResponse, setLoading, setDisable, dispatch) {
+      try{
+        postData.image = fileResult;
+        postData.gifUrl = '';
+        postData.imgId = '';
+        postData.imgVersion = '';
+        const response = await postService.updatePostWithImage(postId, postData);
+        if (response){
+          PostUtils.dispatchNotification(
+            error.response.data.message,
+            'error',
+            setApiResponse,
+            setLoading,
+            setLoading,
+            setDisable,
+            dispatch
+          );
+          setTimeout(()=> {
+            setApiResponse('success')
+            setLoading(false);
+          },3000)
+        }
+        return response;
+      } catch(error){
+        PostUtils.dispatchNotification(
+          error.response.data.message,
+          'error',
+          setApiResponse,
+          setLoading,
+          setLoading,
+          setDisable,
+          dispatch
+        )
+      }
+    }
+
+    static async sendUpdatePostRequest
+    (
+      postId, 
+      postData, 
+      setApiResponse,
+      setLoading,
+      dispatch
+    )
+    {
+      const response = await postService.updatePost(postId, postData);
+      if (response){
+        PostUtils.dispatchNotification(
+          response.data.message,
+          'success',
+          setApiResponse,
+          setLoading,
+          dispatch
+        );
+        setTimeout(()=> {
+          setApiResponse('success')
+          setLoading(false);
+        },3000)
+      }
+      return response;
+    }
+
     static checkPrivacy(post, profile, following) {
         const isPrivate = post?.privacy === 'Private' && post?.userId === profile?._id;
         const isPublic = post?.privacy === 'Public';
