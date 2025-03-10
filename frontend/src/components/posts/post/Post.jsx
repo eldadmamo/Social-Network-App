@@ -12,11 +12,11 @@ import ReactionsModal from '../reactions/reactions-modal/ReactionsModal.jsx';
 import { Utils } from '../../../services/utils/utils.service.jsx';
 import useLocalStorage from '../../../hooks/useLocalStorage.js';
 import CommentinputBox from '../comments/comment-input/CommentinputBox.jsx';
+import CommentsModal from '../comments/comments-modal/CommentsModal.jsx';
 
 const Post = ({ post, showIcons }) => {
-    const { reactionsModalIsOpen } = useSelector((state) => state.modal);
+    const { reactionsModalIsOpen , commentsModalIsOpen } = useSelector((state) => state.modal);
     const selectedPostId = useLocalStorage('selectedPostId', 'get');
-
 
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name);
@@ -31,6 +31,7 @@ const Post = ({ post, showIcons }) => {
     return (
         <>
             {reactionsModalIsOpen && <ReactionsModal />}
+            {commentsModalIsOpen && <CommentsModal/> }
             <div className="post-body" data-testid="post">
                 <div className="user-post-data">
                     <div className="user-post-data-wrap">
@@ -108,7 +109,7 @@ const Post = ({ post, showIcons }) => {
                     </div>
 
                     {selectedPostId === post?._id && <CommentinputBox post={post}/>}
-                    
+
                 </div>
             </div>
         </>

@@ -28,7 +28,7 @@ export class GetComment {
     const commentsNames: ICommentNameList[] = cachedCommentsNames.length ? cachedCommentsNames
     : await commentService.getPostCommentNames({postId: new mongoose.Types.ObjectId(postId)},{createdAt: -1})
 
-    res.status(HTTP_STATUS.OK).json({message: 'Post Comment names successfully', comments: commentsNames})
+    res.status(HTTP_STATUS.OK).json({message: 'Post Comment names successfully', comments: commentsNames[0]})
   }
 
 
