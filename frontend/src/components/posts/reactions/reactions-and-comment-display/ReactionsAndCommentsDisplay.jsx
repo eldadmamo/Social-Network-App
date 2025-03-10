@@ -85,7 +85,8 @@ const ReactionsAndCommentsDisplay = ({post}) => {
             data-testid="reactions-count" 
             className="tooltip-container reactions-count"
             onMouseEnter={getPostReactions}
-            onClick={()=> openReactionsComponent()}
+            onClick={() => openReactionsComponent()}
+
             >
                 {sumAllReactions(reactions)}
                 <div className="tooltip-container-text tooltip-container-likes-bottom" data-testid="tooltip-container">
@@ -126,4 +127,4 @@ ReactionsAndCommentsDisplay.propTypes = {
     post: PropTypes.object
 }
 
-export default ReactionsAndCommentsDisplay
+export default ReactionsAndCommentsDisplay;

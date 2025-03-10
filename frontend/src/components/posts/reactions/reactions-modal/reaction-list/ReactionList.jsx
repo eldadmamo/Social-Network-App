@@ -1,6 +1,6 @@
 import Avatar from '../../../../avatar/Avatar';
 import { reactionsMap } from '../../../../../services/utils/static.data'; 
-import { Utils } from '../../../../../services/utils/utils.service'; 
+import { Utils } from '../../../../../services/utils/utils.service';  
 import PropTypes from 'prop-types';
 
 import './ReactionList.scss';
