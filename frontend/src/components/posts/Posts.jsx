@@ -30,7 +30,7 @@ const Posts = ({ allPosts, userFollowing, postsLoading }) => {
             <>
               {PostUtils.checkPrivacy(post, profile, following) && (
                 <>
-                  <Post post={post} showIcons={false} />
+                  <Post post={post} showIcons={true} />
                 </>
               )}
             </>

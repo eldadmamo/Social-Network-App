@@ -7,19 +7,22 @@ import { find } from 'lodash';
 import { feelingsList, privacyList } from '../../../services/utils/static.data';
 import './Post.scss'
 import PostCommentSection from '../post-comment-section/PostCommentSection.jsx';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ReactionsModal from '../reactions/reactions-modal/ReactionsModal.jsx';
 import { Utils } from '../../../services/utils/utils.service.jsx';
 import useLocalStorage from '../../../hooks/useLocalStorage.js';
 import CommentinputBox from '../comments/comment-input/CommentinputBox.jsx';
 import CommentsModal from '../comments/comments-modal/CommentsModal.jsx';
 import ImageModal from '../../image-modal/ImageModal.jsx';
+import { openModal, toggleDeleteDialog } from '../../../redux-toolkit/reducers/model/modal.reducer.jsx';
+import { updatePostItem } from '../../../redux-toolkit/reducers/post/post.reducer.js';
 
 const Post = ({ post, showIcons }) => {
-    const { reactionsModalIsOpen , commentsModalIsOpen } = useSelector((state) => state.modal);
+    const { reactionsModalIsOpen , commentsModalIsOpen, deleteDialogIsOpen } = useSelector((state) => state.modal);
     const [showImageModal , setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('')
     const selectedPostId = useLocalStorage('selectedPostId', 'get');
+    const dispatch = useDispatch();
 
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name);
@@ -29,6 +32,16 @@ const Post = ({ post, showIcons }) => {
     const getPrivacy = (type) => {
         const privacy = find(privacyList, (data) => data.topText === type);
         return privacy?.icon;
+    }
+
+    const openPostModal = () => {
+        dispatch(openModal({type: 'edit'}))
+        dispatch(updatePostItem(post))
+    };
+
+    const openDeleteDialog = () => {
+        dispatch(toggleDeleteDialog({toggle: !deleteDialogIsOpen}));
+        dispatch(updatePostItem(post))
     }
 
     return (
@@ -63,8 +76,8 @@ const Post = ({ post, showIcons }) => {
                                 </h5>
                                 {showIcons && (
                                     <div className="post-icons" data-testid="post-icons">
-                                        <FaPencilAlt className="pencil" />
-                                        <FaRegTrashAlt className="trash" />
+                                        <FaPencilAlt className="pencil" onClick={openPostModal}/>
+                                        <FaRegTrashAlt className="trash" onClick={openDeleteDialog}/>
                                     </div>
                                 )}
                             </div>

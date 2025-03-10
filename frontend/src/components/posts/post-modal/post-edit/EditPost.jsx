@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import PostWrapper from '../../modal-wrappers/post-wrapper/PostWrapper'
 import { useDispatch, useSelector } from 'react-redux'
-import '../post-add/AddPost.scss'
+import '../post-edit/EditPost.scss'
 import ModalBoxContent from '../modal-box-content/ModalBoxContent'
 import { FaArrowLeft, FaTimes } from 'react-icons/fa'
 import { bgColors } from '../../../../services/utils/static.data'
@@ -10,14 +10,13 @@ import ModalBoxSelection from './../modal-box-content/modalBoxSelection'
 import {  PostUtils } from '../../../../services/utils/post-utils.service'
 import { closeModal, toggleGifModal } from '../../../../redux-toolkit/reducers/model/modal.reducer'
 import Giphy from '../../../giphy/Giphy'
-import PropTypes from 'prop-types';
 import { ImageUtils } from '../../../../services/utils/image-utils.service'
 import { postService } from '../../../../services/api/post/post.service' 
 import Spinner from '../../../spinner/Spinner'
 
-const AddPost = ({ selectedImage, selectedPostVideo }) => {
+const EditPost = () => {
     const { gifModalIsOpen, feeling } = useSelector((state) => state.modal);
-    const { gifUrl, image, privacy, video } = useSelector((state) => state.post);
+    const {post} = useSelector((state) => state);
     const { profile } = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false);
     const [hasVideo, setHasVideo] = useState(false);
@@ -32,11 +31,13 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
       gifUrl: '',
       profilePicture: '',
       image: '',
-      video: ''
+      video: '',
+      imgId: '',
+      imgVersion: ''
     });
     const [disable, setDisable] = useState(true);
     const [apiResponse, setApiResponse] = useState('');
-    const [selectedPostImage, setSelectedPostImage] = useState();
+    const [selectedPostImage, setSelectedPostImage] = useState(null);
     const [selectedVideo, setSelectedVideo] = useState();
     const counterRef = useRef(null);
     const inputRef = useRef(null);
@@ -48,6 +49,7 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
     const selectBackground = (bgColor) => {
       PostUtils.selectBackground(bgColor, postData, setTextAreaBackground, setPostData);
     };
+
   
     const postInputEditable = (event, textContent) => {
       const currentTextLength = event.target.textContent.length;
@@ -80,10 +82,10 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
         if (Object.keys(feeling).length) {
           postData.feelings = feeling?.name;
         }
-        postData.privacy = privacy || 'Public';
-        postData.gifUrl = gifUrl;
+        // postData.privacy = privacy || 'Public';
+        // postData.gifUrl = gifUrl;
         postData.profilePicture = profile?.profilePicture;
-        if (selectedPostImage || selectedVideo || selectedImage || selectedPostVideo) {
+        if (selectedPostImage || selectedVideo ) {
           let result = '';
           if (selectedPostImage) {
             result = await ImageUtils.readAsBase64(selectedPostImage);
@@ -93,13 +95,7 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
             result = await ImageUtils.readAsBase64(selectedVideo);
           }
   
-          if (selectedImage) {
-            result = await ImageUtils.readAsBase64(selectedImage);
-          }
-  
-          if (selectedPostVideo) {
-            result = await ImageUtils.readAsBase64(selectedPostVideo);
-          }
+          
           const type = selectedPostImage || selectedImage ? 'image' : 'video';
           if (type === 'image') {
             postData.image = result;
@@ -137,8 +133,9 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
     };
   
     useEffect(() => {
+        console.log(post)
       PostUtils.positionCursor('editable');
-    }, []);
+    }, [post]);
   
     useEffect(() => {
       if (!loading && apiResponse === 'success') {
@@ -147,21 +144,21 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
       setDisable(postData.post.length <= 0 && !postImage);
     }, [loading, dispatch, apiResponse, postData, postImage]);
   
-    useEffect(() => {
-      if (gifUrl) {
-        setPostImage(gifUrl);
-        setHasVideo(false);
-        PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-      } else if (image) {
-        setPostImage(image);
-        setHasVideo(false);
-        PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-      } else if (video) {
-        setHasVideo(true);
-        setPostImage(video);
-        PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-      }
-    }, [gifUrl, image, postData, video]);
+    // useEffect(() => {
+    //   if (gifUrl) {
+    //     setPostImage(gifUrl);
+    //     setHasVideo(false);
+    //     PostUtils.postInputData(imageInputRef, postData, '', setPostData);
+    //   } else if (image) {
+    //     setPostImage(image);
+    //     setHasVideo(false);
+    //     PostUtils.postInputData(imageInputRef, postData, '', setPostData);
+    //   } else if (video) {
+    //     setHasVideo(true);
+    //     setPostImage(video);
+    //     PostUtils.postInputData(imageInputRef, postData, '', setPostData);
+    //   }
+    // }, [gifUrl, image, postData, video]);
   
     return (
       <>
@@ -172,19 +169,19 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
               className="modal-box"
               style={{
                 height:
-                  selectedPostImage || hasVideo || gifUrl || image || postData?.gifUrl || postData?.image
+                  selectedPostImage || postData?.gifUrl || postData?.image
                     ? '700px'
                     : 'auto'
               }}
             >
               {loading && (
                 <div className="modal-box-loading" data-testid="modal-box-loading">
-                  <span>Posting...</span>
+                  <span>Updating post...</span>
                   <Spinner />
                 </div>
               )}
               <div className="modal-box-header">
-                <h2>Create Post</h2>
+                <h2>Edit Post</h2>
                 <button className="modal-box-header-cancel" onClick={() => closePostModal()}>
                   X
                 </button>
@@ -306,8 +303,6 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
       </>
     );
   };
-  AddPost.propTypes = {
-    selectedImage: PropTypes.any,
-    selectedPostVideo: PropTypes.any
-  };
-  export default AddPost;
+
+ 
+  export default EditPost;

@@ -9,6 +9,7 @@ import './PostForm.scss'
 import { openModal, toggleFeelingModal, toggleGifModal, toggleImageModal } from '../../../redux-toolkit/reducers/model/modal.reducer';
 import AddPost from '../post-modal/post-add/AddPost';
 import { ImageUtils } from '../../../services/utils/image-utils.service';
+import EditPost from '../post-modal/post-edit/EditPost';
 
 
 const PostForm = () => {
@@ -84,7 +85,8 @@ const PostForm = () => {
         </div>
     </div>
   </div>
-      {isOpen && type === 'add' && <AddPost selectedImage={selectedPostImage}/>   }
+      {isOpen && type === 'add' && <AddPost selectedImage={selectedPostImage}/>}
+      {isOpen && type === 'edit' && <EditPost />}
     </>
   )
 }
