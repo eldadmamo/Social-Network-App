@@ -10,12 +10,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { postService } from '../../../services/api/post/post.service';
 import { addReactions } from '../../../redux-toolkit/reducers/post/user-post-reaction.reducer';
 import { socketService } from '../../../services/socket/socket.service';
+import useLocalStorage from './../../../hooks/useLocalStorage';
+import { clearPost, updatePostItem } from '../../../redux-toolkit/reducers/post/post.reducer';
 
 
 const CommentArea = ({ post }) => {
     const {profile} = useSelector((state) => state.user);
     let {reactions} = useSelector((state) => state.userPostReactions);
-    const [userSelectedReaction, setUserSelectedReaction] = useState('')
+    const [userSelectedReaction, setUserSelectedReaction] = useState('');
+    const selectedPostId = useLocalStorage('selectedPostId', 'get');
+    const [setSelectedPostId] = useLocalStorage('selectedPostId', 'set');
     const dispatch = useDispatch();
 
     const selectedUserReaction = useCallback((postReactions)=> {
@@ -24,7 +28,24 @@ const CommentArea = ({ post }) => {
         setUserSelectedReaction(result);
     },[post]);
 
-   
+    const toggleCommentInput = () => {
+        if (!selectedPostId){
+            setSelectedPostId(post?._id);
+            dispatch(updatePostItem(post))
+        } else {
+            removeSelectedPostId()
+        }
+    }
+
+    const removeSelectedPostId = () => {
+        if (selectedPostId === post?._id){
+            setSelectedPostId('')
+            dispatch(clearPost());
+        } else {
+            setSelectedPostId(post?._id);
+            dispatch(updatePostItem(post))
+        }
+    }
 
     const addReactionPost = async (reaction) => {
         try{
@@ -155,7 +176,7 @@ const CommentArea = ({ post }) => {
             <Reactions handleClick={addReactionPost}  />
         </div>
     </div>
-    <div className="comment-block" >
+    <div className="comment-block" onClick={toggleCommentInput}>
         <span className="comments-text">
             <FaRegCommentAlt className="comment-alt" /> <span>Comments</span>
         </span>

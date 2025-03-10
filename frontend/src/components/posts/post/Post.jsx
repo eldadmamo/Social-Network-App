@@ -10,9 +10,13 @@ import PostCommentSection from '../post-comment-section/PostCommentSection.jsx';
 import { useSelector } from 'react-redux';
 import ReactionsModal from '../reactions/reactions-modal/ReactionsModal.jsx';
 import { Utils } from '../../../services/utils/utils.service.jsx';
+import useLocalStorage from '../../../hooks/useLocalStorage.js';
+import CommentinputBox from '../comments/comment-input/CommentinputBox.jsx';
 
 const Post = ({ post, showIcons }) => {
     const { reactionsModalIsOpen } = useSelector((state) => state.modal);
+    const selectedPostId = useLocalStorage('selectedPostId', 'get');
+
 
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name);
@@ -102,6 +106,9 @@ const Post = ({ post, showIcons }) => {
                             <PostCommentSection post={post} />
                         </div>
                     </div>
+
+                    {selectedPostId === post?._id && <CommentinputBox post={post}/>}
+                    
                 </div>
             </div>
         </>
