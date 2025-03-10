@@ -1,18 +1,20 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PostWrapper from '../../modal-wrappers/post-wrapper/PostWrapper'
 import { useDispatch, useSelector } from 'react-redux'
 import '../post-edit/EditPost.scss'
 import ModalBoxContent from '../modal-box-content/ModalBoxContent'
 import { FaArrowLeft, FaTimes } from 'react-icons/fa'
-import { bgColors } from '../../../../services/utils/static.data'
+import { bgColors, feelingsList } from '../../../../services/utils/static.data'
 import Button from '../../../button/Button'
 import ModalBoxSelection from './../modal-box-content/modalBoxSelection'
 import {  PostUtils } from '../../../../services/utils/post-utils.service'
-import { closeModal, toggleGifModal } from '../../../../redux-toolkit/reducers/model/modal.reducer'
+import { addPostFeeling, closeModal, toggleGifModal } from '../../../../redux-toolkit/reducers/model/modal.reducer'
 import Giphy from '../../../giphy/Giphy'
 import { ImageUtils } from '../../../../services/utils/image-utils.service'
 import { postService } from '../../../../services/api/post/post.service' 
 import Spinner from '../../../spinner/Spinner'
+import { find } from 'lodash'
+import { Utils } from '../../../../services/utils/utils.service'
 
 const EditPost = () => {
     const { gifModalIsOpen, feeling } = useSelector((state) => state.modal);
@@ -72,8 +74,57 @@ const EditPost = () => {
   
     const clearImage = () => {
       setSelectedVideo(null);
-      PostUtils.clearImage(postData, '', inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
+      PostUtils.clearImage(postData, post?.post, inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
     };
+
+    const getFeeling = useCallback((name)=> {
+        const feeling = find(feelingsList, (data) => data.name === name);
+        dispatch(addPostFeeling({feeling}));
+    },[dispatch]
+    );
+
+    const postInputData = useCallback(()=> {
+       setTimeout(()=> {
+        if(imageInputRef?.current){
+            postData.post = post?.post;
+            imageInputRef.current.textContent = post?.post;
+            setPostData(postData);
+        }
+       }) 
+    },[post, postData]);
+
+    const editableFields = useCallback(()=> {
+        if (post?.post.feelings){
+            getFeeling(post?.post.feelings)
+        }
+
+        if (post?.bgColor){
+            postData.bgColor = post?.bgColor;
+            setPostData(postData);
+            setTextAreaBackground(post?.bgColor);
+            setTimeout(()=> {
+                if(inputRef?.current){
+                    postData.post = post?.post;
+                    inputRef.current.textContent = post?.post;
+                    setPostData(postData);
+                }
+            })
+        }
+
+        if (post?.gifUrl && !post?.imgId){
+            postData.gifUrl = post?.gifUrl 
+            setPostImage(post?.gifUrl);
+            postInputData();
+        }
+
+        if(post?.imgId && !post?.gifUrl){
+            postData.imgId = post?.imgId;
+            postData.imgVersion = post?.imgVersion;
+            const imageUrl = Utils.getImage(post?.imgId, post?.imgVersion);
+            setPostImage(imageUrl);
+            postInputData();
+        }
+    },[post, postData, getFeeling, postInputData])
   
     const createPost = async () => {
       setLoading(!loading);
@@ -144,21 +195,9 @@ const EditPost = () => {
       setDisable(postData.post.length <= 0 && !postImage);
     }, [loading, dispatch, apiResponse, postData, postImage]);
   
-    // useEffect(() => {
-    //   if (gifUrl) {
-    //     setPostImage(gifUrl);
-    //     setHasVideo(false);
-    //     PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-    //   } else if (image) {
-    //     setPostImage(image);
-    //     setHasVideo(false);
-    //     PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-    //   } else if (video) {
-    //     setHasVideo(true);
-    //     setPostImage(video);
-    //     PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-    //   }
-    // }, [gifUrl, image, postData, video]);
+    useEffect(() => {
+      editableFields();  
+    }, [editableFields]);
   
     return (
       <>
