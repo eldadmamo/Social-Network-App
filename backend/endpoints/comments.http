@@ -19,7 +19,7 @@ withCredentials: true
 
 ###
 
-GET {{baseUrl}}/{{urlPath}}/post/commentsname/67bed1c3e32858d50d37cd43
+GET {{baseUrl}}/{{urlPath}}/post/commentsname/67ccc5b38b33e9e04e56b5b8
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

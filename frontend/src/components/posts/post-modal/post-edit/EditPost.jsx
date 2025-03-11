@@ -1,23 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import PostWrapper from '../../modal-wrappers/post-wrapper/PostWrapper'
 import { useDispatch, useSelector } from 'react-redux'
-import '../post-add/AddPost.scss'
+import '../post-edit/EditPost.scss'
 import ModalBoxContent from '../modal-box-content/ModalBoxContent'
 import { FaArrowLeft, FaTimes } from 'react-icons/fa'
-import { bgColors } from '../../../../services/utils/static.data'
+import { bgColors, feelingsList } from '../../../../services/utils/static.data'
 import Button from '../../../button/Button'
 import ModalBoxSelection from './../modal-box-content/modalBoxSelection'
 import {  PostUtils } from '../../../../services/utils/post-utils.service'
-import { closeModal, toggleGifModal } from '../../../../redux-toolkit/reducers/model/modal.reducer'
+import { addPostFeeling, closeModal, toggleGifModal } from '../../../../redux-toolkit/reducers/model/modal.reducer'
 import Giphy from '../../../giphy/Giphy'
-import PropTypes from 'prop-types';
 import { ImageUtils } from '../../../../services/utils/image-utils.service'
 import { postService } from '../../../../services/api/post/post.service' 
 import Spinner from '../../../spinner/Spinner'
+import { find } from 'lodash'
+import { Utils } from '../../../../services/utils/utils.service'
 
-const AddPost = ({ selectedImage, selectedPostVideo }) => {
+const EditPost = () => {
     const { gifModalIsOpen, feeling } = useSelector((state) => state.modal);
-    const { gifUrl, image, privacy, video } = useSelector((state) => state.post);
+    const {post} = useSelector((state) => state);
     const { profile } = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false);
     const [hasVideo, setHasVideo] = useState(false);
@@ -32,11 +33,13 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
       gifUrl: '',
       profilePicture: '',
       image: '',
-      video: ''
+      video: '',
+      imgId: '',
+      imgVersion: ''
     });
     const [disable, setDisable] = useState(true);
     const [apiResponse, setApiResponse] = useState('');
-    const [selectedPostImage, setSelectedPostImage] = useState();
+    const [selectedPostImage, setSelectedPostImage] = useState(null);
     const [selectedVideo, setSelectedVideo] = useState();
     const counterRef = useRef(null);
     const inputRef = useRef(null);
@@ -48,6 +51,7 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
     const selectBackground = (bgColor) => {
       PostUtils.selectBackground(bgColor, postData, setTextAreaBackground, setPostData);
     };
+
   
     const postInputEditable = (event, textContent) => {
       const currentTextLength = event.target.textContent.length;
@@ -70,98 +74,137 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
   
     const clearImage = () => {
       setSelectedVideo(null);
-      PostUtils.clearImage(postData, '', inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
+      PostUtils.clearImage(postData, post?.post, inputRef, dispatch, setSelectedPostImage, setPostImage, setPostData);
     };
+
+    const getFeeling = useCallback((name)=> {
+        const feeling = find(feelingsList, (data) => data.name === name);
+        dispatch(addPostFeeling({feeling}));
+    },[dispatch]
+    );
+
+    const postInputData = useCallback(()=> {
+       setTimeout(()=> {
+        if(imageInputRef?.current){
+            postData.post = post?.post;
+            imageInputRef.current.textContent = post?.post;
+            setPostData(postData);
+        }
+       }) 
+    },[post, postData]);
+
+    const editableFields = useCallback(()=> {
+        if (post?.feelings){
+            getFeeling(post?.feelings)
+        }
+
+        if (post?.bgColor){
+            postData.bgColor = post?.bgColor;
+            setPostData(postData);
+            setTextAreaBackground(post?.bgColor);
+            setTimeout(()=> {
+                if(inputRef?.current){
+                    postData.post = post?.post;
+                    inputRef.current.textContent = post?.post;
+                    setPostData(postData);
+                }
+            })
+        }
+
+        if (post?.gifUrl && !post?.imgId){
+            postData.gifUrl = post?.gifUrl 
+            setPostImage(post?.gifUrl);
+            postInputData();
+        }
+
+        if(post?.imgId && !post?.gifUrl){
+            postData.imgId = post?.imgId;
+            postData.imgVersion = post?.imgVersion;
+            const imageUrl = Utils.getImage(post?.imgId, post?.imgVersion);
+            setPostImage(imageUrl);
+            postInputData();
+        }
+    },[post, postData, getFeeling, postInputData])
   
-    const createPost = async () => {
+    const updatePost = async () => {
       setLoading(!loading);
       setDisable(!disable);
       try {
         if (Object.keys(feeling).length) {
           postData.feelings = feeling?.name;
         }
-        postData.privacy = privacy || 'Public';
-        postData.gifUrl = gifUrl;
+        if (postData.gifUrl || (postData.imgId && postData.imgVersion)) {
+            postData.bgColor = '#ffffff'
+        }
+        postData.privacy = post?.privacy || 'Public';
         postData.profilePicture = profile?.profilePicture;
-        if (selectedPostImage || selectedVideo || selectedImage || selectedPostVideo) {
-          let result = '';
-          if (selectedPostImage) {
-            result = await ImageUtils.readAsBase64(selectedPostImage);
-          }
-  
-          if (selectedVideo) {
-            result = await ImageUtils.readAsBase64(selectedVideo);
-          }
-  
-          if (selectedImage) {
-            result = await ImageUtils.readAsBase64(selectedImage);
-          }
-  
-          if (selectedPostVideo) {
-            result = await ImageUtils.readAsBase64(selectedPostVideo);
-          }
-          const type = selectedPostImage || selectedImage ? 'image' : 'video';
-          if (type === 'image') {
-            postData.image = result;
-            postData.video = '';
-          } else {
-            postData.video = result;
-            postData.image = '';
-          }
-          const response = await PostUtils.sendPostWithFileRequest(
-            type,
+        if (selectedPostImage || selectedVideo ) {
+        const result = await ImageUtils.readAsBase64(image);
+        await PostUtils.sendUpdatePostWithImageRequest(
+            result,
+            post?._id,
             postData,
-            imageInputRef,
             setApiResponse,
             setLoading,
-            setDisable,
             dispatch
-          );
-          if (response && response?.data?.message) {
-            setHasVideo(false);
-            PostUtils.closePostModal(dispatch);
-          }
+        );
         } else {
-          const response = await postService.createPost(postData);
-          if (response) {
-            setApiResponse('success');
-            setLoading(false);
-            setHasVideo(false);
-            PostUtils.closePostModal(dispatch);
-          }
+           await PostUtils.sendUpdatePostRequest(
+            post?._id,
+            postData,
+            setApiResponse,
+            setLoading,
+            dispatch
+        );
         }
       } catch (error) {
         setHasVideo(false);
         PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
       }
     };
-  
+
     useEffect(() => {
+        console.log(post)
       PostUtils.positionCursor('editable');
-    }, []);
+    }, [post]);
+
+    useEffect(()=> {
+        setTimeout(()=> {
+            if(imageInputRef?.current && imageInputRef?.current.textContent.length){
+                counterRef.current.textContent = `${maxNumberOfCharacters - imageInputRef?.current.textContent.length}/100`;
+            } else if(inputRef?.current && inputRef?.current.textContent.length){
+                counterRef.current.textContent = `${maxNumberOfCharacters - inputRef?.current.textContent.length}/100`;
+            } 
+        })
+    })
   
     useEffect(() => {
       if (!loading && apiResponse === 'success') {
         dispatch(closeModal());
       }
-      setDisable(postData.post.length <= 0 && !postImage);
-    }, [loading, dispatch, apiResponse, postData, postImage]);
+      setDisable(post?.post.length <= 0 && !postImage);
+    }, [loading, dispatch, apiResponse, post, postImage]);
   
     useEffect(() => {
-      if (gifUrl) {
-        setPostImage(gifUrl);
-        setHasVideo(false);
-        PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-      } else if (image) {
-        setPostImage(image);
-        setHasVideo(false);
-        PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-      } else if (video) {
-        setHasVideo(true);
-        setPostImage(video);
-        PostUtils.postInputData(imageInputRef, postData, '', setPostData);
-      }
-    }, [gifUrl, image, postData, video]);
+        if (post?.gifUrl) {
+            postData.image = '';
+            postData.video = '';
+            setSelectedPostImage(null);
+            setSelectedVideo(null);
+            setHasVideo(false);
+            setPostImage(post?.gifUrl);
+            PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+          } else if (post?.image) {
+            setPostImage(post?.image);
+            setHasVideo(false);
+            PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+          } else if (post?.video) {
+            setPostImage(post?.video);
+            setHasVideo(true);
+            PostUtils.postInputData(imageInputRef, postData, post?.post, setPostData);
+          }
+      editableFields();  
+    }, [editableFields, post, postData]);
   
     return (
       <>
@@ -172,19 +215,19 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
               className="modal-box"
               style={{
                 height:
-                  selectedPostImage || hasVideo || gifUrl || image || postData?.gifUrl || postData?.image
+                  selectedPostImage || postData?.gifUrl || post?.imgId
                     ? '700px'
                     : 'auto'
               }}
             >
               {loading && (
                 <div className="modal-box-loading" data-testid="modal-box-loading">
-                  <span>Posting...</span>
+                  <span>Updating post...</span>
                   <Spinner />
                 </div>
               )}
               <div className="modal-box-header">
-                <h2>Create Post</h2>
+                <h2>Edit Post</h2>
                 <button className="modal-box-header-cancel" onClick={() => closePostModal()}>
                   X
                 </button>
@@ -283,7 +326,7 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
               <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} setSelectedVideo={setSelectedVideo} />
   
               <div className="modal-box-button" data-testid="post-button">
-                <Button label="Create Post" className="post-button" disabled={disable} handleClick={createPost} />
+                <Button label="Update" className="post-button" disabled={disable} handleClick={updatePost} />
               </div>
             </div>
           )}
@@ -306,8 +349,6 @@ const AddPost = ({ selectedImage, selectedPostVideo }) => {
       </>
     );
   };
-  AddPost.propTypes = {
-    selectedImage: PropTypes.any,
-    selectedPostVideo: PropTypes.any
-  };
-  export default AddPost;
+
+ 
+  export default EditPost;

@@ -10,19 +10,19 @@ import { toggleGifModal } from '../../redux-toolkit/reducers/model/modal.reducer
 import Spinner from '../spinner/Spinner';
 
 const Giphy = () => {
-  const {gifModelIsOpen} = useSelector((state) => state.modal);
+  const { gifModalIsOpen } = useSelector((state) => state.modal);
   const [gifs, setGifs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const selectGif = (gif) => {
-    dispatch(updatePostItem({gifUrl:gif, image: ''}));
-    dispatch(toggleGifModal(!gifModelIsOpen));
-  }
+    dispatch(updatePostItem({ gifUrl: gif, image: '', video: '' }));
+    dispatch(toggleGifModal(!gifModalIsOpen));
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     GiphyUtils.getTrendingGifs(setGifs, setLoading);
-  },[])
+  }, []);
 
   return (
     <>
@@ -37,19 +37,19 @@ const Giphy = () => {
               labelText=""
               placeholder="Search Gif"
               className="giphy-container-picker-form-input"
-              handleChange={(e) => GiphyUtils.searchGif(e.target.value, setGifs, setLoading)}
+              handleChange={(e) => GiphyUtils.searchGifs(e.target.value, setGifs, setLoading)}
             />
           </div>
 
-          {loading && <Spinner/>}
+          {loading && <Spinner />}
 
           <ul className="giphy-container-picker-list" data-testid="unorderedList">
-            {gifs.map((gif, index) => (
+            {gifs.map((gif) => (
               <li
                 className="giphy-container-picker-list-item"
                 data-testid="list-item"
-                key={index}
-                onClick={()=> selectGif(gif.images.original.url)}
+                key={Utils.generateString(10)}
+                onClick={() => selectGif(gif.images.original.url)}
               >
                 <img style={{ width: '470px' }} src={`${gif.images.original.url}`} alt="" />
               </li>

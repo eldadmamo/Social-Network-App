@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useRef, useState } from 'react'
 import './Streams.scss'
-import Suggesstions from '../../../components/suggesstions/Suggesstions';
+import Suggestions from '../../../components/suggesstions/Suggesstions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
 import useEffectOnce from '../../../hooks/useEffectOnce';
@@ -10,7 +10,7 @@ import Posts from '../../../components/posts/Posts';
 import { Utils } from '../../../services/utils/utils.service';
 import { postService } from '../../../services/api/post/post.service';
 import { getPosts } from '../../../redux-toolkit/api/posts';
-import { uniqBy } from 'lodash';
+import { orderBy, uniqBy } from 'lodash';
 import useInfiniteScroll from './../../../hooks/useInfiniteScroll';
 import { PostUtils } from '../../../services/utils/post-utils.service';
 import useLocalStorage from '../../../hooks/useLocalStorage';
@@ -29,6 +29,8 @@ const Streams = () => {
   let appPosts = useRef([]);
   const dispatch = useDispatch();
   const storedUsername = useLocalStorage('username', 'get');
+  const [deleteSelectedPostId] = useLocalStorage('selectedPostId', 'delete');
+  
   useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData);
   let PAGE_SIZE = 10;
 
@@ -43,11 +45,12 @@ const Streams = () => {
 
   const getAllPosts = async () => {
     try{
-      const response = await postService.getAllPosts(1);
+      const response = await postService.getAllPosts(currentPage);
       if(response.data.posts.length > 0){
         appPosts = [...posts, ...response.data.posts];
         const allPosts = uniqBy(appPosts, '_id');
-        setPosts(allPosts);
+        const orderedPosts = orderBy(allPosts, ['createdAt'], ['desc']);
+        setPosts(orderedPosts);
       }
       setLoading(false);
     } catch(error){
@@ -64,22 +67,27 @@ const Streams = () => {
     }
   }
 
+  useEffect(()=> {
+    dispatch(getPosts());
+  },[dispatch])
+
 
   useEffectOnce(()=> {
     getReactionsByUsername();
-  })
-
-  useEffect(()=> {
-    dispatch(getPosts());
+    deleteSelectedPostId();
     dispatch(getUserSuggestions());
     getAllPosts()
-  },[dispatch])
+   
+  })
 
-  useEffect(()=> {
-    setLoading(allPosts?.isLoading)
-    setPosts(allPosts?.posts)
-    setTotalPostsCount(allPosts?.totalPostsCount)
-  },[allPosts])
+
+  useEffect(() => {
+    if (allPosts?.posts?.length > 0) { 
+      const orderedPosts = orderBy(allPosts.posts, ['createdAt'], ['desc']);
+      setPosts(orderedPosts);
+    }
+    setTotalPostsCount(allPosts?.totalPostsCount || 0);
+  }, [allPosts]);
 
 
   useEffect(()=> {
@@ -91,10 +99,12 @@ const Streams = () => {
       <div className="streams-content">
         <div className="streams-post" ref={bodyRef}>
           <PostForm />
-          <Posts allPosts={posts || []} postsLoading={loading} userFollowing={following} />
+          <Posts allPosts={posts} postsLoading={loading} userFollowing={following} />
           <div ref={bottomLineRef} style={{ marginBottom: '50px', height: '50px' }}></div>
         </div>
-        
+        <div className="streams-suggestions">
+          <Suggestions />
+        </div>
       </div>
     </div>
   )

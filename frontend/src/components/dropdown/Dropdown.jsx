@@ -37,7 +37,7 @@ const Dropdown = ({
               style={{ maxHeight: `${height}px` }}
             >
               {data.map((item) => (
-                <div className="social-sub-card">
+                <div className="social-sub-card" key={Utils.generateString(10)}>
                   <div className="content-avatar">
                     {title === 'Notifications' ? (
                       <Avatar
