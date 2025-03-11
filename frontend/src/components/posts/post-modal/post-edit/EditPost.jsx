@@ -94,8 +94,8 @@ const EditPost = () => {
     },[post, postData]);
 
     const editableFields = useCallback(()=> {
-        if (post?.post.feelings){
-            getFeeling(post?.post.feelings)
+        if (post?.feelings){
+            getFeeling(post?.feelings)
         }
 
         if (post?.bgColor){
@@ -139,47 +139,30 @@ const EditPost = () => {
         postData.privacy = post?.privacy || 'Public';
         postData.profilePicture = profile?.profilePicture;
         if (selectedPostImage || selectedVideo ) {
-          updatePostWithImage();
-        } else {
-            updateUserPost();
-        }
-      } catch (error) {
-        setHasVideo(false);
-        PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, setDisable, dispatch);
-      }
-    };
-
-    const updateUserPost = async () => {
-        const response = await PostUtils.sendUpdatePostRequest(
-            post?._id,
-            postData,
-            setApiResponse,
-            setLoading,
-            setDisable,
-            dispatch
-        );
-        if(response && response?.data?.message){
-            PostUtils.closePostModal(dispatch);
-        }
-    }
-
-    const updatePostWithImage = async (image) => {
         const result = await ImageUtils.readAsBase64(image);
-        const response = await PostUtils.sendUpdatePostWithImageRequest(
+        await PostUtils.sendUpdatePostWithImageRequest(
             result,
             post?._id,
             postData,
             setApiResponse,
             setLoading,
-            setDisable,
             dispatch
         );
-        if(response && response?.data?.message){
-            PostUtils.closePostModal(dispatch);
+        } else {
+           await PostUtils.sendUpdatePostRequest(
+            post?._id,
+            postData,
+            setApiResponse,
+            setLoading,
+            dispatch
+        );
         }
+      } catch (error) {
+        setHasVideo(false);
+        PostUtils.dispatchNotification(error.response.data.message, 'error', setApiResponse, setLoading, dispatch);
+      }
+    };
 
-    }
-  
     useEffect(() => {
         console.log(post)
       PostUtils.positionCursor('editable');

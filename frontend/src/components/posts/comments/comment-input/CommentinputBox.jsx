@@ -8,42 +8,42 @@ import { cloneDeep } from 'lodash'
 import { socketService } from '../../../../services/socket/socket.service'
 import { postService } from '../../../../services/api/post/post.service'
 
-const CommentinputBox = ({post}) => {
-    const {profile} = useSelector((state) => state.user)
-    const [comment, setComment] = useState('')
+const CommentInputBox = ({ post }) => {
+    const { profile } = useSelector((state) => state.user);
+    const [comment, setComment] = useState('');
     const commentInputRef = useRef(null);
     const dispatch = useDispatch();
-
+  
     const submitComment = async (event) => {
-        event.preventDefault();
-        try{
-            post = cloneDeep(post);
-            post.commentsCount +=1;
-            const commentBody = {
-                userTo: post?.userId,
-                postId: post?._id,
-                comment: comment.trim(),
-                commentsCount: post.commentsCount,
-                profilePicture: profile?.profilePicture
-            };
-            socketService?.socket?.emit('comment', commentBody);
-            await postService.addComment(commentBody);
-            setComment('');
-        }catch(error){
-            Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
-        }
-    }
-
-    useEffect(()=> {
-        if (commentInputRef?.current){
-            commentInputRef.current.focus()
-        }
-    },[])
-
-  return (
-    <div className='comment-container' data-testid="comment-input">
-        <form className='comment-form' onSubmit={submitComment}>
-            <Input 
+      event.preventDefault();
+      try {
+        post = cloneDeep(post);
+        post.commentsCount += 1;
+        const commentBody = {
+          userTo: post?.userId,
+          postId: post?._id,
+          comment: comment.trim(),
+          commentsCount: post.commentsCount,
+          profilePicture: profile?.profilePicture
+        };
+        socketService?.socket?.emit('comment', commentBody);
+        await postService.addComment(commentBody);
+        setComment('');
+      } catch (error) {
+        Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      }
+    };
+  
+    useEffect(() => {
+      if (commentInputRef?.current) {
+        commentInputRef.current.focus();
+      }
+    }, []);
+  
+    return (
+      <div className="comment-container" data-testid="comment-input">
+        <form className="comment-form" onSubmit={submitComment}>
+          <Input
             ref={commentInputRef}
             name="comment"
             type="text"
@@ -51,15 +51,13 @@ const CommentinputBox = ({post}) => {
             labelText=""
             className="comment-input"
             placeholder="Write a comment..."
-            handleChange={(event)=> setComment(event.target.value)}
-            />
+            handleChange={(event) => setComment(event.target.value)}
+          />
         </form>
-    </div>
-  )
-}
-
-CommentinputBox.propTypes = {
+      </div>
+    );
+  };
+  CommentInputBox.propTypes = {
     post: PropTypes.object
-}
-
-export default CommentinputBox
+  };
+  export default CommentInputBox;

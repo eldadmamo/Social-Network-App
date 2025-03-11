@@ -10,56 +10,61 @@ import { closeModal } from '../../../../redux-toolkit/reducers/model/modal.reduc
 import { clearPost } from '../../../../redux-toolkit/reducers/post/post.reducer'
 
 const CommentsModal = () => {
-    const {post} = useSelector((state) => state);
-    const [postComments, setPostsComments] = useState([]);
-
-    const dispatch = useDispatch()
-
+    const { post } = useSelector((state) => state);
+    const [postComments, setPostComments] = useState([]);
+    const dispatch = useDispatch();
+  
     const getPostComments = async () => {
-        try{
-            const response = await postService.getPostComments(post?._id);
-            setPostsComments(response.data?.comments);
-        } catch(error){
-          Utils.dispatchNotification(error.response.data.message, 'error', dispatch);  
-        }
-    } 
-
+      try {
+        const response = await postService.getPostComments(post?._id);
+        setPostComments(response.data?.comments);
+      } catch (error) {
+        Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+      }
+    };
+  
     const closeCommentsModal = () => {
-        dispatch(closeModal());
-        dispatch(clearPost());
-    }
-
-    useEffectOnce(()=> {
-        getPostComments();
-    },[]);
-
-  return (
-    <ReactionWrapper closeModal={closeCommentsModal}>
-    <div className="modal-comments-header">
-        <h2>Comments</h2>
-    </div>
-    <div className="modal-comments-container">
-        <ul className="modal-comments-container-list">
-            {postComments.map((data) => (
-            <li className="modal-comments-container-list-item" key={data?._id} data-testid="modal-list-item">
-                <div className="modal-comments-container-list-item-display">
+      dispatch(closeModal());
+      dispatch(clearPost());
+    };
+  
+    useEffectOnce(() => {
+      getPostComments();
+    });
+  
+    return (
+      <>
+        <ReactionWrapper closeModal={closeCommentsModal}>
+          <div className="modal-comments-header">
+            <h2>Comments</h2>
+          </div>
+          <div className="modal-comments-container">
+            <ul className="modal-comments-container-list">
+              {postComments.map((data) => (
+                <li className="modal-comments-container-list-item" key={data?._id} data-testid="modal-list-item">
+                  <div className="modal-comments-container-list-item-display">
                     <div className="user-img">
-                        <Avatar name={data?.username} bgColor={data?.avatarColor} textColor="#ffffff" size={45}
-                            avatarSrc={data?.profilePicture} />
+                      <Avatar
+                        name={data?.username}
+                        bgColor={data?.avatarColor}
+                        textColor="#ffffff"
+                        size={45}
+                        avatarSrc={data?.profilePicture}
+                      />
                     </div>
                     <div className="modal-comments-container-list-item-display-block">
-                        <div className="comment-data">
-                            <h1>{data?.username}</h1>
-                            <p>{data?.comment}</p>
-                        </div>
+                      <div className="comment-data">
+                        <h1>{data?.username}</h1>
+                        <p>{data?.comment}</p>
+                      </div>
                     </div>
-                </div>
-            </li>
-            ))}
-        </ul>
-    </div>
-</ReactionWrapper>
-  )
-}
-
-export default CommentsModal
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </ReactionWrapper>
+      </>
+    );
+  };
+  export default CommentsModal;

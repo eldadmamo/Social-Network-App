@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useRef, useState } from 'react'
 import './Streams.scss'
-import Suggesstions from '../../../components/suggesstions/Suggesstions';
+import Suggestions from '../../../components/suggesstions/Suggesstions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
 import useEffectOnce from '../../../hooks/useEffectOnce';
@@ -67,24 +67,27 @@ const Streams = () => {
     }
   }
 
+  useEffect(()=> {
+    dispatch(getPosts());
+  },[dispatch])
+
 
   useEffectOnce(()=> {
     getReactionsByUsername();
     deleteSelectedPostId();
-  })
-
-  useEffect(()=> {
-    dispatch(getPosts());
     dispatch(getUserSuggestions());
     getAllPosts()
-  },[dispatch])
+   
+  })
 
-  useEffect(()=> {
-    setLoading(allPosts?.isLoading)
-    const orderedPosts = orderBy(allPosts?.posts, ['createdAt'], ['desc']);
-    setPosts(orderedPosts)
-    setTotalPostsCount(allPosts?.totalPostsCount)
-  },[allPosts])
+
+  useEffect(() => {
+    if (allPosts?.posts?.length > 0) { 
+      const orderedPosts = orderBy(allPosts.posts, ['createdAt'], ['desc']);
+      setPosts(orderedPosts);
+    }
+    setTotalPostsCount(allPosts?.totalPostsCount || 0);
+  }, [allPosts]);
 
 
   useEffect(()=> {
@@ -96,10 +99,12 @@ const Streams = () => {
       <div className="streams-content">
         <div className="streams-post" ref={bodyRef}>
           <PostForm />
-          <Posts allPosts={posts || []} postsLoading={loading} userFollowing={following} />
+          <Posts allPosts={posts} postsLoading={loading} userFollowing={following} />
           <div ref={bottomLineRef} style={{ marginBottom: '50px', height: '50px' }}></div>
         </div>
-        
+        <div className="streams-suggestions">
+          <Suggestions />
+        </div>
       </div>
     </div>
   )

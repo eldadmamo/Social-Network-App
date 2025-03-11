@@ -15,9 +15,12 @@ import CommentinputBox from '../comments/comment-input/CommentinputBox.jsx';
 import CommentsModal from '../comments/comments-modal/CommentsModal.jsx';
 import ImageModal from '../../image-modal/ImageModal.jsx';
 import { openModal, toggleDeleteDialog } from '../../../redux-toolkit/reducers/model/modal.reducer.jsx';
-import { updatePostItem } from '../../../redux-toolkit/reducers/post/post.reducer.js';
+import { clearPost, updatePostItem } from '../../../redux-toolkit/reducers/post/post.reducer.js';
+import Dialog from '../../dialog/Dialog.jsx';
+import { postService } from '../../../services/api/post/post.service.jsx';
 
 const Post = ({ post, showIcons }) => {
+    const {_id} = useSelector((state) => state.post);
     const { reactionsModalIsOpen , commentsModalIsOpen, deleteDialogIsOpen } = useSelector((state) => state.modal);
     const [showImageModal , setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('')
@@ -26,13 +29,26 @@ const Post = ({ post, showIcons }) => {
 
     const getFeeling = (name) => {
         const feeling = find(feelingsList, (data) => data.name === name);
-        return feeling?.name;
+        return feeling?.image;
     }
 
     const getPrivacy = (type) => {
         const privacy = find(privacyList, (data) => data.topText === type);
         return privacy?.icon;
     }
+
+    const deletePost = async () => {
+        try{
+            const response = await postService.deletePost(_id);
+            if(response){
+                Utils.dispatchNotification(error.response.data.message, 'success', dispatch);
+                dispatch(toggleDeleteDialog({toggle: !deleteDialogIsOpen}));
+                // dispatch(clearPost())
+            }
+        }catch(error){
+            Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+        }
+    }  
 
     const openPostModal = () => {
         dispatch(openModal({type: 'edit'}))
@@ -50,6 +66,18 @@ const Post = ({ post, showIcons }) => {
             {commentsModalIsOpen && <CommentsModal/> }
             {showImageModal && (
                 <ImageModal image={`${imageUrl}`} onCancel={()=> setShowImageModal(!showImageModal)} showArrow={false}  />
+            )}
+            {deleteDialogIsOpen && (
+                <Dialog 
+                title="Are you sure you want to delete this post?"
+                firstButtonText="Delete"
+                secondButtonText="Cancel"
+                firstBtnHandler={()=> deletePost()}
+                secondBtnHandler={()=> {
+                    dispatch(toggleDeleteDialog({toggle: !deleteDialogIsOpen}));
+                    dispatch(clearPost())
+                }}
+                />
             )}
             <div className="post-body" data-testid="post">
                 <div className="user-post-data">

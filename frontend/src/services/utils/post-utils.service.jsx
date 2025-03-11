@@ -73,7 +73,6 @@ export class PostUtils {
         imageInputRef,
         setApiResponse,
         setLoading,
-        setDisable,
         dispatch
     ){
         try{
@@ -92,13 +91,12 @@ export class PostUtils {
                 'error',
                 setApiResponse,
                 setLoading,
-                setDisable,
                 dispatch
             );
         }
     }
 
-    static async sendUpdatePostWithImageRequest (fileResult, postId , postData, setApiResponse, setLoading, setDisable, dispatch) {
+    static async sendUpdatePostWithImageRequest (fileResult, postId , postData, setApiResponse, setLoading, dispatch) {
       try{
         postData.image = fileResult;
         postData.gifUrl = '';
@@ -112,15 +110,14 @@ export class PostUtils {
             setApiResponse,
             setLoading,
             setLoading,
-            setDisable,
             dispatch
           );
           setTimeout(()=> {
             setApiResponse('success')
             setLoading(false);
           },3000)
+          PostUtils.closePostModal(dispatch)
         }
-        return response;
       } catch(error){
         PostUtils.dispatchNotification(
           error.response.data.message,
@@ -128,7 +125,6 @@ export class PostUtils {
           setApiResponse,
           setLoading,
           setLoading,
-          setDisable,
           dispatch
         )
       }
@@ -156,8 +152,8 @@ export class PostUtils {
           setApiResponse('success')
           setLoading(false);
         },3000)
+        PostUtils.closePostModal(dispatch)
       }
-      return response;
     }
 
     static checkPrivacy(post, profile, following) {
