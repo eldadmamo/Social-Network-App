@@ -68,7 +68,7 @@ export const AppRouter = () => {
                 {
                     path: 'followers',
                     element: (
-                        <Suspense>
+                        <Suspense fallback={<CardSkeleton/>}>
                             <Followers/>
                         </Suspense>
                     ),  
@@ -76,7 +76,7 @@ export const AppRouter = () => {
                 {
                     path: 'following',
                     element: (
-                        <Suspense>
+                        <Suspense fallback={<CardSkeleton/>}>
                             <Following/>
                         </Suspense>
                     ),  
