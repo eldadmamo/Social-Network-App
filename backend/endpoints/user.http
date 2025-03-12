@@ -14,7 +14,7 @@ withCredentials: true
 ###
 
 
-GET {{baseUrl}}/{{urlPath}}/user/profile/posts/eldad/67be1c53ca10b4f2838ef1f5/974143628422
+GET {{baseUrl}}/{{urlPath}}/user/profile/posts/eldad/67d18ce26b319beeb077f36d/636067717992
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

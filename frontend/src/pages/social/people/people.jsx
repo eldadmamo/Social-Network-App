@@ -4,18 +4,24 @@ import { FaCircle } from 'react-icons/fa';
 import Avatar from '../../../components/avatar/Avatar';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
 import CardElementStats from '../../../components/card-element/CardElementStats';
-import CardElementButton from '../../../components/card-element/CardElementButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userService } from '../../../services/api/user/user.service';
 import { uniqBy } from 'lodash';
 import { ProfileUtils } from '../../../services/utils/profile-utils.service';
 import { useNavigate } from 'react-router-dom';
 import './people.scss'
+import useEffectOnce from '../../../hooks/useEffectOnce';
+import { FollowersUtils } from '../../../services/utils/followers-utils.service';
+import { socketService } from '../../../services/socket/socket.service';
+import CardElementButtons from '../../../components/card-element/CardElementButton';
+import { followerService } from '../../../services/api/followers/follower.server';
 
 const People = () => {
+  const {profile} = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [onlineUsers] = useState([])
-  const [loading] = useState(true);
+  const [loading,setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalUsersCount, setTotalUsersCount] = useState(0);
   const bodyRef = useRef(null);
@@ -47,7 +53,7 @@ const People = () => {
         })
       }
       setTotalUsersCount(response.data.totalUsers);
-
+      setFollowers(response.data.followers);
       setLoading(false);
     }catch(error){
       setLoading(false);
@@ -55,17 +61,43 @@ const People = () => {
     }
   },[currentPage, dispatch]);
 
-  const followUser = async (user) => {
+  const getUserFollowing = async () => {
+    try{
+      const response = await followerService.getUserFollowing();
+      setFollowing(response.data.following);
+    }catch(error){
+      setLoading(false)
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  }
 
+  const followUser = async (user) => {
+    try{
+      FollowersUtils.followUser(user, dispatch);
+    }catch(error){
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
   }
 
   const unfollowUser = async (user) => {
-
+    try{
+      const userData = user;
+      userData.followersCount -=1;
+      socketService?.socket?.emit('unfollow user', userData);
+      FollowersUtils.unFollowUser(user, profile, dispatch);
+    }catch(error){
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
   }
 
-  useEffect(()=> {
+  useEffectOnce(()=> {
     getAllUsers();
+    getUserFollowing();
   },[])
+
+  useEffect(()=> {
+    FollowersUtils.socketIOFollowAndUnfollow(users, following, setFollowing, setUsers);
+  },[following, users]);
 
 
   return (
@@ -99,8 +131,8 @@ const People = () => {
             followersCount={data?.followersCount}
             followingCount={data?.followingCount}
             />
-            <CardElementButton
-            isChecked={Utils.checkIfUserIsFollowed([], data?._id)}
+            <CardElementButtons
+            isChecked={Utils.checkIfUserIsFollowed(following, data?._id)}
             btnTextOne="Follow"
             btnTextTwo="Unfollow"
             onClickBtnOne={() => followUser(data)}

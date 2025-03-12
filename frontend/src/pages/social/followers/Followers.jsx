@@ -14,6 +14,7 @@ import { followerService } from '../../../services/api/followers/follower.server
 import { socketService } from '../../../services/socket/socket.service';
 import { FollowersUtils } from '../../../services/utils/followers-utils.service';
 import './followers.scss'
+import CardElementButtons from '../../../components/card-element/CardElementButton';
 
 const Followers = () => {
   const {profile, token} = useSelector((state) => state.user);
@@ -96,10 +97,10 @@ const Followers = () => {
             followersCount={data?.followersCount}
             followingCount={data?.followingCount}
             />
-            <CardElementButton
+            <CardElementButtons
             isChecked={Utils.checkIfUserIsBlocked(blockedUsers, data?._id)}
             btnTextOne="Block"
-            btnTextTwo="unblock"
+            btnTextTwo="Unblock"
             onClickBtnOne={() => blockUser(data)}
             onClickBtnTwo={()=> unblockUser(data)}
             onNavigateToProfile={()=> ProfileUtils.navigateToProfile(data, navigate)}
