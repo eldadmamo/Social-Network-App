@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updatePostItem } from '../../redux-toolkit/reducers/post/post.reducer';
 import { toggleGifModal } from '../../redux-toolkit/reducers/model/modal.reducer';
 import Spinner from '../spinner/Spinner';
+import { Utils } from '../../services/utils/utils.service';
 
 const Giphy = () => {
   const { gifModalIsOpen } = useSelector((state) => state.modal);

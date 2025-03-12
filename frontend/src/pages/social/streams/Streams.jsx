@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useRef, useState } from 'react'
 import './Streams.scss'
-import Suggestions from '../../../components/suggesstions/Suggesstions';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserSuggestions } from '../../../redux-toolkit/api/suggestion';
 import useEffectOnce from '../../../hooks/useEffectOnce';
@@ -15,6 +15,8 @@ import useInfiniteScroll from './../../../hooks/useInfiniteScroll';
 import { PostUtils } from '../../../services/utils/post-utils.service';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { addReactions } from '../../../redux-toolkit/reducers/post/user-post-reaction.reducer';
+import Suggestions from '../../../components/suggesstions/Suggestions';
+import { followerService } from '../../../services/api/followers/follower.server';
 
 
 const Streams = () => {
@@ -32,14 +34,14 @@ const Streams = () => {
   const [deleteSelectedPostId] = useLocalStorage('selectedPostId', 'delete');
   
   useInfiniteScroll(bodyRef, bottomLineRef, fetchPostData);
-  let PAGE_SIZE = 10;
+  const PAGE_SIZE = 10;
 
   function fetchPostData(){
     let pageNum = currentPage;
     if(currentPage <= Math.round(totalPostsCount/ PAGE_SIZE)){
       pageNum += 1;
       setCurrentPage(pageNum);
-      getAllPosts();
+      
     }
   }
 
@@ -58,6 +60,15 @@ const Streams = () => {
     }
   } 
 
+  const getUserFollowing = async () => {
+    try {
+      const response = await followerService.getUserFollowing();
+      setFollowing(response.data.following);
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
+
   const getReactionsByUsername = async () => {
     try{
       const response = await postService.getReactionsByUsername(storedUsername);
@@ -67,17 +78,14 @@ const Streams = () => {
     }
   }
 
-  useEffect(()=> {
-    dispatch(getPosts());
-  },[dispatch])
-
-
+  
   useEffectOnce(()=> {
+    getUserFollowing();
     getReactionsByUsername();
     deleteSelectedPostId();
     dispatch(getUserSuggestions());
     getAllPosts()
-   
+    dispatch(getPosts());
   })
 
 

@@ -27,7 +27,7 @@ const Header = () => {
     const [notifications, setNotifications] = useState([])
     const [notificationCount, setNotificationCount] = useState(0)
     const [notificationDialogContent, setNotificationDialogContent] = useState({
-      post: '',
+      post: '', 
       imgUrl: '',
       comment: '',
       reaction: '',
