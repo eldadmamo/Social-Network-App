@@ -105,8 +105,8 @@ const People = () => {
       <div className='people'>People</div>
       {users.length > 0 && (
         <div className='card-element'>
-        {users.map((data,index) => (
-          <div className='card-element-item' key={index} data-testid="card-element-item">
+        {users.map((data) => (
+          <div className='card-element-item' key={data?._id} data-testid="card-element-item">
             {Utils.checkIfUserIsOnline(data?.username, onlineUsers) && (
               <div className='card-element-item-indicator'>
                   <FaCircle className='online-indicator'/>

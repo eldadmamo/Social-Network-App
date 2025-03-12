@@ -86,8 +86,12 @@ const Notifications = () => {
     <div className="notifications">Notifications</div>
     {notifications.length > 0 && (
       <div className="">
-        {notifications.map((notification, index) => (
-        <div className="notification-box" data-testid="notification-box" key={index} onClick={()=> markAsRead(notification)}>
+        {notifications.map((notification) => (
+        <div className="notification-box" 
+        data-testid="notification-box" 
+        key={notification?._id} 
+        onClick={()=> markAsRead(notification)}
+        >
             <div className="notification-box-sub-card">
                 <div className="notification-box-sub-card-media">
                     <div className="notification-box-sub-card-media-image-icon">

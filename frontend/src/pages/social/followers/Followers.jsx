@@ -75,8 +75,8 @@ const Followers = () => {
       <div className='followers'>Followers</div>
       {followers.length > 0 && (
         <div className='card-element'>
-        {followers.map((data,index) => (
-          <div className='card-element-item' key={index} data-testid="card-element-item">
+        {followers.map((data) => (
+          <div className='card-element-item' key={data?._id} data-testid="card-element-item">
             
             <div className='card-element-header'>
               <div className='card-element-header-bg'></div>

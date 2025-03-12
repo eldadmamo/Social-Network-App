@@ -49,15 +49,18 @@ const Header = () => {
     const backgroundColor = `${enviroment === 'DEV' ? '#50b5ff': enviroment === 'STG' ? '#e9710f': ''}`
 
     const getUserNotifications = async () => {
-        try{
-          const response = await notificationService.getUserNotifications();
-          const mappedNotifications = NotificationUtils.mapSettingsDropdownItems(response.data.notifications, setNotificationCount)
-          setNotifications(mappedNotifications);
-          socketService?.socket.emit('setup', {userId: storedUsername})
-        }catch(error){
-          Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
-        }
+      try {
+        const response = await notificationService.getUserNotifications();
+        const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(
+          response.data.notifications,
+          setNotificationCount
+        );
+        setNotifications(mappedNotifications);
+        socketService?.socket.emit('setup', { userId: storedUsername });
+      } catch (error) {
+        Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
       }
+    };
     
     const onMarkAsRead = async (notification) => {
         try {
