@@ -1,7 +1,8 @@
+import { cloneDeep,filter, find, findIndex } from "lodash";
 import { followerService } from "../api/followers/follower.server";
 import { socketService } from "../socket/socket.service";
 import { Utils } from "./utils.service";
-import { socketIOFollowerObject } from '@root/shared/sockets/follower';
+import { addUser } from "../../redux-toolkit/reducers/user/user.reducer";
 
 export class FollowersUtils {
     static async followUser(user, dispatch){
