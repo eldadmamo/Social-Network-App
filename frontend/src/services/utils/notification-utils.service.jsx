@@ -9,7 +9,7 @@ export class NotificationUtils {
 
 static socketIONotification(profile, notifications, setNotifications, type, setNotificationsCount){
         socketService?.socket?.on('insert notification',(data, userToData) => {
-            if(profile?._id === userData.userTo){
+            if(profile?._id === userToData.userTo){
                 notifications = [...data];
                 if(type === 'notificationPage'){
                     setNotifications(notifications);

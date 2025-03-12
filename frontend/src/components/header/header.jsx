@@ -49,19 +49,22 @@ const Header = () => {
     const backgroundColor = `${enviroment === 'DEV' ? '#50b5ff': enviroment === 'STG' ? '#e9710f': ''}`
 
     const getUserNotifications = async () => {
-        try{
-          const response = await notificationService.getUserNotifications();
-          const mappedNotifications = NotificationUtils.mapSettingsDropdownItems(response.data.notifications, setNotificationCount)
-          setNotifications(response.data.notifications);
-          socketService?.socket.emit('setup', {userId: storedUsername})
-        }catch(error){
-          Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
-        }
+      try {
+        const response = await notificationService.getUserNotifications();
+        const mappedNotifications = NotificationUtils.mapNotificationDropdownItems(
+          response.data.notifications,
+          setNotificationCount
+        );
+        setNotifications(mappedNotifications);
+        socketService?.socket.emit('setup', { userId: storedUsername });
+      } catch (error) {
+        Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
       }
+    };
     
     const onMarkAsRead = async (notification) => {
         try {
-          NotificationUtils.markMessageAsRead(notification?._id, notification, notificationDialogContent);
+          NotificationUtils.markMessageAsRead(notification?._id, notification, setNotificationDialogContent);
         } catch (error) {
           Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
         }
@@ -81,8 +84,8 @@ const Header = () => {
     const onLogout = async () => {
       try{
         setLoggedIn(false);
-        await userService.logoutUser();
         Utils.clearStore({dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn});
+        await userService.logoutUser();
         navigate('/')
       }catch(error){
         Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
@@ -91,7 +94,7 @@ const Header = () => {
 
     useEffectOnce(()=> {
         Utils.mapSettingsDropdownItems(setSettings);
-        getUserNotifications
+        getUserNotifications();
     })
     useEffect(()=> {
       const env = Utils.appEnviroment();
@@ -99,7 +102,7 @@ const Header = () => {
   },[])
 
   useEffect(() => {
-    NotificationUtils.socketIONotification(profile, notifications, setNotifications, 'notificationPage', setNotificationCount);
+    NotificationUtils.socketIONotification(profile, notifications, setNotifications, 'header', setNotificationCount);
   }, [profile, notifications]);
 
   return (

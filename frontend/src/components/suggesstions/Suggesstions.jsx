@@ -5,6 +5,7 @@ import './Suggesstions.scss'
 import { useEffect , useState} from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Utils } from '../../services/utils/utils.service'
 
 const Suggesstions = () => {
   const {suggestions} = useSelector(state => state)
@@ -25,7 +26,7 @@ const Suggesstions = () => {
       <div className="suggestions-container">
         <div className="suggestions">
           {users?.map((user) => (
-            <div data-testid="suggestions-item" className="suggestions-item" key={user?._id}>
+            <div data-testid="suggestions-item" className="suggestions-item" key={Utils.generateString(10)}>
               <Avatar
                 name={user?.username}
                 bgColor={user?.avatarColor}

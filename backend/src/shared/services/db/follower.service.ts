@@ -61,17 +61,17 @@ class FollowerService {
             reaction: ''
         });
         socketIONotificationObject.emit('insert notification', notifications, {userTo: followedUserId});
-        const templateParams: INotificationTemplate = {
-            username: response[1].username!,
-            message: `${username} is now following you.`,
-            header: 'Follower Notification'
-        };
-        const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-        emailQueue.addEmailJob('followersEmail', {
-            receiverEmail: response[1].email!,
-            template,
-            subject: `${username} is now following you.`
-        });
+        // const templateParams: INotificationTemplate = {
+        //     username: response[1].username!,
+        //     message: `${username} is now following you.`,
+        //     header: 'Follower Notification'
+        // };
+        // const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+        // emailQueue.addEmailJob('followersEmail', {
+        //     receiverEmail: response[1].email!,
+        //     template,
+        //     subject: `${username} is now following you.`
+        // });
     }
 }
 
