@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactionsModal from '../reactions/reactions-modal/ReactionsModal.jsx';
 import { Utils } from '../../../services/utils/utils.service.jsx';
 import useLocalStorage from '../../../hooks/useLocalStorage.js';
-import CommentinputBox from '../comments/comment-input/CommentinputBox.jsx';
+import CommentInputBox from '../comments/comment-input/CommentinputBox.jsx';
 import CommentsModal from '../comments/comments-modal/CommentsModal.jsx';
 import ImageModal from '../../image-modal/ImageModal.jsx';
 import { openModal, toggleDeleteDialog } from '../../../redux-toolkit/reducers/model/modal.reducer.jsx';
@@ -182,7 +182,7 @@ const Post = ({ post, showIcons }) => {
                         </div>
                     </div>
 
-                    {selectedPostId === post?._id && <CommentinputBox post={post}/>}
+                    {selectedPostId === post?._id && <CommentInputBox post={post}/>}
 
                 </div>
             </div>
