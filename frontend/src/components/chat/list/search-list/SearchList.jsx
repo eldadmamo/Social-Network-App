@@ -2,9 +2,23 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './SearchList.scss'
 import Avatar from '../../../avatar/Avatar'
+import { useLocation, useNavigate, createSearchParams } from 'react-router-dom'
+
 
 const SearchList = ({result, isSearching, searchTerm, setSelectedUser, setSearch, setIsSearching, setSearchResult, setComponentType}) => {
-  return (
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const addUsernameToUrlQuery = (user) => {
+    setComponentType('searchList')
+    setSelectedUser(user)
+    const url = `${location.pathname}?${createSearchParams({username: user.username.toLowerCase(), id: user._id})}`
+    navigate(url);
+    setSearch('')
+    setIsSearching(false)
+    setSearchResult([])
+  }
+    return (
     <div className='search-result'>
         <div className='search-result-container'>
             {!isSearching && result.length > 0 && (
@@ -14,7 +28,7 @@ const SearchList = ({result, isSearching, searchTerm, setSelectedUser, setSearch
                     data-testid="search-result-item"
                     className='search-result-container-item'
                     key={user._id}
-
+                    onClick={() => addUsernameToUrlQuery(user)}
                     >
                         <Avatar
                         name={user.username}

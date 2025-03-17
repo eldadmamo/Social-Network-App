@@ -1,14 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '../../avatar/Avatar'
 import { FaSearch, FaTimes } from 'react-icons/fa'
 import Input from '../../input/input'
 import { useSelector } from 'react-redux'
 import { Utils } from '../../../services/utils/utils.service'
 import './ChatList.scss'
+import SearchList from './search-list/SearchList'
 
 const ChatList = () => {
     const {profile} = useSelector((state) => state.user);
-     
+    const {chatList} = useSelector((state) => state.chat);
+    const [search, setSearch] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [componentType, setComponentType] = useState('chatList')
+    const [chatMessageList, setChatMessageList] = useState([]);
+
+    useEffect(() => {
+        console.log(selectedUser,componentType,chatMessageList);
+        setChatMessageList(chatList);
+    },[chatList])
+
   return (
     <div data-testid="chatList">
     <div className="conversation-container">
@@ -52,7 +65,16 @@ const ChatList = () => {
                 ))}
             </div>
 
-            
+         <SearchList
+         searchTerm={search}
+         result={searchResult}
+         isSearching={isSearching}
+         setSearchResult={setSearchResult}
+         setIsSearching={setIsSearching}
+         setSearch={setSearch}
+         setSelectedUser={setSelectedUser}
+         setComponentType={setComponentType}
+         />            
         </div>
     </div>
 </div>
