@@ -8,6 +8,10 @@ import './ChatList.scss'
 import SearchList from './search-list/SearchList'
 import { userService } from '../../../services/api/user/user.service'
 import useDebounce from './../../../hooks/useDebounce';
+import { ChatUtils } from '../../../services/utils/chat-utils.service'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { setSelectedChatUser } from '../../../redux-toolkit/reducers/chat/chat.reducer'
+import { chatService } from '../../../services/api/chat/chat.service'
 
 const ChatList = () => {
     const {profile} = useSelector((state) => state.user);
@@ -20,6 +24,8 @@ const ChatList = () => {
     const [chatMessageList, setChatMessageList] = useState([]);
     const debounceValue = useDebounce(search, 1000);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const searchUsers = useCallback(
         async (query)=> {
@@ -37,14 +43,49 @@ const ChatList = () => {
         }
     },[dispatch])
 
+    const addSelectedUserToList = useCallback((user)=> {
+        const newUser = {
+        receiverId: user?._id,
+        receiverUsername: user?.username,
+        receiverAvatarColor: user?.avatarColor,
+        receiverProfilePicture: user?.profilePicture,
+        senderUsername: profile?.username,
+        senderId: profile?._id,
+        senderAvatarColor: profile?.avatarColor,
+        senderProfilePicture: profile?.profilePicture,
+        body: ''
+        }
+        ChatUtils.joinRoomEvent(user,profile);
+        ChatUtils.privateChatMessages = [];
+        const findUser = find(
+        chatMessageList, 
+        (chat) => chat.receiverId === searchParams.get('id') || chat.senderId === searchParams.get('id')
+        );
+        if(!findUser){
+            const newChatList = [newUser, ...chatMessageList];
+            setChatMessageList(newChatList);
+            if(!chatList.length) {
+                dispatch(setSelectedChatUser({isLoading: false, user: newUser}));
+                const userTwoName = newUser?.receiverUsername !== profile?.username ? newUser?.receiverUsername : newUser?.senderUsername;
+                chatService.addChatUsers({userOne: profile?.username, userTwo: userTwoName})
+            }
+        }
+    },[chatList, chatMessageList, dispatch, searchParams, profile])
+
     useEffect(()=> {
     if (debounceValue){
         searchUsers(debounceValue);
      }
     },[debounceValue,searchUsers])
 
+    useEffect(()=> {
+        if (selectedUser && componentType === 'searchList'){
+            addSelectedUserToList(selectedUser);
+         }
+        },[addSelectedUserToList, componentType, selectedUser])
+
     useEffect(() => {
-        console.log(selectedUser,componentType,chatMessageList);
+        
         setChatMessageList(chatList);
     },[chatList])
 
