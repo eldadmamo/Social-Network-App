@@ -101,7 +101,7 @@ const Following = () => {
         </div>
       )}
 
-      <div style={{ marginBottom: '80px', height: '50px' }}></div>
+      
     </div>
   );
 };

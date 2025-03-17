@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Avatar from '../../avatar/Avatar'
 import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa'
@@ -11,19 +11,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactionsModal from '../reactions/reactions-modal/ReactionsModal.jsx';
 import { Utils } from '../../../services/utils/utils.service.jsx';
 import useLocalStorage from '../../../hooks/useLocalStorage.js';
-import CommentinputBox from '../comments/comment-input/CommentinputBox.jsx';
+import CommentInputBox from '../comments/comment-input/CommentinputBox.jsx';
 import CommentsModal from '../comments/comments-modal/CommentsModal.jsx';
 import ImageModal from '../../image-modal/ImageModal.jsx';
 import { openModal, toggleDeleteDialog } from '../../../redux-toolkit/reducers/model/modal.reducer.jsx';
 import { clearPost, updatePostItem } from '../../../redux-toolkit/reducers/post/post.reducer.js';
 import Dialog from '../../dialog/Dialog.jsx';
 import { postService } from '../../../services/api/post/post.service.jsx';
+import { ImageUtils } from '../../../services/utils/image-utils.service.jsx';
 
 const Post = ({ post, showIcons }) => {
     const {_id} = useSelector((state) => state.post);
     const { reactionsModalIsOpen , commentsModalIsOpen, deleteDialogIsOpen } = useSelector((state) => state.modal);
     const [showImageModal , setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('')
+    const [backgroundImageColor, setBackgroundImageColor] = useState('')
     const selectedPostId = useLocalStorage('selectedPostId', 'get');
     const dispatch = useDispatch();
 
@@ -59,6 +61,21 @@ const Post = ({ post, showIcons }) => {
         dispatch(toggleDeleteDialog({toggle: !deleteDialogIsOpen}));
         dispatch(updatePostItem(post))
     }
+
+    const getBackgroundImageColor = async () => {
+        let imageUrl = '';
+        if (post?.imgId && !post?.gifUrl && post.bgColor === '#ffffff'){
+            imageUrl = Utils.getImage(post.imgId, post.imgVersion);
+        } else if (post?.gifUrl && post.bgColor === '#ffffff'){
+            imageUrl = post?.gifUrl;
+        }
+        const bgColor = await ImageUtils.getBackgroundImageColor(imageUrl);
+        setBackgroundImageColor(bgColor);
+    }
+
+    useEffect(()=> {
+        getBackgroundImageColor(post)
+    },[post])
 
     return (
         <>
@@ -138,24 +155,26 @@ const Post = ({ post, showIcons }) => {
                                 <div
                                     data-testid="post-image"
                                     className="image-display-flex"
+                                    style={{height: '600px', backgroundColor: `${backgroundImageColor}`}}
                                     onClick={()=> {
                                         setImageUrl(Utils.getImage(post.imgId, post.imgVersion))
                                         setShowImageModal(!showImageModal);
                                     }}
                                 >
-                                    <img className="post-image" src={`${Utils.getImage(post.imgId, post.imgVersion)}`} alt="" />
+                                    <img className="post-image" style={{objectFit: 'contain'}} src={`${Utils.getImage(post.imgId, post.imgVersion)}`} alt="" />
                                 </div>
                             )}
 
                             {post?.gifUrl && post.bgColor === '#ffffff' && (
                                 <div
                                     className="image-display-flex"
+                                    style={{height: '600px', backgroundColor: `${backgroundImageColor}`}}
                                     onClick={()=> {
                                         setImageUrl(post?.gifUrl)
                                         setShowImageModal(!showImageModal);
                                     }}
                                 >
-                                    <img className="post-image" src={`${post?.gifUrl}`} alt="" />
+                                    <img className="post-image" style={{objectFit: 'contain'}} src={`${post?.gifUrl}`} alt="" />
                                 </div>
                             )}
                             {(post?.reactions.length > 0 || post?.commentsCount > 0) && <hr />}
@@ -163,7 +182,7 @@ const Post = ({ post, showIcons }) => {
                         </div>
                     </div>
 
-                    {selectedPostId === post?._id && <CommentinputBox post={post}/>}
+                    {selectedPostId === post?._id && <CommentInputBox post={post}/>}
 
                 </div>
             </div>

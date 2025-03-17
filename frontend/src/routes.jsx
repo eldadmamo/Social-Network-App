@@ -8,6 +8,7 @@ import Error from "./pages/error/Error";
 import StreamsSkeleton from "./pages/social/streams/StreamsSkeleton";
 import NotificationSkeleton from "./pages/social/notifications/NotificationSkeleton";
 import CardSkeleton from "./components/card-element/CardSkeleton";
+import PhotoSkeleton from "./pages/social/photos/PhotoSkeleton";
 
 const Social = lazy(()=> import('./pages/social/Social'))
 const Chat = lazy(()=> import('./pages/social/chat/Chat'))
@@ -15,7 +16,7 @@ const Followers = lazy(()=> import('./pages/social/followers/followers'))
 const Following = lazy(()=> import('./pages/social/following/following'))
 const Notifications = lazy(()=> import('./pages/social/notifications/notifications'))
 const People = lazy(()=> import('./pages/social/people/people'))
-const Photo = lazy(()=> import('./pages/social/photos/photo'))
+const Photos = lazy(()=> import('./pages/social/photos/photos'))
 const Profiles = lazy(()=> import('./pages/social/profile/profile'))
 const Streams = lazy(()=> import('./pages/social/streams/Streams'))
 
@@ -84,8 +85,8 @@ export const AppRouter = () => {
                 {
                     path: 'photos',
                     element: (
-                        <Suspense>
-                            <Photo/>
+                        <Suspense fallback={<PhotoSkeleton/>}>
+                            <Photos/>
                         </Suspense>
                     ),  
                 },
