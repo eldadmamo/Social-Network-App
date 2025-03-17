@@ -8,6 +8,7 @@ import { addUser } from '../redux-toolkit/reducers/user/user.reducer'
 import { Utils } from '../services/utils/utils.service'
 import { Navigate, useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types';
+import { getConversationList } from '../redux-toolkit/api/chat'
 
 const ProtectedRoute = ({ children }) => {
     const { profile, token } = useSelector((state) => state.user);
@@ -24,6 +25,7 @@ const ProtectedRoute = ({ children }) => {
     const checkUser = useCallback(async () => {
       try {
         const response = await userService.checkCurrentUser();
+        dispatch(getConversationList())
         setUserData(response.data.user);
         setTokenIsValid(true);
         dispatch(addUser({ token: response.data.token, profile: response.data.user }));

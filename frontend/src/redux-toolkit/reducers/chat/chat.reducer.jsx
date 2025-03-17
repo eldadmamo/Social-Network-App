@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { orderBy } from 'lodash';
-import { getConversationList } from '../../../services/api/chat/chat.service';
+import { getConversationList } from '../../api/chat';
 
 const initialState = {
   chatList: [],
