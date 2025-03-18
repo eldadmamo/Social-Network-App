@@ -10,6 +10,7 @@ import { ChatUtils } from './../../../services/utils/chat-utils.service';
 import useEffectOnce from './../../../hooks/useEffectOnce';
 import { chatService } from '../../../services/api/chat/chat.service';
 import { some } from 'lodash';
+import MessageDisplay from './message-display/MessageDisplay';
 
 const ChatWindow = () => {
     const {profile} = useSelector((state) => state.user);
@@ -19,6 +20,7 @@ const ChatWindow = () => {
     const [chatMessages,setChatMessages] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([])
     const [searchParams] = useSearchParams();
+    const [rendered, setRendered] = useState('')
     const dispatch = useDispatch();
 
     const getChatMessages = useCallback(async (receiverId)=> {
@@ -76,16 +78,38 @@ const ChatWindow = () => {
         }
     };
 
-    useEffectOnce(()=> {
-        getUserProfileByUserId();
-        getNewUserMessages();
-    })
+    const updateMessageReaction = async (body) => {
+        try{
+            await chatService.updateMessageReaction(body);
+        }catch(error){
+            Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+        }
+    }
+
+    const deleteChatMessage = async (senderId, receiverId, messageId, type) => {
+        try{
+            await chatService.markMessageAsDelete(messageId, senderId, receiverId, type);
+        }catch(error){
+            Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+        }
+    }
 
     useEffect(()=> {
-        ChatUtils.socketIOMessageReceived(chatMessages, searchParams.get('username'), setConversationId, setChatMessages);
+        if(rendered){
+          getUserProfileByUserId()
+          getNewUserMessages()
+        }
+        if(!rendered) setRendered(true);
+    },[getUserProfileByUserId,getNewUserMessages, searchParams])
+
+    useEffect(()=> {
+        if (rendered){
+            ChatUtils.socketIOMessageReceived(chatMessages, searchParams.get('username'), setConversationId, setChatMessages);
+        }
+        if(!rendered) setRendered(true);
         ChatUtils.usersOnline(setOnlineUsers);
         ChatUtils.usersOnChatPage();
-    },[chatMessages,searchParams]);
+    },[chatMessages,searchParams, rendered]);
 
     useEffect(()=> {
         ChatUtils.socketIOMessageReaction(chatMessages, searchParams.get('username'), setConversationId, setChatMessages);
@@ -125,7 +149,12 @@ const ChatWindow = () => {
         </div>
         <div className="chat-window">
             <div className="chat-window-message">
-                Message Display component
+                <MessageDisplay
+                chatMessages={chatMessages}
+                profile={profile}
+                updateMessageReaction={updateMessageReaction}
+                deleteChatMessage={deleteChatMessage}
+                />
             </div>
             <div className="chat-window-input">
             
