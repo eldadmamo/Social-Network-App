@@ -1,5 +1,5 @@
 import { Request,response,Response } from "express";
-import HTTP_STATUS, { REQUESTED_RANGE_NOT_SATISFIABLE }  from 'http-status-codes';
+import HTTP_STATUS  from 'http-status-codes';
 import { UserCache } from "@service/redis/user.cache";
 import { IUserDocument } from "@user/interfaces/user.interface";
 import { joiValidation } from "@global/decorators/joi-validation.decorators";
@@ -11,7 +11,6 @@ import { uploads } from "@global/helpers/cloudinary-upload";
 import { BadRequestError } from "@global/helpers/error.handler";
 import { IMessageData, IMessageNotification } from "@chat/interfaces/chat.interface";
 import { socketIOChatObject } from "@socket/chat";
-import { CurrentUser } from './../../auth/controllers/current-user';
 import { INotificationTemplate } from "@root/features/notifications/interfaces/notification.interface";
 import { notificationTemplate } from "@service/emails/templates/notifications/notification-template";
 import { emailQueue } from "@service/queues/email.queue";
