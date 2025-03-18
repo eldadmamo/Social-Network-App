@@ -151,6 +151,7 @@ const ChatList = () => {
     useEffect(() => {
       setChatMessageList(chatList);
     }, [chatList]);
+
   
     useEffect(() => {
       if (rendered) {

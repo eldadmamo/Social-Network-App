@@ -1,0 +1,59 @@
+.chat-window-container {
+  display: grid;
+  grid:
+    "message-header"
+    "message-container";
+
+  // Make sure the container spans the full width of the screen
+  width: 100%;
+  max-width: 100%;
+  margin: 0; // Remove any default margin
+  padding: 0; // Remove any default padding
+
+  .chat-title {
+    grid-area: message-header;
+    display: grid;
+    grid-template-columns: 40px max-content;
+    height: 50px;
+    border-bottom: 1px solid var(--white-4);
+    margin-top: 10px;
+    padding: 0 15px;
+  }
+
+  .chat-window {
+    grid-area: message-container;
+    display: grid;
+    grid-template-areas:
+      "message-body"
+      "image-preview"
+      "message-form";
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.65fr max-content 45px; 
+    height: 826px;
+    position: relative;
+    background-repeat: no-repeat;
+
+    &-message {
+      grid-area: message-body;
+      height: 100%;
+      overflow-y: scroll;
+    }
+
+    &-input {
+      grid-area: message-form;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      z-index: 10;
+    }
+
+    app-image-preview {
+      grid-area: image-preview;
+      width: 100%;
+    }
+  }
+}
+
+.chat-window {
+  width: 100%; // Ensure the chat window spans the full width of the screen
+}

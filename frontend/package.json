@@ -15,10 +15,12 @@
     "test": "react-app-rewired test --coverage --forceExit --detectOpenHandles --watchAll=false"
   },
   "dependencies": {
+    "@loadable/component": "^5.16.4",
     "@reduxjs/toolkit": "^2.6.0",
     "axios": "^1.8.1",
     "data-fns": "^1.1.0",
     "date-fns": "^4.1.0",
+    "emoji-picker-react": "^4.12.2",
     "lodash": "^4.17.21",
     "millify": "^6.1.0",
     "react": "^18.2.0",
