@@ -43,7 +43,7 @@ export class UserCache extends BaseCache {
 
     const firstList =  {
       '_id': `${_id}`,
-      'uid': `${uId}`,
+      'uId': `${uId}`,
       'username': `${username}`,
       'email': `${email}`,
       'avatarColor':`${avatarColor}`,
