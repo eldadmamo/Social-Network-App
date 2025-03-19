@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
+import ImageGridModal from '../image-grid-modal/ImageGridModal';
+import Spinner from '../spinner/Spinner';
+import Button from '../button/Button';
 
 const BackgroundHeader = ({
     user,
@@ -77,20 +80,45 @@ const BackgroundHeader = ({
 
   return (
     <>
+    {showImagesModal && (
+        <ImageGridModal
+        images={galleryImages}
+        closeModal={()=> setShowImageModal(false)}
+        selectedImage={(event)=> {
+            setSelectedBackground(event);
+            selectedFileImage(event, 'background');
+        }}
+        />
+    )}
 <div className="profile-banner" data-testid="profile-banner">
+    {hasImage && (
     <div className="save-changes-container" data-testid="save-changes-container">
-        <div className="save-changes-box">
-            <div className="spinner-container">
-                <Spinner bgColor="white" />
-            </div>
-            <div className="save-changes-buttons">
-                <div className="save-changes-buttons-bg">
-                    <Button label="Cancel" className="cancel change-btn" disabled={false} />
-                    <Button label="Save Changes" className="save change-btn" disabled={false} />
-                </div>
-            </div>
-        </div>
-    </div>
+         <div className="save-changes-box">
+             <div className="spinner-container">
+                 {showSpinner && !hasError && <Spinner bgColor="white"/>}
+             </div>
+             <div className="save-changes-buttons">
+                 <div className="save-changes-buttons-bg">
+                     <Button label="Cancel" className="cancel change-btn" disabled={false} 
+                     handleClick={()=> {
+                        setShowSpinner(false)
+                        cancelFileSelection()
+                        hideSaveChangesContainer()
+                     }}
+                     />
+                     <Button label="Save Changes" className="save change-btn" disabled={false} 
+                       handleClick={()=> {
+                        setShowSpinner(true)
+                        const type = selectedBackground ? 'background': 'profile';
+                        saveImage(type);
+                       }}
+                     />
+                 </div>
+             </div>
+         </div>
+     </div>
+    )}
+   
     <div data-testid="profile-banner-image" className="profile-banner-image">
         <div className="delete-btn" data-testid="delete-btn">
             <Button label="Remove" className="remove" disabled={false} />
@@ -102,7 +130,7 @@ const BackgroundHeader = ({
         <div data-testid="profile-pic" className="profile-pic"
             >
             <Avatar name={user?.username} bgColor={user?.avatarColor} textColor="#ffffff" size={180} round={circularPic}
-                avatarSrc="" />
+                avatarSrc={selectedProfileImage || user?.profilePicture} />
             <div className="profile-pic-select" data-testid="profile-pic-select">
                 <Input type="file" className="inputFile" />
                 <label>
