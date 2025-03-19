@@ -3,6 +3,10 @@ import PropTypes from 'prop-types'
 import ImageGridModal from '../image-grid-modal/ImageGridModal';
 import Spinner from '../spinner/Spinner';
 import Button from '../button/Button';
+import Avatar from '../avatar/Avatar';
+import Input from '../input/input';
+import { FaCamera } from 'react-icons/fa';
+import './BackgroundHeader.scss'
 
 const BackgroundHeader = ({
     user,
@@ -129,7 +133,7 @@ const BackgroundHeader = ({
     <div className="profile-banner-data">
         <div data-testid="profile-pic" className="profile-pic"
             >
-            <Avatar name={user?.username} bgColor={user?.avatarColor} textColor="#ffffff" size={180} round={circularPic}
+            <Avatar name={user?.username} bgColor={user?.avatarColor} textColor="#ffffff" size={180} 
                 avatarSrc={selectedProfileImage || user?.profilePicture} />
             <div className="profile-pic-select" data-testid="profile-pic-select">
                 <Input type="file" className="inputFile" />
