@@ -64,8 +64,8 @@ const BackgroundHeader = ({
                         </li>
                     )}
                     <li
-                    onClick={(event)=> {
-                        backgroundFileInputClicked(event)
+                    onClick={()=> {
+                        backgroundFileInputClicked()
                         setIsActive(false)
                         setShowImageModal(false)
                     }}
@@ -95,7 +95,7 @@ const BackgroundHeader = ({
         }}
         />
     )}
-    {!loading ? (
+    {loading ? (
         <BackgroundHeaderSkeleton tabItems={tabItems} />
     ): (
         <div className="profile-banner" data-testid="profile-banner">
@@ -161,7 +161,7 @@ const BackgroundHeader = ({
                         profileImageRef.current.value = null;
                     }
                 }}
-                handleClick={(event)=> {
+                handleChange={(event)=> {
                     setSelectedProfileImage(URL.createObjectURL(event.target.files[0]));
                     selectedFileImage(event.target.files[0], 'profile');
                 }}
@@ -183,8 +183,8 @@ const BackgroundHeader = ({
                     backgroundFileRef.current.value = null;
                 }
             }}
-            handleClick={(event)=> {
-                setSelectedProfileImage(URL.createObjectURL(event.target.files[0]));
+            handleChange={(event)=> {
+                setSelectedBackground(URL.createObjectURL(event.target.files[0]));
                 selectedFileImage(event.target.files[0], 'background');
             }}
             />
@@ -198,7 +198,7 @@ const BackgroundHeader = ({
     </div>
     <div className="profile-banner-items">
         <ul className="banner-nav">
-            {tabItems.map((data) => {
+            {tabItems.map((data) => (
               <div data-testid="tab-elements" key={data.key}>
                 {data.show && (
                     <li className="banner-nav-item" key={data.key}>
@@ -211,7 +211,7 @@ const BackgroundHeader = ({
                 </li>
                 )}
             </div>
-            })}
+            ))}
         </ul>
     </div>
   </div>

@@ -9,7 +9,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "image": "https://media.licdn.com/dms/image/v2/D4E03AQFSJHY0JzUCug/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1730833758630?e=1746057600&v=beta&t=bOSwlFNSkdFkSmUHfzLFaALvpuB9aQQdpQ02S0jvzHY"
+  "image": "https://static.wikia.nocookie.net/id4/images/6/61/D99E253B-203E-489A-937B-1A802EB41BB0.jpg/revision/latest?cb=20220102193014"
 }
 
 
@@ -21,8 +21,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "image": "https://res.cloudinary.com/dggixttgq/image/upload/v1740590137/67be1c53ca10b4f2838ef1f5"
+  "image": "https://res.cloudinary.com/dggixttgq/image/upload/v1742485342/67dae4dd4a24251005859ad3"
 }
+
 
 
 ###
@@ -34,7 +35,7 @@ withCredentials: true
 
 ###
 
-DELETE {{baseUrl}}/{{urlPath}}/images/67bf4f7af81bd408c39a9a03
+DELETE {{baseUrl}}/{{urlPath}}/images/
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -43,7 +44,7 @@ withCredentials: true
 ###
 
 
-GET {{baseUrl}}/{{urlPath}}/images/67bc589111945b4bf432d7a8
+GET {{baseUrl}}/{{urlPath}}/images/67dae4dd4a24251005859ad3
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

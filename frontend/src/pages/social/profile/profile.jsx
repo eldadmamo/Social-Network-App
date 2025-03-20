@@ -6,12 +6,20 @@ import { userService } from '../../../services/api/user/user.service';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { tabItems } from '../../../services/utils/static.data';
 import './profile.scss'
-import { AddImage } from './../../../../../backend/src/features/images/controllers/add-image';
-import { Utils } from './../../../services/utils/utils.service';
 import { imageService } from './../../../services/api/image/image.service';
+import Timeline from '../../../components/timeline/Timeline';
+import FollowerCard from '../followers/FollowerCard';
+import GalleryImage from './../../../components/gallery-image/GalleryImage';
+import { toggleDeleteDialog } from '../../../redux-toolkit/reducers/model/modal.reducer';
+import ChangePassword from '../../../components/change-password/ChangePassword';
+import NotificationSettings from '../../../components/notification-settings/NotificationSettings';
+import { filter } from 'lodash';
+import ImageModal from '../../../components/image-modal/ImageModal';
+import Dialog from '../../../components/dialog/Dialog';
 
 const Profiles = () => {
   const {profile} = useSelector((state) => state.user);
+  const {deleteDialogIsOpen, data} = useSelector((state) => state.modal)
   const [user, setUser] = useState();
   const [rendered, setRendered] = useState(false)
   const [hasError, setHasError] = useState(false)
@@ -23,6 +31,7 @@ const Profiles = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [displayContent, setDisplayContent] = useState('timeline');
   const [loading , setLoading]  = useState(true)
+  const [showImagesModal, setShowImageModal] = useState(false)
   const [userProfileData, setUserProfileData] = useState(null)
   const dispatch = useDispatch();
   const {username} = useParams();
@@ -41,8 +50,8 @@ const Profiles = () => {
     }
   }
 
-  const getUserProfileByUsername = useCallback(async ()=>  {
-    try{
+  const getUserProfileByUsername = useCallback(async () => {
+    try {
       const response = await userService.getUserProfileByUsername(
         username, 
         searchParams.get('id'),
@@ -50,12 +59,23 @@ const Profiles = () => {
       );
       setUser(response.data.user);
       setUserProfileData(response.data);
-      setBgUrl(Utils.getImage(response.data.user?.bgImageId, response.data.user?.bgImageVersion))
+      // This will update bgUrl with the new image ID and version
+      setBgUrl(Utils.getImage(response.data.user?.bgImageId, response.data.user?.bgImageVersion));
       setLoading(false);
-    }catch(error){
+    } catch (error) {
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
     }
-  },[dispatch , searchParams, username])
+  }, [dispatch, searchParams, username]);
+
+  const getUserImages = useCallback(async () => {
+    try {
+      const imagesResponse = await imageService.getUserImages(searchParams.get('id'));
+      setGalleryImages(imagesResponse.data.images);
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  }, [dispatch, searchParams]);
+
 
   const saveImage = (type) => {
     const reader = new FileReader();
@@ -75,9 +95,11 @@ const Profiles = () => {
       const url = type === 'background' ? '/images/background' :'/images/profile'
       const response = await imageService.addImage(url, result);
       if(response){
-        Utils.dispatchNotification(error.response.data.message, 'success', dispatch);
+        Utils.dispatchNotification(response.data.message, 'success', dispatch);
         setHasError(false)
         setHasImage(false)
+        await getUserProfileByUsername();
+        await getUserImages();
       }
     }catch(error){
       setHasError(true)
@@ -85,7 +107,32 @@ const Profiles = () => {
     }
   }
 
-  const removeBackgroundImage = (type) => {};
+  const removeBackgroundImage = async (bgImageId) => {
+    try{
+      setBgUrl('')
+      await removeImage(`/image/background/${bgImageId}`)
+    }catch(error){
+      setHasError(true);
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  }
+
+  const removeImageFromGallery = async (imageId) => {
+    try{
+      dispatch(toggleDeleteDialog({toggle: false, data: null}))
+      const images = filter(galleryImages, (image) => image._id !== imageId);
+      setGalleryImages(images);
+      await removeImage(`/images/${imageId}`);
+    }catch(error){
+      setHasError(true);
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  }
+
+  const removeImage = async (url) => {
+    const response = await imageService.removeImage(url);
+    Utils.dispatchNotification(response.data.message, 'success', dispatch);
+  }
 
   const cancelFileSelection = () => {
     setHasImage(!hasImage);
@@ -97,12 +144,30 @@ const Profiles = () => {
   useEffect(()=> {
     if (rendered){
       getUserProfileByUsername();
+      getUserImages()
     }
     if(!rendered) setRendered(true);
-  },[rendered, getUserProfileByUsername])
+  },[rendered, getUserProfileByUsername, getUserImages])
 
   return (
     <>
+    {showImagesModal && (
+      <ImageModal
+      image={`${imageUrl}`}
+      onCancel={()=> setShowImageModal(!showImagesModal)}
+      showArrow={false}
+      />
+    )}
+    {deleteDialogIsOpen && (
+          <Dialog
+            title="Are you sure you want to delete this image?"
+            showButtons={true}
+            firstButtonText="Delete"
+            secondButtonText="Cancel"
+            firstBtnHandler={() => removeImageFromGallery(data)}
+            secondBtnHandler={() =>  dispatch(toggleDeleteDialog({toggle: false, data: null}))}
+          />
+        )}
       <div className='profile-wrapper'>
         <div className='profile-wrapper-container'>
           <div className='profile-header'>
@@ -122,6 +187,39 @@ const Profiles = () => {
             hideSettings={username === profile?.username}
             galleryImages={galleryImages}
             />
+          </div>
+          <div className='profile-content'>
+            {displayContent === 'timeline' && <Timeline userProfileData={userProfileData} loading={loading} />}
+            {displayContent === 'followers' && <FollowerCard userData={user} />}
+            {displayContent === 'gallery' && (
+              <>
+              {galleryImages.length > 0 && (
+                <>
+                <div className='imageGrid-container'>
+                  {galleryImages.map((image) => {
+                    <div key={image._id}>
+                      <GalleryImage
+                      showCaption={false}
+                      showDelete={true}
+                      imgSrc={Utils.getImage(image?.imgId, image.imgVersion)}
+                      onClick={()=> {
+                        setImageUrl(Utils.getImage(image?.imgId, image?.imgVersion))
+                        setShowImageModal(!showImagesModal);
+                      }}
+                      onRemoveImage={(event) => {
+                        event.stopPropagation();
+                        dispatch(toggleDeleteDialog({toggle: !deleteDialogIsOpen , data: image?._id}))
+                      }}
+                      />
+                    </div>
+                  })}
+                </div>
+                </>
+              )}
+              </>
+            )}
+            {displayContent === 'change password' && <ChangePassword />}
+            {displayContent === 'notification' && <NotificationSettings />}
           </div>
         </div>
       </div>
