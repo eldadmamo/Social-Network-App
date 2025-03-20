@@ -86,7 +86,7 @@ const Following = () => {
                 btnTextTwo="Unfollow"
                 onClickBtnOne={() => followUser(data)}
                 onClickBtnTwo={() => unFollowUser(data)}
-                onNavigateToProfile={() => ProfileUtils.navigateToProfile(data, navigate)}
+                onNavigateToProfile={()=> ProfileUtils.navigateToProfile(data, navigate)}
               />
             </div>
           ))}
