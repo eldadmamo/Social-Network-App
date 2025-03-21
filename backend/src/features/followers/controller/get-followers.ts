@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import HTTP_STATUS from 'http-status-codes';
 import mongoose from "mongoose";
 import { FollowerCache } from "@root/shared/services/redis/followe.cache";
-import { IFollower, IFollowerData } from "../interfaces/follower.interface";
+import { IFollowerData } from "../interfaces/follower.interface";
 import { followerService } from "@root/shared/services/db/follower.service";
 
 const followerCache: FollowerCache = new FollowerCache();

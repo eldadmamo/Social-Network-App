@@ -73,7 +73,6 @@ export class UserCache extends BaseCache {
     const dataToSave = {...firstList, ...secondList, ...thirdList};
 
     try {
-      ('users:1');
       if (!this.client.isOpen) {
         await this.client.connect();
       }
@@ -224,7 +223,7 @@ public async getRandomUsersFromCache(userId: string, excludedUsername: string): 
       }
 
       await this.client.HSET(`users:${userId}`,`${prop}`, JSON.stringify(value))
-      const response: IUserDocument = await this.getUserFromCache(userId) as IUserDocument;
+      const response: IUserDocument = (await this.getUserFromCache(userId)) as IUserDocument;
       return response;
     } catch(error){
       log.error(error);

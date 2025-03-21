@@ -91,7 +91,7 @@ export class FollowerCache extends BaseCache {
        }
 
 
-       const response: string = await this.client.HGET(`users:${key}`, prop) as string;
+       const response: string = (await this.client.HGET(`users:${key}`, prop)) as string;
        const multi: ReturnType<typeof this.client.multi> = this.client.multi();
 
        let blocked: string[] = Helpers.parseJson(response) as string[];

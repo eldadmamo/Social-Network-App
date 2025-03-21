@@ -1,4 +1,3 @@
-import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { BaseCache } from './base.cache';
 import Logger from 'bunyan';
 import { find } from 'lodash';
@@ -21,7 +20,7 @@ export class CommentCache extends BaseCache {
         await this.client.connect();
       }
       await this.client.LPUSH(`comments:${postId}`, value);
-      const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCache');
+      const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
       let count: number = Helpers.parseJson(commentsCount[0]) as number;
       count+=1;
       await this.client.HSET(`posts:${postId}`,'commentsCount', `${count}`)

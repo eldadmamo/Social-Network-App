@@ -39,7 +39,7 @@ const ChatList = () => {
           setSearch(query);
           if (query) {
             const response = await userService.searchUsers(query);
-            setSearchResult(response.data.Search);
+            setSearchResult(response.data.search);
             setIsSearching(false);
           }
         } catch (error) {

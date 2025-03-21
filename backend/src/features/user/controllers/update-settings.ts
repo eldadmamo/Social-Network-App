@@ -1,8 +1,5 @@
 import { Request,Response } from "express"
 import HTTP_STATUS from 'http-status-codes';
-import { Helpers } from "@global/helpers/helpers";
-import { userService } from "@service/db/user.service";
-import { ISearchUser } from "@user/interfaces/user.interface";
 import { UserCache } from "@service/redis/user.cache";
 import { joiValidation } from "@global/decorators/joi-validation.decorators";
 import { notificationSettingsSchema } from "@user/schemes/info";

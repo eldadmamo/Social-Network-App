@@ -54,7 +54,7 @@ public async addChatUsersToCache(value:IChatUsers): Promise<IChatUsers[]> {
       }
 
       const users: IChatUsers[] = await this.getChatUserList();
-      const usersIndex = findIndex(users, (listItem: IChatUsers) => JSON.stringify(listItem) === JSON.stringify(value))
+      const usersIndex: number = findIndex(users, (listItem: IChatUsers) => JSON.stringify(listItem) === JSON.stringify(value))
       let chatUsers: IChatUsers[] = [];
       if(usersIndex === -1){
         await this.client.RPUSH('chatUsers', JSON.stringify(value))
@@ -63,7 +63,6 @@ public async addChatUsersToCache(value:IChatUsers): Promise<IChatUsers[]> {
         chatUsers = users;
       }
       return chatUsers;
-
     }catch(error){
       log.error(error);
       throw new ServerError('Server error. Try again')

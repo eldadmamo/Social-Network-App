@@ -21,7 +21,7 @@ export class AddFollow {
     const followingCount: Promise<void> = followerCache.updateFollowersCountInCache(`${req.currentUser!.userId}`, 'followingCount', 1);
     await Promise.all([followersCount, followingCount]);
 
-    const cachedFollower: Promise<IUserDocument> = userCache.getUserFromCache(`${followerId}`) as Promise<IUserDocument>;
+    const cachedFollower: Promise<IUserDocument> = userCache.getUserFromCache(followerId) as Promise<IUserDocument>;
     const cachedFollowedUser: Promise<IUserDocument> = userCache.getUserFromCache(`${req.currentUser!.userId}`) as Promise<IUserDocument>;
     const response: [IUserDocument, IUserDocument] = await Promise.all([cachedFollower, cachedFollowedUser]);
 

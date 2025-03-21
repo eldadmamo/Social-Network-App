@@ -101,7 +101,7 @@ class UserService {
             }
         }
     ]);
-    const followers: string[] = await followerService.getFollowedUsersIds(userId);
+    const followers: string[] = await followerService.getFollowedUsersIds(`${userId}`);
     for (const user of users) {
         const followerIndex = indexOf(followers, user._id.toString());
         if (followerIndex < 0) {

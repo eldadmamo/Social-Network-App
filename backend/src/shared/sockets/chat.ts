@@ -1,5 +1,4 @@
 import { ISenderReceiver } from '@chat/interfaces/chat.interface';
-import { IFollowers } from '@root/features/followers/interfaces/follower.interface';
 import { Server, Socket } from 'socket.io';
 import { connectedUsersMap } from './user';
 

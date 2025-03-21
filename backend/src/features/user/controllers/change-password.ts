@@ -1,8 +1,7 @@
 import { Request,Response } from "express"
 import HTTP_STATUS from 'http-status-codes';
-import { Helpers } from "@global/helpers/helpers";
 import { userService } from "@service/db/user.service";
-import { IResetPasswordParams, ISearchUser, IUserDocument } from "@user/interfaces/user.interface";
+import { IResetPasswordParams} from "@user/interfaces/user.interface";
 import { joiValidation } from "@global/decorators/joi-validation.decorators";
 import { changePasswordSchema } from "@user/schemes/info";
 import { BadRequestError } from "@global/helpers/error.handler";
@@ -34,7 +33,7 @@ export class Update {
           username: existingUser.username!,
           email: existingUser.email!,
           ipaddress: publicIP.address(),
-          date: moment().format('DD/MM/YYY HH:mm')
+          date: moment().format('DD/MM/YYYY HH:mm')
         }
 
         const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);

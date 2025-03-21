@@ -21,7 +21,7 @@ const changePasswordSchema: ObjectSchema = Joi.object({
         'string.max': 'Password should have a maximum length of 20 characters',
         'string.empty': 'Current Password is a required field'
     }),
-    newPassword: Joi.string().required().min(8).max(20).messages({
+    newPassword: Joi.string().required().min(4).max(20).messages({
         'string.base': 'Password should be a type of string',
         'string.min': 'Password must have a minimum length of 8 characters',
         'string.max': 'Password should have a maximum length of 20 characters',
