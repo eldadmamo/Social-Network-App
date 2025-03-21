@@ -1,4 +1,4 @@
-import PostForm from '../../components/posts/post-form/PostFormSkeleton'
+import PostForm from '../posts/post-form/PostForm';
 import Post from '../../components/posts/post/Post'
 import CountContainer from './CountContainer';
 import { Utils } from '../../services/utils/utils.service'; 

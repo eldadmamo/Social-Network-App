@@ -109,7 +109,7 @@ const ChatWindow = () => {
         if(!rendered) setRendered(true);
         ChatUtils.usersOnline(setOnlineUsers);
         ChatUtils.usersOnChatPage();
-    },[chatMessages,searchParams, rendered]);
+    },[searchParams, rendered]);
 
     useEffect(()=> {
         ChatUtils.socketIOMessageReaction(chatMessages, searchParams.get('username'), setConversationId, setChatMessages);

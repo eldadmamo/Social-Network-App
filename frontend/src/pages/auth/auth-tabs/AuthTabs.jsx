@@ -6,6 +6,7 @@ import {Login, Register} from '../index'
 import useLocalStorage from '../../../hooks/useLocalStorage'
 import { useNavigate } from 'react-router-dom'
 import { Utils } from '../../../services/utils/utils.service'
+import PageLoader from '../../../components/page-loader/PageLoader'
 
 
 const AuthTabs = () => {
@@ -23,7 +24,10 @@ const AuthTabs = () => {
 
   return (
     <>
-      <div className='container-wrapper' style={{backgroundImage: `url(${backgroundImage})` }}>
+    {keepLoggedIn ? (
+      <PageLoader/>
+    ): (
+   <div className='container-wrapper' style={{backgroundImage: `url(${backgroundImage})` }}>
         <div className='environment'>{enviroment}</div>
         <div className='container-wrapper-auth'>
           <div className='tabs'>
@@ -50,6 +54,8 @@ const AuthTabs = () => {
           </div>
         </div>
       </div>
+    )}
+      
     </>
   )
 }

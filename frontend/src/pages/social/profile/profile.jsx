@@ -219,7 +219,7 @@ const Profiles = () => {
               </>
             )}
             {displayContent === 'change password' && <ChangePassword />}
-            {displayContent === 'notification' && <NotificationSettings />}
+            {displayContent === 'notifications' && <NotificationSettings />}
           </div>
         </div>
       </div>
