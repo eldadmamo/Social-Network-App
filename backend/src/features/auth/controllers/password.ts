@@ -16,7 +16,7 @@ import { resetPasswordTemplate } from "@root/shared/services/emails/templates/re
 
 export class Password {
   @joiValidation(emailSchema)
-  public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async create(req: Request, res: Response): Promise<void> {
     const {email} = req.body;
     const existingUser: IAuthDocument = await authService.getAuthUserByEmail(email);
     if(!existingUser){
@@ -25,7 +25,7 @@ export class Password {
 
     const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20));
     const randomCharaters: string = randomBytes.toString('hex');
-    await authService.updatePasswordToken(`${existingUser._id}`,randomCharaters, Date.now() * 60 * 60 * 1000);
+    await authService.updatePasswordToken(`${existingUser._id!}`,randomCharaters, Date.now() * 60 * 60 * 1000);
 
     const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomCharaters}`;
     const template: string = forgotPasswordTemplate.passwordResetTemplate(existingUser.username!, resetLink);
@@ -34,7 +34,7 @@ export class Password {
   }
 
   @joiValidation(passwordSchema)
-  public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async update(req: Request, res: Response): Promise<void> {
     const {password, confirmPassword} = req.body;
     const { token } = req.params;
     if(password !== confirmPassword){

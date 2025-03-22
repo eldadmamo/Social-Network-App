@@ -6,7 +6,7 @@ import { imageService } from '../services/db/image.service';
 const log: Logger = config.createLogger('imageWorker');
 
 class ImageWorker {
-  async addUserProfileImageDB(job: Job, done: DoneCallback): Promise<void> {
+  async addUserProfileImageToDB(job: Job, done: DoneCallback): Promise<void> {
     try {
       const { key, value, imgId, imgVersion } = job.data;
       await imageService.addUserProfileImageToDB(key, value, imgId, imgVersion);

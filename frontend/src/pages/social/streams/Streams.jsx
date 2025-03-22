@@ -41,7 +41,7 @@ const Streams = () => {
     if(currentPage <= Math.round(totalPostsCount/ PAGE_SIZE)){
       pageNum += 1;
       setCurrentPage(pageNum);
-      
+      getAllPosts()
     }
   }
 

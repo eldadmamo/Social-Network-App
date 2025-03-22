@@ -134,7 +134,7 @@ export class Utils {
     
       static getVideo(videoId, videoVersion) {
         return videoId && videoVersion
-          ? `https://res.cloudinary.com/dyamr9ym3/video/upload/v${videoVersion}/${videoId}`
+          ? `https://res.cloudinary.com/dggixttgq/video/upload/v${videoVersion}/${videoId}`
           : '';
       }
     

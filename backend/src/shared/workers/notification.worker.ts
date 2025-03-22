@@ -1,10 +1,9 @@
  import { DoneCallback, Job } from 'bull';
  import Logger from 'bunyan';
  import { config } from '@root/config';
- import { mailTransport } from '../services/emails/main.transport';
-import { notificationService } from '../services/db/notification.service';
+ import { notificationService } from '../services/db/notification.service';
 
- const log: Logger = config.createLogger('emailWorker');
+ const log: Logger = config.createLogger('notificationWorker');
 
  class NotificationWorker {
    async updateNotification(job: Job, done: DoneCallback): Promise<void> {

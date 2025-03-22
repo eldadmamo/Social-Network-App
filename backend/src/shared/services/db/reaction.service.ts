@@ -9,7 +9,6 @@ import mongoose from "mongoose";
 import { Helpers } from "@root/shared/globals/helpers/helpers";
 import { INotificationDocument, INotificationTemplate } from "@root/features/notifications/interfaces/notification.interface";
 import { NotificationModel } from "@root/features/notifications/models/notification.schema";
-import { BulkWriteResult } from "mongodb";
 import { socketIONotificationObject } from "@root/shared/sockets/notification";
 import { notificationTemplate } from "../emails/templates/notifications/notification-template";
 import { emailQueue } from "../queues/email.queue";

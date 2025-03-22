@@ -4,9 +4,9 @@ import { joiValidation } from '@root/shared/globals/decorators/joi-validation.de
 import { signupSchema } from '../schemes/signup';
 import { IAuthDocument, ISignUpData } from '../interfaces/auth.interface';
 import { authService } from '@root/shared/services/db/auth.service';
-import { BadRequestError } from '@root/shared/globals/helpers/error.handler';
 import { Helpers } from '@root/shared/globals/helpers/helpers';
-import { UploadApiOptions } from 'cloudinary';
+import { BadRequestError } from '@root/shared/globals/helpers/error.handler';
+import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@root/shared/globals/helpers/cloudinary-upload';
 import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@root/features/user/interfaces/user.interface';
@@ -39,7 +39,7 @@ export class SignUp {
       password,
       avatarColor
     });
-    const result: UploadApiOptions = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiOptions;
+    const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiResponse;
     if (!result?.public_id) {
       throw new BadRequestError('File upload: Error Occured. Try Again.');
     }
@@ -51,7 +51,7 @@ export class SignUp {
 
     // Add to database
     // omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-    authQueue.addAuthUserJob('addAuthUserDB', { value: authData });
+    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
@@ -83,7 +83,7 @@ export class SignUp {
       password,
       avatarColor,
       createdAt: new Date()
-    } as unknown as IAuthDocument;
+    } as IAuthDocument;
   }
 
   private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {

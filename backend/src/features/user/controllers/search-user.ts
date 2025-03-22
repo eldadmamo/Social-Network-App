@@ -9,6 +9,6 @@ export class Search {
 
     const regex = new RegExp(Helpers.escapeRegex(req.params.query), 'i');
     const users: ISearchUser[] = await userService.searchUsers(regex);
-    res.status(HTTP_STATUS.OK).json({message: 'Search Results', Search: users})
+    res.status(HTTP_STATUS.OK).json({message: 'Search Results', search: users})
   }
 }

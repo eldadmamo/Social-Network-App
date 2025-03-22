@@ -1,5 +1,4 @@
 import { ICommentDocument, ICommentJob, ICommentNameList, IQueryComment } from "@root/features/comment/interfaces/comment.interface";
-
 import { IPostDocument } from "@root/features/post/interfaces/post.interface";
 import { PostModel } from "@root/features/post/models/post.schema";
 import mongoose,{ Query } from "mongoose";

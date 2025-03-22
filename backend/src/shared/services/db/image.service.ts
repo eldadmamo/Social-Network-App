@@ -29,7 +29,7 @@ class ImageService {
   }
 
   public async getImageByBackgroundId(bgImageId: string): Promise<IFileImageDocument> {
-    const image: IFileImageDocument | null = (await ImageModel.findOne({bgImageId}).exec()) as IFileImageDocument;
+    const image: IFileImageDocument  = (await ImageModel.findOne({bgImageId}).exec()) as IFileImageDocument;
     return image;
   }
 

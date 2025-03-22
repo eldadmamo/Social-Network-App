@@ -15,12 +15,13 @@ import { FollowersUtils } from '../../../services/utils/followers-utils.service'
 import { socketService } from '../../../services/socket/socket.service';
 import CardElementButtons from '../../../components/card-element/CardElementButton';
 import { followerService } from '../../../services/api/followers/follower.server';
+import { ChatUtils } from '../../../services/utils/chat-utils.service';
 
 const People = () => {
   const {profile} = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [onlineUsers] = useState([])
+  const [onlineUsers, setOnlineUsers] = useState([])
   const [loading,setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalUsersCount, setTotalUsersCount] = useState(0);
@@ -97,6 +98,7 @@ const People = () => {
 
   useEffect(()=> {
     FollowersUtils.socketIOFollowAndUnfollow(users, following, setFollowing, setUsers);
+    ChatUtils.usersOnline(setOnlineUsers);
   },[following, users]);
 
 

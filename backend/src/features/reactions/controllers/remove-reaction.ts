@@ -2,11 +2,10 @@ import { Request,Response } from "express";
 import HTTP_STATUS from 'http-status-codes';
 import { joiValidation } from "@root/shared/globals/decorators/joi-validation.decorators";
 import { addReactionSchema } from "../schemes/reactions";
-import { IReactionDocument, IReactionJob } from "../interfaces/reaction.interface";
-import { ObjectId } from 'mongodb';
+import {  IReactionJob } from "../interfaces/reaction.interface";
 import { ReactionCache } from './../../../shared/services/redis/reaction.cache';
 import { reactionQueue } from "@root/shared/services/queues/reaction.queue";
-import { CurrentUser } from './../../auth/controllers/current-user';
+
 
 const reactionCache: ReactionCache = new ReactionCache();
 

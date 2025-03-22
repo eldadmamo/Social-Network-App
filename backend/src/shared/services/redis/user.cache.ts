@@ -73,7 +73,6 @@ export class UserCache extends BaseCache {
     const dataToSave = {...firstList, ...secondList, ...thirdList};
 
     try {
-      ('users:1');
       if (!this.client.isOpen) {
         await this.client.connect();
       }
@@ -106,6 +105,10 @@ export class UserCache extends BaseCache {
       response.bgImageId = Helpers.parseJson(`${response.bgImageId}`);
       response.bgImageVersion = Helpers.parseJson(`${response.bgImageVersion}`);
       response.profilePicture = Helpers.parseJson(`${response.profilePicture}`);
+      response.work = Helpers.parseJson(`${response.work}`);
+      response.school = Helpers.parseJson(`${response.school}`);
+      response.location = Helpers.parseJson(`${response.location}`);
+      response.quote = Helpers.parseJson(`${response.quote}`);
 
       return response;
     } catch (error) {
@@ -220,7 +223,7 @@ public async getRandomUsersFromCache(userId: string, excludedUsername: string): 
       }
 
       await this.client.HSET(`users:${userId}`,`${prop}`, JSON.stringify(value))
-      const response: IUserDocument = await this.getUserFromCache(userId) as IUserDocument;
+      const response: IUserDocument = (await this.getUserFromCache(userId)) as IUserDocument;
       return response;
     } catch(error){
       log.error(error);

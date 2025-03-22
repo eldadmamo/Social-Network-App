@@ -1,11 +1,11 @@
-import { Request,response,Response } from "express";
+import { Request,Response } from "express";
 import HTTP_STATUS  from 'http-status-codes';
 import { UserCache } from "@service/redis/user.cache";
 import { IUserDocument } from "@user/interfaces/user.interface";
 import { joiValidation } from "@global/decorators/joi-validation.decorators";
 import { addChatSchema } from "@chat/schemes/chat";
 import { ObjectId } from 'mongodb';
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import { UploadApiResponse } from "cloudinary";
 import { uploads } from "@global/helpers/cloudinary-upload";
 import { BadRequestError } from "@global/helpers/error.handler";

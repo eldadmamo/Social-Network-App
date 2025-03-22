@@ -1,4 +1,4 @@
-import { IGetPostsQuery, IPostDocument, IQueryDeleted } from "@root/features/post/interfaces/post.interface";
+import { IGetPostsQuery, IPostDocument,IQueryComplete, IQueryDeleted } from "@root/features/post/interfaces/post.interface";
 import { PostModel } from "@root/features/post/models/post.schema";
 import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { UserModel } from "@root/features/user/models/user.schema";

@@ -1,5 +1,5 @@
 import HTTP_STATUS from 'http-status-codes';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 export class SignOut {
   public async update(req: Request, res: Response): Promise<void> {

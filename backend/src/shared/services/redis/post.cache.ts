@@ -105,7 +105,7 @@ export class PostCache extends BaseCache {
       return postReplies;
     } catch (error) {
       log.error(error);
-      throw new ServerError('Server error. Try again.GetPostsFromCache');
+      throw new ServerError('Server error. Try again.');
     }
   }
 
@@ -157,7 +157,8 @@ export class PostCache extends BaseCache {
         await this.client.connect();
       }
 
-      const reply: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
+      const reply: string[] = await this.client.ZRANGE(key, start, end);
+      reply.reverse();
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const value of reply) {
         multi.HGETALL(`posts:${value}`);
@@ -268,13 +269,13 @@ export class PostCache extends BaseCache {
       }
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       multi.HGETALL(`posts:${key}`);
-      const reply: PostCacheMultiType = await multi.exec() as PostCacheMultiType;
+      const reply: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
       const postReply = reply as IPostDocument[];
       postReply[0].commentsCount = Helpers.parseJson(`${postReply[0].commentsCount}`) as number;
       postReply[0].reactions = Helpers.parseJson(`${postReply[0].reactions}`) as IReactions;
       postReply[0].createdAt = new Date(Helpers.parseJson(`${postReply[0].createdAt}`)) as Date;
-      return postReply[0];
 
+      return postReply[0];
 
     }catch(error){
       log.info('');

@@ -7,10 +7,8 @@ import { authService } from '@root/shared/services/db/auth.service';
 import { BadRequestError } from '@root/shared/globals/helpers/error.handler';
 import { loginSchema } from '../schemes/signin';
 import { IAuthDocument } from '../interfaces/auth.interface';
-import { IResetPasswordParams, IUserDocument } from '@root/features/user/interfaces/user.interface';
+import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { userService } from '@root/shared/services/db/user.service';
-import { forgotPasswordTemplate } from '@root/shared/services/emails/templates/forgot-password/forgot-password-template';
-import { emailQueue } from '@root/shared/services/queues/email.queue';
 
 
 export class SignIn {

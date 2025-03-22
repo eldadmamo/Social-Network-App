@@ -23,13 +23,13 @@ export class AddImage {
     }
 
     const url = `https://res.cloudinary.com/dggixttgq/image/upload/v${result.version}/${result.public_id}`;
-    const cachedUser: IUserDocument | null = await userCache.updateSingleUserItemInCache(
+    const cachedUser: IUserDocument | null = (await userCache.updateSingleUserItemInCache(
       `${req.currentUser!.userId}`,
       'profilePicture',
       url
-    ) as IUserDocument;
+    )) as IUserDocument;
     socketIOImageObject.emit('update user', cachedUser);
-    imageQueue.addImageJob('addUserProfileImageDB', {
+    imageQueue.addImageJob('addUserProfileImageToDB', {
       key: `${req.currentUser!.userId}`,
       value: url,
       imgId: result.public_id,

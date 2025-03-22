@@ -5,7 +5,7 @@ import { imageWorker } from "@root/shared/workers/image.worker";
 class ImageQueue extends BaseQueue {
   constructor(){
     super('images');
-    this.processJob('addUserProfileImageDB', 5, imageWorker.addUserProfileImageDB);
+    this.processJob('addUserProfileImageToDB', 5, imageWorker.addUserProfileImageToDB);
     this.processJob('updateBGImageInDB', 5, imageWorker.updateBGImageInDB);
     this.processJob('addImageToDB', 5, imageWorker.addImageToDB);
     this.processJob('removeImageFromDB', 5, imageWorker.removeImageFromDB);

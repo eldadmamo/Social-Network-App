@@ -1,7 +1,5 @@
-import { joiValidation } from "@root/shared/globals/decorators/joi-validation.decorators";
 import { UserCache } from "@root/shared/services/redis/user.cache";
 import { Request,Response } from "express";
-import { addImageSchema } from "../schemes/images";
 import { IUserDocument } from "@root/features/user/interfaces/user.interface";
 import { socketIOImageObject } from "@root/shared/sockets/image";
 import { imageQueue } from "@root/shared/services/queues/image.queue";
@@ -36,7 +34,7 @@ export class DeleteImage {
       'bgImageVersion',
       ''
     ) as Promise<IUserDocument>;
-    await Promise.all([bgImageId, bgImageVersion]) as [IUserDocument, IUserDocument];
+    (await Promise.all([bgImageId, bgImageVersion])) as [IUserDocument, IUserDocument];
 
 
     imageQueue.addImageJob('removeImageFromDB', {

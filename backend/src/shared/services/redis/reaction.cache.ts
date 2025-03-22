@@ -1,4 +1,3 @@
-import { IUserDocument } from '@root/features/user/interfaces/user.interface';
 import { BaseCache } from './base.cache';
 import Logger from 'bunyan';
 import { find } from 'lodash';
@@ -100,6 +99,7 @@ export class ReactionCache extends BaseCache {
       const result: IReactionDocument = find(list, (listItem: IReactionDocument) => {
         return listItem?.postId === postId && listItem?.username === username;
       }) as IReactionDocument;
+
       return result ?  [result, 1]: [];
     } catch(error){
       log.error(error);

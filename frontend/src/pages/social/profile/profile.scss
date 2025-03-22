@@ -3,12 +3,14 @@
     max-width: 1152px;
     margin: auto;
     overflow: scroll;
+    margin: 0 50px;
   
     &-container {
       display: grid;
       grid-template-areas:
         "header"
         "content";
+        width: 1100px;
       grid-template-columns: 1fr;
       grid-template-rows: 1fr;
   

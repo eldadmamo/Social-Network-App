@@ -35,8 +35,5 @@ export class AddUser {
     const blocked: Promise<void> = followerCache.updateBlockedUserPropInCache(`${userId}`, 'blocked',`${followerId}`, type);
     const blockedBy: Promise<void> = followerCache.updateBlockedUserPropInCache(`${followerId}`, 'blockedBy',`${userId}`, type);
     await Promise.all([blocked, blockedBy]);
-
-
-
   }
 }
