@@ -52,8 +52,6 @@ export class FollowersUtils {
     });
   }
 
-  socketIoFollowUsersSuggestions
-
   static socketIOBlockAndUnblock(profile, token, setBlockedUsers, dispatch) {
     socketService?.socket?.on('blocked user id', (data) => {
       const user = FollowersUtils.addBlockedUser(profile, data);

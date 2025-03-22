@@ -1,12 +1,13 @@
 import './AuthTabs.scss'
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import backgroundImage from '../../../assets/images/background.jpg'
-import {Login, Register} from '../index'
+import Login from './../login/Login';
+import Register from './../register/Register';
 import useLocalStorage from '../../../hooks/useLocalStorage'
 import { useNavigate } from 'react-router-dom'
 import { Utils } from '../../../services/utils/utils.service'
 import PageLoader from '../../../components/page-loader/PageLoader'
+
 
 
 const AuthTabs = () => {

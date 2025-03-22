@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Utils } from '../../../services/utils/utils.service';
 import { useDispatch, useSelector } from 'react-redux';
 import { postService } from '../../../services/api/post/post.service';
@@ -7,7 +7,6 @@ import useEffectOnce from '../../../hooks/useEffectOnce';
 import GalleryImage from '../../../components/gallery-image/GalleryImage';
 import { PostUtils } from '../../../services/utils/post-utils.service';
 import './photos.scss'
-import { set } from 'lodash';
 import ImageModal from '../../../components/image-modal/ImageModal';
 
 const Photos = () => {
@@ -110,7 +109,9 @@ const Photos = () => {
           />
         )}
         <div className='photos'>Photos</div>
-        {posts.map((post, index) => (
+        {posts.length > 0 && (
+          <div className="gallery-images">
+            {posts.map((post, index) => (
               <div
                 key={Utils.generateString(10)}
                 className={`${!emptyPost(post) ? 'empty-post-div' : ''}`}
@@ -128,12 +129,10 @@ const Photos = () => {
                           onClick={() => {
                             setRightImageIndex(index + 1);
                             setLeftImageIndex(index);
-
                             setLastItemLeft(index === 0);
                             setLastItemRight(index + 1 === posts.length);
-
-                            setShowImageModal(!showImageModal)
-                            setImageUrl(postImageUrl(post))
+                            setImageUrl(postImageUrl(post));
+                            setShowImageModal(!showImageModal);
                           }}
                         />
                       </>
@@ -142,6 +141,8 @@ const Photos = () => {
                 )}
               </div>
             ))}
+          </div>
+        )}
 
       {loading && !posts.length && <div className="card-element" style={{ height: '350px' }}></div>}
 

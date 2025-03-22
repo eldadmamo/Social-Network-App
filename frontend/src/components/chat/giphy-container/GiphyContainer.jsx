@@ -6,7 +6,6 @@ import './GiphyContainer.scss';
 import { Utils } from './../../../services/utils/utils.service';
 import { GiphyUtils } from './../../../services/utils/giphy-utils.service';
 import Spinner from './../../spinner/Spinner';
-import './GiphyContainer.scss'
 
 const GiphyContainer = ({ handleGiphyClick }) => {
   const [gifs, setGifs] = useState([]);

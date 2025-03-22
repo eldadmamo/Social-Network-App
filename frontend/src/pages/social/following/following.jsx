@@ -11,6 +11,7 @@ import { Utils } from '../../../services/utils/utils.service';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import './following.scss'
 
 const Following = () => {
   const { profile } = useSelector((state) => state.user);

@@ -1,7 +1,8 @@
 .private-chat-wrapper {
   height: 100vh;
   max-width: 1152px;
-  margin: auto;
+  margin: 0 60px;
+
 
   &-content {
     margin-top: 20px;
@@ -20,28 +21,13 @@
       flex-basis: 300px;
       border-right: 1px solid var(--white-4);
       padding: 0 15px;
-      transition: width 0.3s ease;
     }
 
     &-conversation {
       grid-area: message;
       flex-grow: 1;
-      transition: width 0.3s ease;
+      width: 900px;
 
-      .no-chattwo  {
-        color: var(--black-3);
-        font-weight: 700;
-        font-size: 18px;
-        padding: 10px;
-        background-color: var(--white-1);
-        width: 300%;
-        display: flex;
-        justify-content: start;
-        height: 100%;
-        align-items: center;
-        transition: width 0.3s ease;
-      }
-      
       .no-chat {
         color: var(--black-3);
         font-weight: 700;
@@ -54,12 +40,6 @@
         justify-content: center;
         height: 100%;
         align-items: center;
-        transition: width 0.3s ease;
-      }
-
-      &.full-width {
-        grid-column: span 2; // Take the full width
-        width: 100%;
       }
     }
   }

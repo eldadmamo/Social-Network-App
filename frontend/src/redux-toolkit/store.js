@@ -9,13 +9,13 @@ import chatReducer from '../redux-toolkit/reducers/chat/chat.reducer'
 
 export const store = configureStore({
     reducer: {
-        user: userReducer,
-        suggestions: suggestionsReduce,
-        notifications: notificationReducer,
-        modal: modalReducer,
-        post: postReducer,
-        allPosts: postReducer,
-        userPostReactions: userPostReactionReducer,
-        chat: chatReducer
+      user: userReducer,
+      suggestions: suggestionsReduce,
+      notifications: notificationReducer,
+      modal: modalReducer,
+      post: postReducer,
+      allPosts: postReducer,
+      userPostReactions: userPostReactionReducer,
+      chat: chatReducer
     }
-})
+  });

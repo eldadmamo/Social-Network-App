@@ -10,11 +10,11 @@ Accept: application/json
 withCredentials: true
 
 {
-  "post": "This is my first Second post",
+  "post": "This is my First post",
   "bgColor": "#41aa1f3",
   "privacy": "Public",
   "gifUrl": "",
-  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1739971415/67b5db56239edd72a49f8bd8",
+  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1742638735/67de8e8ce87999713688236b",
   "feelings": "happy"
 }
 
@@ -30,9 +30,9 @@ withCredentials: true
   "bgColor": "#41aa1f3",
   "privacy": "Public",
   "gifUrl": "",
-  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1739971415/67b5db56239edd72a49f8bd8",
+  "profilePicture": "https://res.cloudinary.com/dggixttgq/image/upload/v1742638735/67de8e8ce87999713688236b",
   "feelings": "sad",
-  "image": "https://m.media-amazon.com/images/M/MV5BOGZlMWY3ZGUtMWQ4Yy00OWNkLWIxNDYtNzcwYTVjMTc3ZTA4XkEyXkFqcGdeQXJoYW5uYWg@._V1_.jpg"
+  "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Geneva_MotorShow_2013_-_Lamborghini_Veneno_1.jpg/1200px-Geneva_MotorShow_2013_-_Lamborghini_Veneno_1.jpg"
 }
 
 ###
