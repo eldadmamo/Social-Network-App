@@ -1,4 +1,4 @@
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/double-checkmark.png';
 import { FaCaretDown, FaCaretUp, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
 import { useState, useEffect, useRef } from 'react';
 import './Header.scss';
@@ -189,14 +189,14 @@ const Header = () => {
           )}
           <div className="header-navbar">
             <div className="header-image" data-testid="header-image" onClick={() => navigate('/app/social/streams')}>
-              <img src={logo} className="img-fluid" alt="" />
+              {/* <img src={logo} className="img-fluid" alt="" /> */}
               <div className="app-name">
-                Chatty
-                {environment && (
+                Social Network
+                {/* {environment && (
                   <span className="environment" style={{ backgroundColor: `${backgrounColor}` }}>
                     {environment}
                   </span>
-                )}
+                )} */}
               </div>
             </div>
             <div className="header-menu-toggle">
@@ -215,12 +215,12 @@ const Header = () => {
                 }}
               >
                 <span className="header-list-name">
-                  <FaRegBell className="header-list-icon" />
+                  {/* <FaRegBell className="header-list-icon" />
                   {notificationCount > 0 && (
                     <span className="bg-danger-dots dots" data-testid="notification-dots">
                       {notificationCount}
                     </span>
-                  )}
+                  )} */}
                 </span>
                 {isNotificationActive && (
                   <ul className="dropdown-ul" ref={notificationRef}>

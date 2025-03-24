@@ -150,8 +150,8 @@ export class Utils {
     
       static renameFile(element) {
         const fileName = element.name.split('.').slice(0, -1).join('.');
-        const blob = element.slice(0, element.size, '/image/png');
-        const newFile = new File([blob], `${fileName}.png`, { type: '/image/png' });
+        const blob = element.slice(0, element.size, 'image/png'); // Fix here
+        const newFile = new File([blob], `${fileName}.png`, { type: 'image/png' }); // And here
         return newFile;
       }
 }

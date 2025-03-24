@@ -84,8 +84,12 @@ const Profile = () => {
 
   const saveImage = (type) => {
     const reader = new FileReader();
-    reader.addEventListener('load', async () => addImage(reader.result, type), false);
-
+    
+    reader.addEventListener('load', async () => {
+      console.log('FileReader result:', reader.result);
+      addImage(reader.result, type);
+  }, false);
+  
     if (selectedBackgroundImage && typeof selectedBackgroundImage !== 'string') {
       reader.readAsDataURL(Utils.renameFile(selectedBackgroundImage));
     } else if (selectedProfileImage && typeof selectedProfileImage !== 'string') {

@@ -10,42 +10,44 @@ import './photos.scss'
 import ImageModal from '../../../components/image-modal/ImageModal';
 
 const Photos = () => {
-  const {profile} = useSelector((state) => state.user);
+  const { profile } = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState('');
   const [showImageModal, setShowImageModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [rightImageIndex, setRightImageIndex] = useState();
   const [leftImageIndex, setLeftImageIndex] = useState();
   const [lastItemRight, setLastItemRight] = useState(false);
-  const [lastItemLeft, setLastItemLeft] = useState(false)
+  const [lastItemLeft, setLastItemLeft] = useState(false);
   const dispatch = useDispatch();
 
   const getPostsWithImages = async () => {
-    try{
+    try {
       const response = await postService.getPostsWithImages(1);
       setPosts(response.data.posts);
-      setLoading(false)
-    }catch(error){
-      setLoading(false)
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
     }
-  }
+  };
+
+  const getUserFollowing = async () => {
+    try {
+      const response = await followerService.getUserFollowing();
+      setFollowing(response.data.following);
+    } catch (error) {
+      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
+    }
+  };
 
   const postImageUrl = (post) => {
-    const imgUrl = Utils.getImage(post?.image, post?.imageVersion);
+    const imgUrl = Utils.getImage(post?.imgId, post?.imgVersion);
     return post?.gifUrl ? post?.gifUrl : imgUrl;
   }
 
-  const getUserFollowing = async () => {
-    try{
-      const response = await followerService.getUserFollowing();
-      setFollowing(response.data.following);
-    }catch(error){
-      Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
-    }
-  }
+  
 
   const emptyPost = (post) => {
     return (

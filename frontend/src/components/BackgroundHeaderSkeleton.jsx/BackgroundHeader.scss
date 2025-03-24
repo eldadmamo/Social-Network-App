@@ -120,6 +120,7 @@
             display: none;
           }
         }
+        
   
         label {
           background-color: var(--white-1);
@@ -254,7 +255,7 @@
           grid-area: spinner;
           position: relative;
         }
-  
+        
         .save-changes-buttons {
           grid-area: buttons;
           text-align: right;
@@ -295,6 +296,7 @@
             font-weight: 800;
             text-align: center;
             vertical-align: middle;
+            margin-right: 50px;
             border: 1px solid transparent;
             line-height: 1.5;
             font-size: 14px;

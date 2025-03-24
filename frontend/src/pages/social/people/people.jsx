@@ -18,150 +18,141 @@ import { followerService } from '../../../services/api/followers/follower.server
 import { ChatUtils } from '../../../services/utils/chat-utils.service';
 
 const People = () => {
-  const {profile} = useSelector((state) => state.user);
+  const { profile } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState([])
-  const [loading,setLoading] = useState(true);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalUsersCount, setTotalUsersCount] = useState(0);
   const bodyRef = useRef(null);
   const bottomLineRef = useRef(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   useInfiniteScroll(bodyRef, bottomLineRef, fetchData);
-  const dispatch = useDispatch();
 
   const PAGE_SIZE = 12;
 
-  function fetchData(){
+  function fetchData() {
     let pageNum = currentPage;
-    if(currentPage <= Math.round(totalUsersCount / PAGE_SIZE)) {
+    if (currentPage <= Math.round(totalUsersCount / PAGE_SIZE)) {
       pageNum += 1;
       setCurrentPage(pageNum);
       getAllUsers();
     }
   }
 
-  const getAllUsers = useCallback(async ()=> {
-    try{
+  const getAllUsers = useCallback(async () => {
+    try {
       const response = await userService.getAllUsers(currentPage);
-      console.log(response.data.users);
-      if(response.data.users.length > 0){
+      if (response.data.users.length > 0) {
         setUsers((data) => {
-          const result = [...data,...response.data.users];
+          const result = [...data, ...response.data.users];
           const allUsers = uniqBy(result, '_id');
           return allUsers;
-        })
+        });
       }
       setTotalUsersCount(response.data.totalUsers);
-      setFollowers(response.data.followers);
       setLoading(false);
-    }catch(error){
+    } catch (error) {
       setLoading(false);
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
     }
-  },[currentPage, dispatch]);
+  }, [currentPage, dispatch]);
 
   const getUserFollowing = async () => {
-    try{
+    try {
       const response = await followerService.getUserFollowing();
       setFollowing(response.data.following);
-    }catch(error){
-      setLoading(false)
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
     }
-  }
+  };
 
   const followUser = async (user) => {
-    try{
+    try {
       FollowersUtils.followUser(user, dispatch);
-    }catch(error){
+    } catch (error) {
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
     }
-  }
+  };
 
-  const unfollowUser = async (user) => {
-    try{
+  const unFollowUser = async (user) => {
+    try {
       const userData = user;
-      userData.followersCount -=1;
+      userData.followersCount -= 1;
       socketService?.socket?.emit('unfollow user', userData);
       FollowersUtils.unFollowUser(user, profile, dispatch);
-    }catch(error){
+    } catch (error) {
       Utils.dispatchNotification(error.response.data.message, 'error', dispatch);
     }
-  }
+  };
 
-  useEffectOnce(()=> {
+  useEffectOnce(() => {
     getAllUsers();
     getUserFollowing();
-  },[])
+  });
 
-  useEffect(()=> {
+  useEffect(() => {
     FollowersUtils.socketIOFollowAndUnfollow(users, following, setFollowing, setUsers);
     ChatUtils.usersOnline(setOnlineUsers);
-  },[following, users]);
-
+  }, [following, users]);
 
   return (
-    <div className='card-container' ref={bodyRef}>
-      <div className='people'>People</div>
+    <div className="card-container" ref={bodyRef}>
+      <div className="people">People</div>
       {users.length > 0 && (
-        <div className='card-element'>
-        {users.map((data) => (
-          <div className='card-element-item' key={data?._id} data-testid="card-element-item">
-            {Utils.checkIfUserIsOnline(data?.username, onlineUsers) && (
-              <div className='card-element-item-indicator'>
-                  <FaCircle className='online-indicator'/>
-              </div>
-            )}
-            <div className='card-element-header'>
-              <div className='card-element-header-bg'></div>
-                <Avatar
-                name={data?.username}
-                bgColor={data?.avatarColor}
-                textColor="#ffffff"
-                size={120}
-                avatarSrc={data?.profilePicture}
-                />
-                <div className='card-element-header-text'>
-                  <span className='card-element-header-name'>{data?.username}</span>
+        <div className="card-element">
+          {users.map((data) => (
+            <div className="card-element-item" key={data?._id} data-testid="card-element-item">
+              {Utils.checkIfUserIsOnline(data?.username, onlineUsers) && (
+                <div className="card-element-item-indicator">
+                  <FaCircle className="online-indicator" />
                 </div>
-              
+              )}
+              <div className="card-element-header">
+                <div className="card-element-header-bg"></div>
+                <Avatar
+                  name={data?.username}
+                  bgColor={data?.avatarColor}
+                  textColor="#ffffff"
+                  size={120}
+                  avatarSrc={data?.profilePicture}
+                />
+                <div className="card-element-header-text">
+                  <span className="card-element-header-name">{data?.username}</span>
+                </div>
+              </div>
+              <CardElementStats
+                postsCount={data?.postsCount}
+                followersCount={data?.followersCount}
+                followingCount={data?.followingCount}
+              />
+              <CardElementButtons
+                isChecked={Utils.checkIfUserIsFollowed(following, data?._id)}
+                btnTextOne="Follow"
+                btnTextTwo="Unfollow"
+                onClickBtnOne={() => followUser(data)}
+                onClickBtnTwo={() => unFollowUser(data)}
+                onNavigateToProfile={() => ProfileUtils.navigateToProfile(data, navigate)}
+              />
             </div>
-            <CardElementStats 
-            postsCount={data?.postsCount}
-            followersCount={data?.followersCount}
-            followingCount={data?.followingCount}
-            />
-            <CardElementButtons
-            isChecked={Utils.checkIfUserIsFollowed(following, data?._id)}
-            btnTextOne="Follow"
-            btnTextTwo="Unfollow"
-            onClickBtnOne={() => followUser(data)}
-            onClickBtnTwo={()=> unfollowUser(data)}
-            onNavigateToProfile={()=> ProfileUtils.navigateToProfile(data, navigate)}
-            />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       )}
 
-      {loading && !users.length && 
-      <div className='card-element' style={{height: '350px'}}>
-       
-      </div>
-      }
+      {loading && !users.length && <div className="card-element" style={{ height: '350px' }}></div>}
 
       {!loading && !users.length && (
-        <div className='empty-page' data-testid="empty-page">
+        <div className="empty-page" data-testid="empty-page">
           No user available
         </div>
-      )} 
+      )}
 
-      <div ref={bottomLineRef} style={{marginBottom: '80px', height: '50px'}}></div>
-
+      <div ref={bottomLineRef} style={{ marginBottom: '80px', height: '50px' }}></div>
     </div>
-  )
-}
-
-export default People
+  );
+};
+export default People;

@@ -60,7 +60,7 @@ const Sidebar = () => {
         try {
           const receiverId = user?.receiverUsername !== profile?.username ? user?.receiverId : user?.senderId;
           if (user?.receiverUsername === profile?.username && !user.isRead) {
-            await chatService.markMessagesAsRad(profile?._id, receiverId);
+            await chatService.markMessagesAsRead(profile?._id, receiverId);
           }
           const userTwoName =
             user?.receiverUsername !== profile?.username ? user?.receiverUsername : user?.senderUsername;
