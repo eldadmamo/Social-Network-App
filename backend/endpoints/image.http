@@ -9,7 +9,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "image": "https://static.wikia.nocookie.net/id4/images/6/61/D99E253B-203E-489A-937B-1A802EB41BB0.jpg/revision/latest?cb=20220102193014"
+  "image": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Kylie_Jenner1_%28cropped%29.png"
 }
 
 
@@ -21,7 +21,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "image": "https://res.cloudinary.com/dggixttgq/image/upload/v1742485342/67dae4dd4a24251005859ad3"
+  "image": "https://res.cloudinary.com/dggixttgq/image/upload/v1742658563/avu2kanmqw9x0ogjsyvw.jpg"
 }
 
 
