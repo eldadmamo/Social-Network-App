@@ -90,7 +90,7 @@ Make sure mongodb and redis are both running on your local machine.
 
 ## API Endpoints
 
-- The actual endpoints for the application can be found inside the folder named `endpoints` https://github.com/Ronin-Chan/Chatty_backend/tree/dev/endpoints. 
+- The actual endpoints for the application can be found inside the folder named `endpoints` https://github.com/eldadmamo/Social-Network-App. 
 - The endpoint files all have a `.http` extension. 
 - To use these files to make API calls, install the extension called [rest client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) on vscode.
 - Update the endpoints http files before using.
