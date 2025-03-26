@@ -39,10 +39,16 @@ const Register = () => {
         avatarColor,
         avatarImage
       });
+      
       setLoggedIn(true);
       setStoredUsername(username);
       setAlertType('alert-success');
-      Utils.dispatchUser(result, pageReload, dispatch, setUser);
+      
+      // Update this line to await the dispatch and setUser
+      await Utils.dispatchUser(result, pageReload, dispatch, setUser);
+      
+      // Explicitly navigate after successful registration
+      navigate('/app/social/streams');
     } catch (error) {
       setLoading(false);
       setHasError(true);

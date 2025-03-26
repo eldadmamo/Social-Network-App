@@ -33,6 +33,10 @@ export interface IAuthDocument extends Document {
   hashPassword(password: string): Promise<string>;
 }
 
+export interface CustomRequest extends Request {
+  user?: IAuthDocument; // Ensure `user` exists on the request
+}
+
 export interface ISignUpData {
   _id: ObjectId;
   uId: string;

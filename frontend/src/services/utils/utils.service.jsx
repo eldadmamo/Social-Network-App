@@ -29,10 +29,14 @@ export class Utils {
         return canvas.toDataURL('image/png');
     }
 
-    static dispatchUser(result, pageReload, dispatch, setUser){
+    
+    static async dispatchUser(result, pageReload, dispatch, setUser) {
+      return new Promise((resolve) => {
         pageReload(true);
-        dispatch(addUser({token: result.data.token, profile: result.data.user}))
+        dispatch(addUser({token: result.data.token, profile: result.data.user}));
         setUser(result.data.user);
+        resolve();
+      });
     }
 
     static clearStore({dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn}){

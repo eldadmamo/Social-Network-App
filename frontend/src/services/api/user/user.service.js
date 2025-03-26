@@ -2,7 +2,7 @@ import axios from "../../axios";
 
 class UserService {
     async getUserSuggestions(){
-        const response = await axios.get('/user/profile/users/suggestions');
+        const response = await axios.get('/user/profile/user/suggestions');
         return response;
     }
 

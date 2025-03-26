@@ -36,9 +36,10 @@ class PostService {
   }
 
   public async editPost(postId: string, updatedPost: IPostDocument): Promise<void> {
-    const updatePost: UpdateQuery<IPostDocument> = PostModel.updateOne({_id: postId}, {$set: {updatedPost}});
+    const updatePost: UpdateQuery<IPostDocument> = PostModel.updateOne({_id: postId}, {$set: updatedPost});
     await Promise.all([updatePost]);
   }
+
 
 
 }

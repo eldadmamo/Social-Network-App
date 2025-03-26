@@ -81,32 +81,32 @@ class UserService {
   public async getRandomUsers(userId: string): Promise<IUserDocument[]> {
     const randomUsers: IUserDocument[] = [];
     const users: IUserDocument[] = await UserModel.aggregate([
-        {$match: {_id: {$ne: new mongoose.Types.ObjectId(userId)}}},
-        {$lookup: {from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId'}},
-        {$unwind: '$authId'},
-        {$sample: {size: 10}},
-        {
-            $addFields: {
-                username: '$authId.username',
-                email: '$authId.email',
-                avatarColor: '$authId.avatarColor',
-                uId: '$authId.uId',
-                createdAt: '$authId.createdAt',
-            }
-        },
-        {
-            $project: {
-                authId: 0,
-                __v: 0
-            }
+      { $match: { _id: { $ne: new mongoose.Types.ObjectId(userId) } } },
+      { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
+      { $unwind: '$authId' },
+      { $sample: { size: 10 } },
+      {
+        $addFields: {
+          username: '$authId.username',
+          email: '$authId.email',
+          avatarColor: '$authId.avatarColor',
+          uId: '$authId.uId',
+          createdAt: '$authId.createdAt'
         }
+      },
+      {
+        $project: {
+          authId: 0,
+          __v: 0
+        }
+      }
     ]);
     const followers: string[] = await followerService.getFollowedUsersIds(`${userId}`);
     for (const user of users) {
-        const followerIndex = indexOf(followers, user._id.toString());
-        if (followerIndex < 0) {
-            randomUsers.push(user);
-        }
+      const followerIndex = indexOf(followers, user._id.toString());
+      if (followerIndex < 0) {
+        randomUsers.push(user);
+      }
     }
     return randomUsers;
   }

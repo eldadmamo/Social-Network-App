@@ -32,14 +32,13 @@ class PostWorker {
     }
   }
 
-  async updatePostiInDB(job: Job, done: DoneCallback): Promise<void> {
-    try{
-      const {key, value} = job.data;
-      // add to db
-      await postService.editPost(key,value);
+  async updatePostInDB(job: Job, done: DoneCallback): Promise<void> {
+    try {
+      const { key, value } = job.data;
+      await postService.editPost(key, value);
       job.progress(100);
-      done(null,job.data);
-    } catch(error){
+      done(null, job.data);
+    } catch (error) {
       log.error(error);
       done(error as Error);
     }

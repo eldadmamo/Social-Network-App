@@ -1,3 +1,5 @@
+import mongoose from "mongoose"
+
 export class Helpers {
   static firstLetterUppercase(str: string): string {
     const valueString = str.toLowerCase();
@@ -9,6 +11,10 @@ export class Helpers {
 
   static lowerCase(str: string): string {
     return str.toLowerCase();
+  }
+
+  static isValidObjectId(id: string): boolean {
+    return mongoose.Types.ObjectId.isValid(id);
   }
 
   static generateRandomIntegers(integerLength: number): number {

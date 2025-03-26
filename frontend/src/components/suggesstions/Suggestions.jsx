@@ -61,7 +61,7 @@ const Suggestions = () => {
             </div>
           ))}
         </div>
-        {users.length > 2 && (
+        {users.length > 4 && (
           <div className="view-more" onClick={() => navigate('/app/social/people')}>
             View More
           </div>

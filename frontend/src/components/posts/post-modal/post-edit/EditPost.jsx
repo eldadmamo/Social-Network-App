@@ -185,8 +185,10 @@ const EditPost = () => {
         postData.imgVersion = '';
         postData.videoId = '';
         postData.videoVersion = '';
+        console.log(postData)
         await PostUtils.sendUpdatePostWithFileRequest(type, post?._id, postData, setApiResponse, setLoading, dispatch);
       } else {
+        console.log(postData)
         setHasVideo(false);
         await PostUtils.sendUpdatePostRequest(post?._id, postData, setApiResponse, setLoading, dispatch);
       }
