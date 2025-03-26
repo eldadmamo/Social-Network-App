@@ -18,7 +18,7 @@
 
 Chatty App backend server is a fascinating real-time social network application. It is developed using [node.js](https://nodejs.org/en/), [typescript](https://www.typescriptlang.org/), [redis](https://redis.io/download/) and [mongodb](https://www.mongodb.com/docs/manual/administration/install-community/).
 
-You can find the repo for the frontend built with react [here](https://github.com/Ronin-Chan/Chatty_frontend).
+You can find the repo for the frontend built with react [here](https://github.com/eldadmamo/Social-Network-App).
 
 ## Features
 
@@ -68,7 +68,7 @@ You'll need to copy the contents of `.env.development.example`, add to `.env` fi
 - There are three different branches develop, staging and main. The develop branch is the default branch.
 
 ```bash
-git clone -b develop https://github.com/Ronin-Chan/Chatty_backend.git
+git clone -b develop https://github.com/eldadmamo/Social-Network-App/backend
 cd chatty-backend
 npm install
 ```
