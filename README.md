@@ -199,5 +199,3 @@ Make sure mongodb and redis are both running on your local machine.
 
 - Inside the `circleci.yml` file, you need to make some updates.
 - There are some properties named `<variable-prefix>` that you need to replace with the `prefix` value from your terraform `variables.tf`. Search the config.yml file and replace `<variable-prefix>`.
-
-## You can find the frontend code [here](https://github.com/Ronin-Chan/Chatty_frontend)
